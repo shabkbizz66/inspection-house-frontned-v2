@@ -1,0 +1,76 @@
+
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Bookings</a></li>
+    <li class="breadcrumb-item"><a routerLink="/bookings/calendar">Calendar</a></li>
+  </ol>
+</nav>
+  
+  
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+          <div>
+            <h4 class="card-title mb-3 mb-md-0">List of all Bookings</h4>
+          </div>
+          <div class="d-flex align-items-center flex-wrap text-nowrap">
+            <button type="button" style="background: #1C315F; border:none;"  routerLink="/bookings/add" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
+              Add Booking
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <!--<h6 class="card-title">Data Table</h6>-->
+        <div class="table-responsive">
+          <table id="dataTableExample" class="table table-striped-new">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Inspector Type</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Inspection Date/Time</th>
+                <th>Package Name</th>
+                <th>Package Price</th>
+                <th>Inspector Name</th>
+                <th>Square Footage</th>
+                <th>Payment Status</th>
+                <th>Agreement</th>
+                <th>Booking Type</th>
+                <th>Created At</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <!--<tbody *ngIf="bookingData">
+              <tr  *ngFor="let fac of bookingData">
+                <td>{{fac.inspectionType}}</td>
+                <td>{{fac.firstName}} {{fac.lastName}}</td>
+                <td>{{fac.email}}</td>
+                <td>{{fac.phone}}</td>
+                <td>{{fac.inspectionDate}} {{fac.inspectionTime}}</td>
+                <td>{{fac.packageName}}</td>
+                <td>${{fac.packagePrice}}</td>
+                <td></td>
+                <td>{{fac.squareFeet}}</td>
+                <td>{{fac.paymentStatus}}</td>
+                <td>{{fac.createdDate}}</td>
+                <td><a [routerLink]="['/bookings/edit/',fac.id]"><i data-feather="eye" appFeatherIcon></i></a></td>
+              </tr>
+            </tbody>-->
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
