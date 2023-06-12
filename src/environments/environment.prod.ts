@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.theinspectionhouse.com',
+  apiUrl: 'http://api.theinspectionhouse.com:9052',
 };
