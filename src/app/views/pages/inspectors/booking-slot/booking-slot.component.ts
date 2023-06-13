@@ -101,11 +101,13 @@ export class BookingSlotComponent implements OnInit {
                 obj.data[y].push('09:00 am');
               }
               //obj.data[y].push(element.startTime);
+              var end = '';
               if(element.endTime == '13:59:00'){
-                obj.data[y].push('02:00 pm');
+                end = '02:00 pm';
               }else if(element.endTime == '17:59:00'){
-                obj.data[y].push('06:00 pm');
+                end = '06:00 pm';
               }
+              obj.data[y].push(end);
               //obj.data[y].push(element.endTime);
               y = y+1;
             });    
@@ -169,7 +171,7 @@ export class BookingSlotComponent implements OnInit {
       this.item.startTime = event.target.value;
       this.item.endTime = '13:59:00';
     }else if(event.target.value == '14:00:00'){
-      this.item.startDate = event.target.value;
+      this.item.startTime = event.target.value;
       this.item.endTime = '17:59:00';
     }
     this.blockType = event.target.value;
