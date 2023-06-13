@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { InspectorService } from '../inspector.service';
 import swal from 'sweetalert2'; 
+import { DataTable } from "simple-datatables";
 
 @Component({
   selector: 'app-booking-slot',
@@ -31,6 +32,8 @@ export class BookingSlotComponent implements OnInit {
   options: any = {
     componentRestrictions: { country: 'US' }
   } 
+  savedData: any;
+  currentId: string;
 
   constructor(public globals: GlobalConstants,
     private inspectorService: InspectorService,
@@ -49,12 +52,15 @@ export class BookingSlotComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       var id = params["id"];
+      this.currentId = id;
       if (id) {
 
         this.inspectorService.get(this.globals.getBlockSlot+'/?id='+id).then((Response: any) => {
           if(Response.status){
-            this.item = Response.data;
-            const [year, month, day] = this.item.startDate.split('-');
+            //this.item = Response.data;
+            this.savedData = Response.data;
+            console.log(this.savedData)
+            /*const [year, month, day] = this.item.startDate.split('-');
             const obj = { year: Number(year), month: Number(month), day: Number(day.split(' ')[0].trim()) };
             this.selectedDate = obj;
 
@@ -71,12 +77,40 @@ export class BookingSlotComponent implements OnInit {
             this.selEndTime = obj3;
 
             this.saveLabel = 'Update';
-            this.addUpdateLabel = 'Update Slot';
+            this.addUpdateLabel = 'Update Slot';*/
+
+            let obj: any = {
+              // Quickly get the headings
+              headings: [
+                "Start Date",
+                "End Date",
+                "Start Time",
+                "End Time"
+              ],
+              data: []
+            };
+      
+            let y = 0;
+            this.savedData.forEach((element: any) => {
+              obj.data[y] = [];
+              obj.data[y].push(element.startDate);
+              obj.data[y].push(element.endDate);
+              obj.data[y].push(element.startTime);
+              obj.data[y].push(element.endTime);
+              y = y+1;
+            });    
+            let dataTable = new DataTable("#dataTableExample", {
+              data: obj
+            });
+
           }else{
-            this.item.inspectorId = id;
+            //this.item.inspectorId = id;
+            //this.selectedDate = this.calendar.getToday();
+            //this.item.startDate = this.selectedDate.year+"-"+('0'+this.selectedDate.month).slice(-2)+"-"+('0'+this.selectedDate.day).slice(-2);
+          }
+          this.item.inspectorId = id;
             this.selectedDate = this.calendar.getToday();
             this.item.startDate = this.selectedDate.year+"-"+('0'+this.selectedDate.month).slice(-2)+"-"+('0'+this.selectedDate.day).slice(-2);
-          }
           
         });
 
@@ -128,9 +162,9 @@ export class BookingSlotComponent implements OnInit {
     }
 
     console.log(this.item);
-
+    
     if (this.item.id) {
-      this.inspectorService.update(this.globals.updateBlockslot,this.item).then((response) => {
+      /*this.inspectorService.update(this.globals.updateBlockslot,this.item).then((response) => {
         this.showToast('Slot Updated Successfully');
         this.backToList();
         //this.SpinnerService.hide();
@@ -140,11 +174,13 @@ export class BookingSlotComponent implements OnInit {
           this.alertService.error('There is something wrong',this.options);
           //this.alertService.BindServerErrors(this.formGroup, rejected);
         }
-      );
+      );*/
     } else {
+      this.item.id = '';
       this.inspectorService.create(this.globals.saveBlockSlot,this.item).then((response) => {
         this.showToast('Slot Inserted Successfully');
-        this.backToList();
+        //this.backToList();
+        this.reloadPage(this.currentId);
         //this.SpinnerService.hide();
       },
         (rejected: RejectedResponse) => {
@@ -162,5 +198,11 @@ export class BookingSlotComponent implements OnInit {
 
   public backToList(){
     this.router.navigate(['/inspectors']);
+  }
+
+  reloadPage(id: string) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate(['/inspectors/blockslot/'+id]);
   }
 }
