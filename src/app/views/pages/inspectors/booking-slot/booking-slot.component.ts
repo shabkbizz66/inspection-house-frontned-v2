@@ -97,10 +97,14 @@ export class BookingSlotComponent implements OnInit {
               obj.data[y].push(element.startDate);
               obj.data[y].push(element.endDate);
 
+              var start= '';
               if(element.startTime == '09:00:00'){
-                obj.data[y].push('09:00 am');
+                start = '09:00 am';
+              }else if(element.startTime = '14:00:00'){
+                start = '02:00 pm';
               }
-              //obj.data[y].push(element.startTime);
+              obj.data[y].push(start);
+              
               var end = '';
               if(element.endTime == '13:59:00'){
                 end = '02:00 pm';
