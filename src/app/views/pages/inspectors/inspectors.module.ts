@@ -10,6 +10,7 @@ import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AlertModule } from '../alert/alert.module';
 import { FeatherIconModule } from '../../../core/feather-icon/feather-icon.module';
+import { BookingSlotComponent } from './booking-slot/booking-slot.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
         path: 'edit/:id',
         component: AddInspectorComponent
       },
+      {
+        path: 'blockslot/:id',
+        component: BookingSlotComponent
+      },
     ]
   }
 ]
@@ -38,7 +43,8 @@ const routes: Routes = [
   declarations: [
     InspectorsComponent,
     ListInspectorsComponent,
-    AddInspectorComponent
+    AddInspectorComponent,
+    BookingSlotComponent
   ],
   imports: [
     CommonModule,

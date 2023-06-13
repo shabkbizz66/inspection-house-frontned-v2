@@ -1,0 +1,72 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/inspectors">Block Inspector Slot</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{addUpdateLabel}}</li>
+    </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-12 stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <!--<h6 class="card-title">Form Grid</h6>-->
+        
+        <form [formGroup]="formGroup">
+          <div class="row">
+            <div class="col-sm-6">
+                <label class="form-label">Start Date <span style="color:red;">*</span></label>
+              <div class="mb-3 input-group">
+                
+                <input type="text" formControlName="startDate"  (dateSelect)="changeDate($event)" [minDate]="minDate" ngbDatepicker #d="ngbDatepicker" [(ngModel)]="selectedDate" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }" class="form-control" placeholder="Enter Start Date">
+                <button class="input-group-text" type="button" (click)="d.toggle()">
+                    <i class="feather icon-calendar icon-md text-muted"></i>
+                </button>
+                <div *ngIf="submitted && f.startDate.errors" class="invalid-feedback">
+                  <div *ngIf="f.startDate.errors.required">Start Date is required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+                <label class="form-label">End Date <span style="color:red;">*</span></label>
+                <div class="mb-3 input-group">
+                  
+                  <input type="text" formControlName="endDate" (dateSelect)="changeEndDate($event)" ngbDatepicker #d1="ngbDatepicker" [(ngModel)]="endDate" [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }" class="form-control" placeholder="Enter End Date">
+                  <button class="input-group-text" type="button" (click)="d1.toggle()">
+                    <i class="feather icon-calendar icon-md text-muted"></i>
+                </button>
+                  <div *ngIf="submitted && f.endDate.errors" class="invalid-feedback">
+                    <div *ngIf="f.endDate.errors.required">End Date is required</div>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <label class="form-label">Start Time <span style="color:red;">*</span></label>
+              <div class="mb-3">
+                <ngb-timepicker formControlName="startTime" (ngModelChange)="startTimeChange($event)" [ngClass]="{ 'is-invalid': submitted && f.startTime.errors }" class="form-control" [(ngModel)]="selStartTime"></ngb-timepicker>
+                <!--<input type="text" formControlName="startTime"  [(ngModel)]="item.startTime" [ngClass]="{ 'is-invalid': submitted && f.startTime.errors }" class="form-control" placeholder="Enter Email">-->
+                <div *ngIf="submitted && f.startTime.errors" class="invalid-feedback">
+                  <div *ngIf="f.startTime.errors.required">Start Time is required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label">End Time <span style="color:red;">*</span></label>
+              <div class=" mb-3">
+                <ngb-timepicker formControlName="endTime" (ngModelChange)="endTimeChange($event)" [ngClass]="{ 'is-invalid': submitted && f.endTime.errors }" class="form-control" [(ngModel)]="selEndTime"></ngb-timepicker>
+                <!--<input type="text" formControlName="endTime"  [(ngModel)]="item.endTime" [ngClass]="{ 'is-invalid': submitted && f.endTime.errors }" class="form-control" placeholder="Enter City">-->
+                <div *ngIf="submitted && f.endTime.errors" class="invalid-feedback">
+                  <div *ngIf="f.endTime.errors.required">End Time is required</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-success submit" (click)="save($event)">{{saveLabel}}</button>
+        </form>  
+      </div>
+      </div>
+    </div>
+  </div>
