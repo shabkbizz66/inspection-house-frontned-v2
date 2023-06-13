@@ -20,4 +20,7 @@ export class GlobalConstants {
     getPricing: string = 'v1/booking/getPrices';
     getDashboard: string = 'v1/booking/getDashboardCounts';
     getInspectorDetalils: string = 'v1/officer/getOfficerName';
+
+    saveBlockSlot = 'v1/bookingslot';
+    getBlockSlot = 'v1/bookingslot/getBookingSlotByInspectorId';
 }

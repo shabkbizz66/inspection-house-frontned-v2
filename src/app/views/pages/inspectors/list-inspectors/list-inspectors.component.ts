@@ -61,7 +61,8 @@ export class ListInspectorsComponent implements OnInit {
         obj.data[y].push(element.status);
         //obj.data[y].push(element.createdDate);
         let id = "/inspectors/edit/"+element.id;
-        let url = '<a href="'+id+'"><i class="feather icon-edit-2"></i></span>';
+        let slot_id = "/inspectors/blockslot/"+element.id;
+        let url = '<a href="'+id+'"><i class="feather icon-edit-2" title="Edit Inspector"></i></a>&nbsp;&nbsp;<a href="'+slot_id+'"><i class="feather icon-file-text" title="Block Slot"></i></a>';
         console.log(url)
         obj.data[y].push(url);
         y = y+1;
