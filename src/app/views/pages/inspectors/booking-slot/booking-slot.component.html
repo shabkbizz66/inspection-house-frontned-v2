@@ -43,25 +43,29 @@
 
           <div class="row">
             <div class="col-sm-6">
-              <label class="form-label">Start Time <span style="color:red;">*</span></label>
+              <label class="form-label">Block Slot <span style="color:red;">*</span></label>
               <div class="mb-3">
-                <ngb-timepicker formControlName="startTime" (ngModelChange)="startTimeChange($event)" [ngClass]="{ 'is-invalid': submitted && f.startTime.errors }" class="form-control" [(ngModel)]="selStartTime"></ngb-timepicker>
-                <!--<input type="text" formControlName="startTime"  [(ngModel)]="item.startTime" [ngClass]="{ 'is-invalid': submitted && f.startTime.errors }" class="form-control" placeholder="Enter Email">-->
-                <div *ngIf="submitted && f.startTime.errors" class="invalid-feedback">
-                  <div *ngIf="f.startTime.errors.required">Start Time is required</div>
+                <select formControlName="type" (change)="changeStartTime($event)" [(ngModel)]="blockType" [ngClass]="{ 'is-invalid': submitted && f.type.errors }" class="form-select">
+                  <option [ngValue]="undefined" selected>-- Select --</option>
+                  <option value="All Day">All Day</option>
+                  <option value="09:00:00">09:00 am</option>
+                  <option value="14:00:00">02:00 pm</option>
+                </select>
+                <!--<ngb-timepicker formControlName="startTime" (ngModelChange)="startTimeChange($event)" [ngClass]="{ 'is-invalid': submitted && f.startTime.errors }" class="form-control" [(ngModel)]="selStartTime"></ngb-timepicker>-->
+                <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+                  <div *ngIf="f.type.errors.required">Start Time is required</div>
                 </div>
               </div>
             </div>
-            <div class="col-sm-6">
+            <!--<div class="col-sm-6">
               <label class="form-label">End Time <span style="color:red;">*</span></label>
               <div class=" mb-3">
                 <ngb-timepicker formControlName="endTime" (ngModelChange)="endTimeChange($event)" [ngClass]="{ 'is-invalid': submitted && f.endTime.errors }" class="form-control" [(ngModel)]="selEndTime"></ngb-timepicker>
-                <!--<input type="text" formControlName="endTime"  [(ngModel)]="item.endTime" [ngClass]="{ 'is-invalid': submitted && f.endTime.errors }" class="form-control" placeholder="Enter City">-->
                 <div *ngIf="submitted && f.endTime.errors" class="invalid-feedback">
                   <div *ngIf="f.endTime.errors.required">End Time is required</div>
                 </div>
               </div>
-            </div>
+            </div>-->
           </div>
 
           <button type="button" class="btn btn-success submit" (click)="save($event)">{{saveLabel}}</button>

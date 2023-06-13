@@ -5,4 +5,5 @@ export class BlockSlotModel{
     endDate:string;
     startTime: string;
     endTime: string;
+    type: string;
 }
