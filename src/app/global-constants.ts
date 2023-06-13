@@ -23,4 +23,5 @@ export class GlobalConstants {
 
     saveBlockSlot = 'v1/bookingslot';
     getBlockSlot = 'v1/bookingslot/getBookingSlotByInspectorId';
+    updateBlockslot = "v1/bookingslot/updateBookingSlot";
 }
