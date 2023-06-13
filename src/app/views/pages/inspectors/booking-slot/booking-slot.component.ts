@@ -34,6 +34,7 @@ export class BookingSlotComponent implements OnInit {
   } 
   savedData: any;
   currentId: string;
+  blockType: string;
 
   constructor(public globals: GlobalConstants,
     private inspectorService: InspectorService,
@@ -95,8 +96,17 @@ export class BookingSlotComponent implements OnInit {
               obj.data[y] = [];
               obj.data[y].push(element.startDate);
               obj.data[y].push(element.endDate);
-              obj.data[y].push(element.startTime);
-              obj.data[y].push(element.endTime);
+
+              if(element.startTime == '09:00:00'){
+                obj.data[y].push('09:00 am');
+              }
+              //obj.data[y].push(element.startTime);
+              if(element.endTime == '13:59:00'){
+                obj.data[y].push('02:00 pm');
+              }else if(element.endTime == '17:59:00'){
+                obj.data[y].push('02:00 pm');
+              }
+              //obj.data[y].push(element.endTime);
               y = y+1;
             });    
             let dataTable = new DataTable("#dataTableExample", {
@@ -124,8 +134,9 @@ export class BookingSlotComponent implements OnInit {
     this.formGroup = new FormGroup({
       startDate: new FormControl("", Validators.required),
       endDate: new FormControl(null, Validators.required),
-      startTime: new FormControl(null, Validators.required),
-      endTime: new FormControl(null, Validators.required)
+      type: new FormControl(null, Validators.required),
+      //startTime: new FormControl(null, Validators.required),
+      //endTime: new FormControl(null, Validators.required)
     });
   }
 
@@ -149,6 +160,22 @@ export class BookingSlotComponent implements OnInit {
     this.item.endTime = ('0'+event?.hour).slice(-2)+":"+('0'+event?.minute).slice(-2)+":"+('0'+event?.second).slice(-2);
   }
 
+  changeStartTime(event: any){
+    console.log(event.target.value);
+    if(event.target.value == 'All Day'){
+      this.item.startTime = '09:00:00';
+      this.item.endTime = '17:59:00';
+    }else if(event.target.value == '09:00:00'){
+      this.item.startTime = event.target.value;
+      this.item.endTime = '13:59:00';
+    }else if(event.target.value == '14:00:00'){
+      this.item.startDate = event.target.value;
+      this.item.endTime = '17:59:00';
+    }
+    this.blockType = event.target.value;
+    
+  }
+
   save(event: any){
     const button = (event.srcElement.disabled === undefined) ? event.srcElement.parentElement : event.srcElement;
     button.setAttribute('disabled', true);
@@ -162,7 +189,6 @@ export class BookingSlotComponent implements OnInit {
     }
 
     console.log(this.item);
-    
     if (this.item.id) {
       /*this.inspectorService.update(this.globals.updateBlockslot,this.item).then((response) => {
         this.showToast('Slot Updated Successfully');
