@@ -167,16 +167,19 @@ export class BookingSlotComponent implements OnInit {
   }
 
   changeStartTime(event: any){
-    console.log(event.target.value);
+    //console.log(event.target.value);
     if(event.target.value == 'All Day'){
       this.item.startTime = '09:00:00';
       this.item.endTime = '17:59:00';
+      this.item.type = 1;
     }else if(event.target.value == '09:00:00'){
       this.item.startTime = event.target.value;
       this.item.endTime = '13:59:00';
+      this.item.type = 2;
     }else if(event.target.value == '14:00:00'){
       this.item.startTime = event.target.value;
       this.item.endTime = '17:59:00';
+      this.item.type = 2;
     }
     this.blockType = event.target.value;
     
