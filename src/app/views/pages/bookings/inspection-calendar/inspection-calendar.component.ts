@@ -64,7 +64,7 @@ export class InspectionCalendarComponent implements OnInit {
         arr.id = element.id;
         arr.start = element.inspectionDate+'T'+element.inspectionTime;
         //arr.end = element.inspectionDate+'T09:00:00';
-        arr.title = element.firstName+' '+element.lastName;
+        arr.title = element.firstName+' '+element.lastName+ ' | '+element.officerName;
         arr.backgroundColor =  'rgba(1,104,250, .15)';
         arr.borderColor = '#0168fa';
         arr.display = 'block';
