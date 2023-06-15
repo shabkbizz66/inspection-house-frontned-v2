@@ -40,3 +40,8 @@ export class BookingModel{
     //timeZone: string;
     status: string;
 }
+
+export class reassignModel{
+    id: string;
+    inspectorId: string;
+}
