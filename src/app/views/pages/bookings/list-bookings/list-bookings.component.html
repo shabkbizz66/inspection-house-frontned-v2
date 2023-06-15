@@ -31,7 +31,7 @@
     <div class="card">
       <div class="card-body">
         <!--<h6 class="card-title">Data Table</h6>-->
-        <div class="table-responsive">
+        <div class="table-responsive" (click)="openModal($event)">
           <table id="dataTableExample" class="table table-striped-new">
             <thead>
               <tr>
@@ -74,3 +74,26 @@
     </div>
   </div>
 </div>
+
+
+<ng-template #basicModal let-modal>
+  <form [formGroup]="formGroup">
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Re-Assign Inspector</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <select formControlName="inspectorId"  [(ngModel)]="item.inspectorId" [ngClass]="{ 'is-invalid': submitted && f.inspectorId.errors }" class="form-select">
+      <option [ngValue]="undefined" selected>-- Select --</option>
+      <option *ngFor="let data of inspectorData" [value]="data.inspector_id">{{data.inspectorFirstName}}</option>
+  </select>
+  <div *ngIf="submitted && f.inspectorId.errors" class="invalid-feedback">
+    <div *ngIf="f.inspectorId.errors.required">Inspector is required</div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="reassignSave($event)">Save changes</button>
+  </div>
+  </form>
+</ng-template>

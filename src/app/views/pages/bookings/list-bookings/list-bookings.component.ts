@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { BookingService } from '../booking.service';
 import { GlobalConstants } from '../../../../global-constants';
 import { DataTable } from "simple-datatables";
 import { formatDate } from "@angular/common";
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { reassignModel } from '../booking.model';
+import swal from 'sweetalert2'; 
+import { RejectedResponse } from '../../../models/rejected-response';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-bookings',
@@ -11,13 +17,31 @@ import { formatDate } from "@angular/common";
 })
 export class ListBookingsComponent implements OnInit {
 
+  @ViewChild('basicModal') basicModal: any;
+
   bookingData: any;
+  displayStyle = "none";
+  inspectorData: any;
+
+  formGroup: FormGroup;
+  item: reassignModel = new reassignModel();
+  submitted: boolean = false;
+  modalReference: NgbModalRef;
 
   constructor(private bookingService: BookingService,
+    private modalService: NgbModal,
+    private router: Router,
     public globals: GlobalConstants) { }
 
   ngOnInit(): void {
+    this.formGroup = new FormGroup({
+      inspectorId: new FormControl("", Validators.required),
+    });
     this.getBookingList();
+  }
+
+  get f() { 
+    return this.formGroup.controls; 
   }
 
   public getBookingList(){
@@ -74,7 +98,8 @@ export class ListBookingsComponent implements OnInit {
         obj.data[y].push(element.bookingType);
         obj.data[y].push(element.createdDate);
         let id = "/bookings/edit/"+element.id;
-        let url = '<a href="'+id+'"><i class="feather icon-eye"></i></a>';
+        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector'><i class='feather icon-user'></i></a>";
+        let url = '<a href="'+id+'" title="View Booking"><i class="feather icon-eye"></i></a>&nbsp;&nbsp;'+popup;
        
        
         //console.log(url)
@@ -82,7 +107,7 @@ export class ListBookingsComponent implements OnInit {
         y = y+1;
       });   
       let dataTable = new DataTable("#dataTableExample", {
-        data: obj
+        data: obj,
       });
       //let dataTable = new DataTable("#dataTableExample");
       //dataTable.insert(this.inspectorData)
@@ -105,4 +130,68 @@ export class ListBookingsComponent implements OnInit {
     const formattedDate = formatDate(date, format, locale);
     return formattedDate;
   }
+
+  openModal(event: any){
+    this.item = new reassignModel();
+    const target  = event.target || event.srcElement || event.currentTarget;
+    const dataId = event.target.parentElement.id;
+    if(dataId != ''){
+      //console.log(event.target.parentElement.id);
+      //console.log('ss')
+      this.bookingService.get(this.globals.getReassignOfficer+'?id='+dataId).then((Response: any) => {
+        this.inspectorData = Response.response;
+        //console.log(Response.response);
+      });
+      this.item.id = dataId;
+      this.openPopup(this.basicModal);
+    }
+   
+  }
+
+  openPopup(content: TemplateRef<any>) {
+    this.modalReference = this.modalService.open(content);
+     /*this.modalService.open(content, {}).result.then((result) => {
+      console.log(result);
+    }).catch((res) => {});*/
+  }
+
+  reassignSave(event: any){
+    const button = (event.srcElement.disabled === undefined) ? event.srcElement.parentElement : event.srcElement;
+    button.setAttribute('disabled', true);
+
+    //console.log(this.formGroup)
+    this.submitted = true;
+    this.formGroup.markAllAsTouched();
+    if (this.formGroup.invalid) {
+      button.removeAttribute('disabled');
+      //this.SpinnerService.hide();
+      //this.eventSave.event.srcElement.disabled = false;
+      return;
+    }
+    console.log(this.item);
+  
+    if (this.item.id) {
+      let url = this.globals.updateBookingInspection+'?id='+this.item.id+'&officerId='+this.item.inspectorId;
+      this.bookingService.create(url,this.item).then((response) => {
+        this.showToast('Inspector Re-assigned Successfully');
+        this.modalReference.close();
+        this.backtoList();
+      },
+        (rejected: RejectedResponse) => {
+          this.item.id = '';
+        }
+      );
+    }
+  }
+
+  showToast(msg: string){
+    swal.fire({ showConfirmButton: false, timer: 1800, title: 'Success!', text: msg, icon: 'success', });
+  }
+
+  backtoList() {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate(['/bookings']);
+  }
+
 }
