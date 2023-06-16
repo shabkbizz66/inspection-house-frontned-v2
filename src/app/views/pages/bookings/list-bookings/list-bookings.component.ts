@@ -189,10 +189,9 @@ export class ListBookingsComponent implements OnInit {
       return;
     }
     console.log(this.item);
-    return false;
+    
     if (this.item.id) {
-      let url = this.globals.updateBookingInspection+'?id='+this.item.id+'&officerId='+this.item.inspectorId;
-      this.bookingService.create(url,this.item).then((response) => {
+      this.bookingService.create(this.globals.updateBookingInspection,this.item).then((response) => {
         this.showToast('Inspector Re-assigned Successfully');
         this.modalReference.close();
         this.backtoList();
