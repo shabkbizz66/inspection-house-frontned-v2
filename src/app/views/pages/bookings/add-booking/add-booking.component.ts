@@ -405,13 +405,13 @@ export class AddBookingComponent implements OnInit {
     this.bookingService.get(this.globals.getAvailableSlots+'?date='+date).then((Response: any) => {
       //console.log(Response);
 
-      if(Response.response.length == 2){
+      if(Response.response && Response.response.length == 2){
         this.slotBooked = true;
       }else{
         this.slotBooked = false;
       }
 
-      if(Response.response.length > 0){
+      if(Response.response && Response.response.length > 0){
         Response.response.forEach((element: any) => {
           if(element == '09:00:00'){
             this.i1 = false;

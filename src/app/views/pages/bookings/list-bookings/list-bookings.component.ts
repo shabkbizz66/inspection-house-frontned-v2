@@ -3,7 +3,7 @@ import { BookingService } from '../booking.service';
 import { GlobalConstants } from '../../../../global-constants';
 import { DataTable } from "simple-datatables";
 import { formatDate } from "@angular/common";
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDateStruct, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { reassignModel } from '../booking.model';
 import swal from 'sweetalert2'; 
@@ -28,14 +28,29 @@ export class ListBookingsComponent implements OnInit {
   submitted: boolean = false;
   modalReference: NgbModalRef;
 
+  inspectionNewDate: NgbDateStruct;
+  date: { year: number; month: number };
+  minDate: any;
+
   constructor(private bookingService: BookingService,
     private modalService: NgbModal,
+    private calendar: NgbCalendar,
     private router: Router,
-    public globals: GlobalConstants) { }
+    public globals: GlobalConstants) { 
+      const current = new Date();
+      this.minDate = {
+        year: current.getFullYear(),
+        month: current.getMonth() + 1,
+        day: current.getDate()
+      };
+    }
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      inspectorId: new FormControl("", Validators.required),
+      type: new FormControl("", Validators.required),
+      inspectionNewDate: new FormControl(""),
+      inspectionNewTime: new FormControl(""),
+      inspectorId: new FormControl(""),
     });
     this.getBookingList();
   }
@@ -98,7 +113,7 @@ export class ListBookingsComponent implements OnInit {
         obj.data[y].push(element.bookingType);
         obj.data[y].push(element.createdDate);
         let id = "/bookings/edit/"+element.id;
-        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector'><i class='feather icon-user'></i></a>";
+        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Reschedule / Re-Assign'><i class='feather icon-user'></i></a>";
         let url = '<a href="'+id+'" title="View Booking"><i class="feather icon-eye"></i></a>&nbsp;&nbsp;'+popup;
        
        
@@ -155,6 +170,11 @@ export class ListBookingsComponent implements OnInit {
     }).catch((res) => {});*/
   }
 
+  closePopup(){
+    this.modalReference.close();
+    this.formGroup.reset();
+  }
+
   reassignSave(event: any){
     const button = (event.srcElement.disabled === undefined) ? event.srcElement.parentElement : event.srcElement;
     button.setAttribute('disabled', true);
@@ -169,7 +189,7 @@ export class ListBookingsComponent implements OnInit {
       return;
     }
     console.log(this.item);
-  
+    return false;
     if (this.item.id) {
       let url = this.globals.updateBookingInspection+'?id='+this.item.id+'&officerId='+this.item.inspectorId;
       this.bookingService.create(url,this.item).then((response) => {
@@ -193,5 +213,33 @@ export class ListBookingsComponent implements OnInit {
     this.router.onSameUrlNavigation = 'reload';
     this.router.navigate(['/bookings']);
   }
+
+  changeType(event: any){
+    if(event.target.value == 'Reassign'){
+      this.formGroup.controls['inspectorId'].setValidators([Validators.required]);
+      this.item.inspectionNewDate = '';
+      this.item.inspectionNewTime = '';
+    }else{
+      this.item.inspectorId = '';
+      this.inspectionNewDate = this.calendar.getToday();
+      this.item.inspectionNewDate = this.inspectionNewDate.year+"-"+('0'+this.inspectionNewDate.month).slice(-2)+"-"+('0'+this.inspectionNewDate.day).slice(-2);
+      this.formGroup.controls['inspectorId'].clearValidators();
+      this.formGroup.controls['inspectionNewTime'].setValidators([Validators.required]);
+      this.formGroup.controls['inspectionNewDate'].setValidators([Validators.required]);
+    }
+    this.formGroup.updateValueAndValidity();
+  }
+
+  changeDate(event: any){
+    this.item.inspectionNewDate = event.year+"-"+('0'+event.month).slice(-2)+"-"+('0'+event.day).slice(-2);
+  }
+
+  /*onTimeChange(event:any){
+    this.item.inspectionNewTime = event.target.value;
+    this.bookingService.get(this.globals.getInspectorDetalils+'?date='+this.item.inspectionNewDate+'&time='+this.item.inspectionNewTime+'&lat='+this.item.latitude+'&long='+this.item.longitude).then((response:any) => {
+      this.showInspectorName = response.response.inspector_name;
+    });
+    
+  }*/
 
 }

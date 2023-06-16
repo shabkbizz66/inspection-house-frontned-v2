@@ -42,6 +42,9 @@ export class BookingModel{
 }
 
 export class reassignModel{
+    type: string;
+    inspectionNewDate: string;
+    inspectionNewTime: string;
     id: string;
     inspectorId: string;
 }
