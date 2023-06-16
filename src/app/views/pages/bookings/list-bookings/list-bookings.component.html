@@ -78,22 +78,61 @@
 
 <ng-template #basicModal let-modal>
   <form [formGroup]="formGroup">
-  <div class="modal-header">
-    <h5 class="modal-title" id="exampleModalLabel">Re-Assign Inspector</h5>
-    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
-  </div>
-  <div class="modal-body">
-    <select formControlName="inspectorId"  [(ngModel)]="item.inspectorId" [ngClass]="{ 'is-invalid': submitted && f.inspectorId.errors }" class="form-select">
-      <option [ngValue]="undefined" selected>-- Select --</option>
-      <option *ngFor="let data of inspectorData" [value]="data.inspector_id">{{data.inspectorFirstName}}</option>
-  </select>
-  <div *ngIf="submitted && f.inspectorId.errors" class="invalid-feedback">
-    <div *ngIf="f.inspectorId.errors.required">Inspector is required</div>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Reschedule Booking / Re-Assign Inspector</h5>
+      <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
-    <button type="button" class="btn btn-primary" (click)="reassignSave($event)">Save changes</button>
-  </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="input-group">
+          <select formControlName="type" (change)="changeType($event)" [(ngModel)]="item.type" [ngClass]="{ 'is-invalid': submitted && f.type.errors }" class="form-select">
+            <option [ngValue]="undefined" selected>-- Select --</option>
+            <option  value="Reschedule">Reschedule Bookiing</option>
+            <option  value="Reassign">Reassign Inspector</option>
+          </select>
+          <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
+            <div *ngIf="f.type.errors.required">Type is required</div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="item.type == 'Reassign'" style="margin-top:20px;">
+        <div class="input-group">
+          <select formControlName="inspectorId"  [(ngModel)]="item.inspectorId" [ngClass]="{ 'is-invalid': submitted && f.inspectorId.errors }" class="form-select">
+            <option [ngValue]="undefined" selected>-- Select --</option>
+            <option *ngFor="let data of inspectorData" [value]="data.inspector_id">{{data.inspectorFirstName}}</option>
+          </select>
+          <div *ngIf="submitted && f.inspectorId.errors" class="invalid-feedback">
+            <div *ngIf="f.inspectorId.errors.required">Inspector is required</div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="item.type == 'Reschedule'" style="margin-top: 20px;">
+        <div class="input-group" style="margin-bottom: 20px;">
+          <input type="text" formControlName="inspectionNewDate" (dateSelect)="changeDate($event)" ngbDatepicker #d1="ngbDatepicker" [(ngModel)]="inspectionNewDate" [ngClass]="{ 'is-invalid': submitted && f.inspectionNewDate.errors }" class="form-control" placeholder="Enter Date">
+          <button class="input-group-text" type="button" (click)="d1.toggle()">
+            <i class="feather icon-calendar icon-md text-muted"></i>
+          </button>
+          <div *ngIf="submitted && f.inspectionNewDate.errors" class="invalid-feedback">
+            <div *ngIf="f.inspectionNewDate.errors.required">Inspection Date is required</div>
+          </div>
+        </div>
+        <div class="input-group">
+          <select formControlName="inspectionNewTime" [(ngModel)]="item.inspectionNewTime" [ngClass]="{ 'is-invalid': submitted && f.inspectionNewTime.errors }" class="form-select">
+            <option [ngValue]="undefined" selected>-- Select Inspection Time--</option>
+            <option  value="09:00:00">09:00 am</option>
+            <option  value="14:00:00">02:00 pm</option>
+          </select>
+          <div *ngIf="submitted && f.inspectionNewTime.errors" class="invalid-feedback">
+            <div *ngIf="f.inspectionNewTime.errors.required">Inspection Time is required</div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closePopup()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="reassignSave($event)">Save changes</button>
+      </div>
+    </div>
   </form>
 </ng-template>
