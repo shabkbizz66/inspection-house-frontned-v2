@@ -204,7 +204,7 @@ export class AddBookingComponent implements OnInit {
       lastname: new FormControl(null, Validators.required),
       yearbuilt: new FormControl(null, [Validators.required,Validators.pattern("^[0-9]*$")]),
       squarefeet: new FormControl(null, [Validators.required,Validators.max(6000), Validators.min(0),Validators.pattern("^[0-9]*$")]),
-      foundation: new FormControl(null, Validators.required),
+      foundation: new FormControl(null),
       secondaryfullname: new FormControl(null),
       secondaryPhone: new FormControl(null),
       secondaryEmail: new FormControl(null),
