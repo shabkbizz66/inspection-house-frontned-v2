@@ -47,10 +47,10 @@ export class ListBookingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      type: new FormControl("", Validators.required),
-      inspectionNewDate: new FormControl(""),
-      inspectionNewTime: new FormControl(""),
-      inspectorId: new FormControl(""),
+      //type: new FormControl("", Validators.required),
+      //inspectionNewDate: new FormControl(""),
+      //inspectionNewTime: new FormControl(""),
+      inspectorId: new FormControl("",Validators.required),
     });
     this.getBookingList();
   }
@@ -113,7 +113,7 @@ export class ListBookingsComponent implements OnInit {
         obj.data[y].push(element.bookingType);
         obj.data[y].push(element.createdDate);
         let id = "/bookings/edit/"+element.id;
-        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Reschedule / Re-Assign'><i class='feather icon-user'></i></a>";
+        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector'><i class='feather icon-user'></i></a>";
         let url = '<a href="'+id+'" title="View Booking"><i class="feather icon-eye"></i></a>&nbsp;&nbsp;'+popup;
        
        
@@ -191,7 +191,9 @@ export class ListBookingsComponent implements OnInit {
     console.log(this.item);
     
     if (this.item.id) {
-      this.bookingService.create(this.globals.updateBookingInspection,this.item).then((response) => {
+      let url = this.globals.updateBookingInspection+'?id='+this.item.id+'&officerId='+this.item.inspectorId; 
+      console.log(url);
+      this.bookingService.create(url,this.item).then((response) => {
         this.showToast('Inspector Re-assigned Successfully');
         this.modalReference.close();
         this.backtoList();
