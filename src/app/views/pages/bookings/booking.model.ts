@@ -28,6 +28,7 @@ export class BookingModel{
     inspectionTime: any;
     packageName: string;
     packagePrice: number;
+    calculatedPrice: number;
     reportreView: string;
     comments: string;
     officerId: string;

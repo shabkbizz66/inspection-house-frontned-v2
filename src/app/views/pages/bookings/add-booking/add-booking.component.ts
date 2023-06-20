@@ -102,8 +102,7 @@ export class AddBookingComponent implements OnInit {
 
           this.serviceCost = Number(this.item.packagePrice) - Number(this.item.additionalServiceCost);
           this.additionalServicesCost = this.item.additionalServiceCost;
-          this.finalServiceCost = this.item.packagePrice;
-          //console.log(this.servicesArr)
+          //this.finalServiceCost = this.item.packagePrice;
 
           //this.saveLabel = 'Update Inspector';
           //this.addUpdateLabel = 'Update';
@@ -221,6 +220,7 @@ export class AddBookingComponent implements OnInit {
       reportreview: new FormControl('',Validators.required),
       inspectiontime: new FormControl('',Validators.required),
       additionalServices: new FormControl(''),
+      packagePrice: new FormControl('',Validators.required),
       comments: new FormControl('')
     });
   }
@@ -356,9 +356,9 @@ export class AddBookingComponent implements OnInit {
     }
 
     this.item.packagePrice = Number(this.item.packagePrice) + Number(this.item.additionalServiceCost);*/
-    //console.log(this.item)
     this.item.bookingType = 'Admin';
-    //return false;
+    console.log(this.item)
+    return false;
     if (this.item.id) {
       this.bookingService.update(this.globals.updateBooking,this.item).then((response) => {
         this.showToast('Booking Updated Successfully');
@@ -536,20 +536,31 @@ export class AddBookingComponent implements OnInit {
     });
     this.item.additionalServiceCost = cost; 
     this.additionalServicesCost = cost;
-    this.item.packagePrice = 0;
+    if(type == 'calculate'){
+      this.item.packagePrice = 0;
+    }else{
+      this.item.packagePrice =  Number(this.item.packagePrice);
+    }
     if(this.packageType != '' && this.item.squareFeet != '' && this.item.yearBuilt != ''){
       let url = '?package_type='+this.packageType+'&squarefeet='+this.item.squareFeet+'&yearbuilt='+this.item.yearBuilt;
       this.bookingService.get(this.globals.getPricing+url).then((Response: any) => {
         this.squarefeetPrice = Response.package_sqft;
         this.yearBuiltPrice = Response.package_additional;
         this.serviceCost = Number(this.squarefeetPrice) + Number(this.yearBuiltPrice)
-        this.item.packagePrice = Number(this.item.packagePrice) + Number(this.item.additionalServiceCost)+ Number(this.squarefeetPrice) + Number(this.yearBuiltPrice);
+        //this.item.packagePrice = Number(this.item.packagePrice) + Number(this.item.additionalServiceCost)+ Number(this.squarefeetPrice) + Number(this.yearBuiltPrice);
         this.finalServiceCost = Number(this.serviceCost) + Number(this.item.additionalServiceCost);
+        this.item.calculatedPrice = this.finalServiceCost;
         if(type == 'finalsave'){
           this.save();
+        }else{
+          this.item.packagePrice = Number(this.item.packagePrice) + Number(this.item.additionalServiceCost)+ Number(this.squarefeetPrice) + Number(this.yearBuiltPrice);
         }
       });
     }
+  }
+
+  changePrice(event:any){
+    console.log(event)
   }
 
 }
