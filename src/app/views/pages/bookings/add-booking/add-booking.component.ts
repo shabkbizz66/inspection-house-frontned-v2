@@ -357,8 +357,8 @@ export class AddBookingComponent implements OnInit {
 
     this.item.packagePrice = Number(this.item.packagePrice) + Number(this.item.additionalServiceCost);*/
     this.item.bookingType = 'Admin';
-    console.log(this.item)
-    return false;
+    //console.log(this.item)
+    
     if (this.item.id) {
       this.bookingService.update(this.globals.updateBooking,this.item).then((response) => {
         this.showToast('Booking Updated Successfully');
