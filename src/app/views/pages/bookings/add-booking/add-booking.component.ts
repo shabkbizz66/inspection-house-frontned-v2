@@ -59,6 +59,8 @@ export class AddBookingComponent implements OnInit {
   subPackage: boolean = false;
   slotBooked: boolean = false;
   showpckg: boolean = false;
+  ontheflyInspectorID: string = '0';
+  inspectorAlert: string='';
   
   constructor(private calendar: NgbCalendar,
     public globals: GlobalConstants,
@@ -301,9 +303,14 @@ export class AddBookingComponent implements OnInit {
   onTimeChange(event:any){
     this.item.inspectionTime = event.target.value;
     this.bookingService.get(this.globals.getInspectorDetalils+'?date='+this.item.inspectionDate+'&time='+this.item.inspectionTime+'&lat='+this.item.latitude+'&long='+this.item.longitude).then((response:any) => {
-      this.showInspectorName = response.response.inspector_name;
+      if(response.response.inspector_name == 0){
+        this.showInspectorName = 'Sorry! No Inspectors are Available';
+        this.inspectorAlert = 'inspectorAlert';
+      }else{
+        this.showInspectorName = response.response.inspector_name;
+        this.ontheflyInspectorID = response.response.inspector_id;
+      }
     });
-    
   }
 
   /*search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
@@ -491,6 +498,11 @@ export class AddBookingComponent implements OnInit {
   }
 
   getExtracPrice(event: any){
+    
+    if(this.ontheflyInspectorID == '0'){
+      return;
+    }
+
     const button = (event.srcElement.disabled === undefined) ? event.srcElement.parentElement : event.srcElement;
     button.setAttribute('disabled', true);
 
