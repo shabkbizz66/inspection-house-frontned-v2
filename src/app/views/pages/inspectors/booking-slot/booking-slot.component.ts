@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { BlockSlotModel } from '../blockslot.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GlobalConstants } from '../../../../global-constants';
 import { RejectedResponse } from '../../../models/rejected-response';
 import { AlertService } from '../../alert/alert.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDateStruct, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { InspectorService } from '../inspector.service';
 import swal from 'sweetalert2'; 
 import { DataTable } from "simple-datatables";
+import { DatatableComponent } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-booking-slot',
@@ -17,6 +18,7 @@ import { DataTable } from "simple-datatables";
 })
 export class BookingSlotComponent implements OnInit {
 
+  @ViewChild('basicModal') basicModal: any;
   formGroup: FormGroup;
   submitted: boolean = false;
   item: BlockSlotModel = new BlockSlotModel();
@@ -35,10 +37,16 @@ export class BookingSlotComponent implements OnInit {
   savedData: any;
   currentId: string;
   blockType: string;
+  modalReference: NgbModalRef;
+  deleteId: string;
+
+  @ViewChild('firstTable') myTable1: DatatableComponent;
+  columns: any;
 
   constructor(public globals: GlobalConstants,
     private inspectorService: InspectorService,
     public alertService: AlertService,
+    private modalService: NgbModal,
     private calendar: NgbCalendar,
     private activatedRoute: ActivatedRoute,
     private router: Router) { 
@@ -51,8 +59,18 @@ export class BookingSlotComponent implements OnInit {
     }
 
   ngOnInit(): void {
+
+    this.columns = [
+      { name: 'Start Date'},
+      { name: 'End Date' },
+      { name: 'Start Time' },
+      { name: 'End Time' },
+      { name: 'Action' }
+     ];
+
     this.activatedRoute.params.subscribe((params) => {
       var id = params["id"];
+      var editId = params['editId'];
       this.currentId = id;
       if (id) {
 
@@ -86,7 +104,8 @@ export class BookingSlotComponent implements OnInit {
                 "Start Date",
                 "End Date",
                 "Start Time",
-                "End Time"
+                "End Time",
+                "Action"
               ],
               data: []
             };
@@ -112,6 +131,15 @@ export class BookingSlotComponent implements OnInit {
                 end = '06:00 pm';
               }
               obj.data[y].push(end);
+
+              let id = "/inspectors/blockslot/edit/"+this.currentId+"/"+element.id;
+              var popup = "<a id='"+element.id+"' title='Delete Slot'><i class='feather icon-delete'></i></a>";
+              let url = '<a href="'+id+'" title="Edit Slot"><i class="feather icon-edit"></i></a>&nbsp;&nbsp;'+popup;
+            
+            
+              //console.log(url)
+              obj.data[y].push(url);
+
               //obj.data[y].push(element.endTime);
               y = y+1;
             });    
@@ -124,12 +152,38 @@ export class BookingSlotComponent implements OnInit {
             //this.selectedDate = this.calendar.getToday();
             //this.item.startDate = this.selectedDate.year+"-"+('0'+this.selectedDate.month).slice(-2)+"-"+('0'+this.selectedDate.day).slice(-2);
           }
-          this.item.inspectorId = id;
-            this.selectedDate = this.calendar.getToday();
-            this.item.startDate = this.selectedDate.year+"-"+('0'+this.selectedDate.month).slice(-2)+"-"+('0'+this.selectedDate.day).slice(-2);
+
           
+
+
+          this.item.inspectorId = id;
+          this.selectedDate = this.calendar.getToday();
+          this.item.startDate = this.selectedDate.year+"-"+('0'+this.selectedDate.month).slice(-2)+"-"+('0'+this.selectedDate.day).slice(-2);
+          
+          if(editId != ''){
+            const info = this.savedData.find((x: any) => x.id == editId);
+            this.item = info;
+            const [year, month, day] = this.item.startDate.split('-');
+            const obj = { year: Number(year), month: Number(month), day: Number(day.split(' ')[0].trim()) };
+            this.selectedDate = obj;
+
+            const [year1, month1, day1] = this.item.endDate.split('-');
+            const obj1 = { year: Number(year1), month: Number(month1), day: Number(day1.split(' ')[0].trim()) };
+            this.endDate = obj1;
+
+            if(this.item.startTime == '09:00:00' && this.item.endTime == '17:59:00'){
+              this.blockType = 'All Day';
+            }else if(this.item.startTime == '09:00:00' && this.item.endTime == '13:59:00'){
+              this.blockType = "09:00:00";
+            }else{
+              this.blockType = "14:00:00";
+            }
+          }
+
+
         });
 
+        
         
       }
     });
@@ -197,11 +251,10 @@ export class BookingSlotComponent implements OnInit {
       return;
     }
 
-    console.log(this.item);
     if (this.item.id) {
-      /*this.inspectorService.update(this.globals.updateBlockslot,this.item).then((response) => {
+      this.inspectorService.update(this.globals.updateBlockslot,this.item).then((response) => {
         this.showToast('Slot Updated Successfully');
-        this.backToList();
+        this.reloadPage(this.currentId);
         //this.SpinnerService.hide();
       },
         (rejected: RejectedResponse) => {
@@ -209,7 +262,7 @@ export class BookingSlotComponent implements OnInit {
           this.alertService.error('There is something wrong',this.options);
           //this.alertService.BindServerErrors(this.formGroup, rejected);
         }
-      );*/
+      );
     } else {
       this.item.id = '';
       this.inspectorService.create(this.globals.saveBlockSlot,this.item).then((response) => {
@@ -239,5 +292,37 @@ export class BookingSlotComponent implements OnInit {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
     this.router.navigate(['/inspectors/blockslot/'+id]);
+  }
+  
+  deleteSlot(event: any){
+    const target  = event.target || event.srcElement || event.currentTarget;
+    this.deleteId = event.target.parentElement.id;
+    if(this.deleteId != ''){
+      this.openPopup(this.basicModal);
+    }
+  }
+
+  deleteSlotDe(id: string){
+    this.modalReference.close();
+    this.inspectorService.create(this.globals.deleteBlockSlot+'?id='+id,this.item).then((response) => {
+      this.showToast('Delete Successfully');
+      this.reloadPage(this.currentId);
+      //this.SpinnerService.hide();
+    },
+      (rejected: RejectedResponse) => {
+        this.item.id = '';
+        this.alertService.error('There is something wrong',this.options);
+        //this.alertService.BindServerErrors(this.formGroup, rejected);
+      }
+    );
+  }
+
+  openPopup(content: TemplateRef<any>) {
+    this.modalReference = this.modalService.open(content);
+  }
+
+  closePopup(){
+    this.modalReference.close();
+    this.formGroup.reset();
   }
 }

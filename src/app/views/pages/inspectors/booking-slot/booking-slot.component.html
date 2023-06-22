@@ -79,7 +79,7 @@
     <div class="col-md-12 stretch-card">
       <div class="card">
         <div class="card-body">
-          <div class="table-responsive">
+          <div class="table-responsive" (click)="deleteSlot($event)">
             <table id="dataTableExample" class="table table-striped-new">
               <thead>
                 <tr>
@@ -87,11 +87,17 @@
                   <th>End Date</th>
                   <th>Start Time</th>
                   <th>End Time</th>
-                  <!--<th>Created At</th>
-                  <th>Action</th>-->
+                  <!--<th>Action</th>-->
                 </tr>
               </thead>
               <tbody>
+                <!--<tr *ngFor="let data of savedData">
+                  <td>{{data.startDate}}</td>
+                  <td>End Date</td>
+                  <td>Start Time</td>
+                  <td>End Time</td>
+                  <td>dasdAction</td>
+                </tr>-->
               </tbody>
               <tfoot>
                 <tr>
@@ -109,3 +115,22 @@
       </div>
     </div>
   </div>
+
+  <ng-template #basicModal let-modal>
+    
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <p style="text-align: center;">Are you sure you want to delete block slot?</p>
+        </div>
+        
+        <div class="modal-footer" style="border: none; display: block; text-align: center;">
+          <button type="button" class="btn btn-secondary" (click)="closePopup()">No</button>
+          <button type="button" class="btn btn-primary" (click)="deleteSlotDe(deleteId)">Yes</button>
+        </div>
+      </div>
+    
+  </ng-template>

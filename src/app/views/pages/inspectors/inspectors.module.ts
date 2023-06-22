@@ -11,6 +11,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AlertModule } from '../alert/alert.module';
 import { FeatherIconModule } from '../../../core/feather-icon/feather-icon.module';
 import { BookingSlotComponent } from './booking-slot/booking-slot.component';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 const routes: Routes = [
   {
@@ -33,6 +34,10 @@ const routes: Routes = [
         path: 'blockslot/:id',
         component: BookingSlotComponent
       },
+      {
+        path: 'blockslot/edit/:id/:editId',
+        component: BookingSlotComponent
+      }
     ]
   }
 ]
@@ -55,7 +60,8 @@ const routes: Routes = [
     NgxMaskModule.forRoot({ validation: true}), // Ngx-mask
     AlertModule,
     GooglePlaceModule,
-    FeatherIconModule
+    FeatherIconModule,
+    NgxDatatableModule 
   ]
 })
 export class InspectorsModule { }
