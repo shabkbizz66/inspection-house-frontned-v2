@@ -9,6 +9,7 @@ import { reassignModel } from '../booking.model';
 import swal from 'sweetalert2'; 
 import { RejectedResponse } from '../../../models/rejected-response';
 import { Router } from '@angular/router';
+import { AlertService } from '../../alert/alert.service';
 
 @Component({
   selector: 'app-list-bookings',
@@ -18,6 +19,7 @@ import { Router } from '@angular/router';
 export class ListBookingsComponent implements OnInit {
 
   @ViewChild('basicModal') basicModal: any;
+  @ViewChild('deleteModal') deleteModal: any;
 
   bookingData: any;
   displayStyle = "none";
@@ -31,11 +33,13 @@ export class ListBookingsComponent implements OnInit {
   inspectionNewDate: NgbDateStruct;
   date: { year: number; month: number };
   minDate: any;
+  cancelId: number = 0;
 
   constructor(private bookingService: BookingService,
     private modalService: NgbModal,
     private calendar: NgbCalendar,
     private router: Router,
+    public alertService: AlertService,
     public globals: GlobalConstants) { 
       const current = new Date();
       this.minDate = {
@@ -82,6 +86,7 @@ export class ListBookingsComponent implements OnInit {
           "Payment Status",
           "Agreement",
           'Booking Type',
+          'Status',
           "Created At",
           "Action"
         ],
@@ -102,6 +107,9 @@ export class ListBookingsComponent implements OnInit {
         obj.data[y].push('$'+element.packagePrice);
         obj.data[y].push(element.officerName);
         obj.data[y].push(element.squareFeet);
+        /*if(element.paymentStatus == 'PENDING'){
+          element.paymentStatus = '<a id="" name="'+element.id+'" (click)="updatePaymentStatus('+element.id+')"><span>Awaiting</span></a>';
+        }*/
         obj.data[y].push(element.paymentStatus);
         let vid = "/bookings/agreement/"+element.id;
         if(element.paymentStatus == 'PAID'){
@@ -111,10 +119,13 @@ export class ListBookingsComponent implements OnInit {
         }
         obj.data[y].push(agreementurl);
         obj.data[y].push(element.bookingType);
+        obj.data[y].push(element.status);
         obj.data[y].push(element.createdDate);
         let id = "/bookings/edit/"+element.id;
         var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector'><i class='feather icon-user'></i></a>";
-        let url = '<a href="'+id+'" title="View Booking"><i class="feather icon-eye"></i></a>&nbsp;&nbsp;'+popup;
+        var popupdelete = "&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' nm='22' title='Cancel Booking'><i class='feather icon-delete'></i></a>";
+        
+        let url = '<a href="'+id+'" title="View Booking"><i class="feather icon-eye"></i></a>&nbsp;&nbsp;'+popup+popupdelete;
        
        
         //console.log(url)
@@ -150,6 +161,8 @@ export class ListBookingsComponent implements OnInit {
     this.item = new reassignModel();
     const target  = event.target || event.srcElement || event.currentTarget;
     const dataId = event.target.parentElement.id;
+    const statusupate = event.target.parentElement.name;
+    const cancelsatus = Number(event.target.parentElement.className);
     if(dataId != ''){
       //console.log(event.target.parentElement.id);
       //console.log('ss')
@@ -159,6 +172,11 @@ export class ListBookingsComponent implements OnInit {
       });
       this.item.id = dataId;
       this.openPopup(this.basicModal);
+    }else if(cancelsatus > 0){
+      this.cancelId = cancelsatus;
+      this.openCancelPopup(this.deleteModal);
+    }else{
+      console.log(statusupate);
     }
    
   }
@@ -242,5 +260,28 @@ export class ListBookingsComponent implements OnInit {
     });
     
   }*/
+
+  updatePaymentStatus(id: string){
+    console.log(id)
+  }
+
+  openCancelPopup(content: TemplateRef<any>) {
+    this.modalReference = this.modalService.open(content);
+  }
+
+  cancelBooking(id: number){
+    this.modalReference.close();
+    this.bookingService.create(this.globals.cancelBooking+'?id='+id+'&status=Cancelled',this.item).then((response) => {
+      this.showToast('Booking Cancelled Successfully');
+      this.backtoList();
+      //this.SpinnerService.hide();
+    },
+      (rejected: RejectedResponse) => {
+        this.item.id = '';
+        //this.alertService.error('There is something wrong',this.options);
+        //this.alertService.BindServerErrors(this.formGroup, rejected);
+      }
+    );
+  }
 
 }

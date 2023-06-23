@@ -136,3 +136,23 @@
     </div>
   </form>
 </ng-template>
+
+
+<ng-template #deleteModal let-modal>
+    
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Confirm Cancel Booking</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <p style="text-align: center;">Are you sure you want to cancel this Booking?</p>
+    </div>
+    
+    <div class="modal-footer" style="border: none; display: block; text-align: center;">
+      <button type="button" class="btn btn-secondary" (click)="closePopup()">No</button>
+      <button type="button" class="btn btn-primary" (click)="cancelBooking(cancelId)">Yes</button>
+    </div>
+  </div>
+
+</ng-template>

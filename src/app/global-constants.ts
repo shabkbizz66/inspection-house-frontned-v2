@@ -12,6 +12,7 @@ export class GlobalConstants {
     getBookingList: string = "v1/booking";
     saveBooking: string = 'v1/booking';
     updateBooking: string = 'v1/updateBooking';
+    cancelBooking: string = 'v1/booking/bookingStatusUpdate';
     getBookingById: string = 'v1/booking/getBooking';
 
     getAgentList: string = 'v1/agents';
@@ -20,6 +21,7 @@ export class GlobalConstants {
     getPricing: string = 'v1/booking/getPrices';
     getDashboard: string = 'v1/booking/getDashboardCounts';
     getInspectorDetalils: string = 'v1/officer/getOfficerName';
+     
 
     saveBlockSlot = 'v1/bookingslot';
     getBlockSlot = 'v1/bookingslot/getBookingSlotByInspectorId';
