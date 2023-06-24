@@ -14,6 +14,7 @@ export class GlobalConstants {
     updateBooking: string = 'v1/updateBooking';
     cancelBooking: string = 'v1/booking/bookingStatusUpdate';
     getBookingById: string = 'v1/booking/getBooking';
+    sendEmail: string = 'v1/booking/sendPaymentLinkEmail';
 
     getAgentList: string = 'v1/agents';
     getAvailableSlots: string = 'v1/booking/getBookingSlot';

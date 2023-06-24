@@ -156,3 +156,22 @@
   </div>
 
 </ng-template>
+
+<ng-template #emailModal let-modal>
+    
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Send Payment Link Email</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <p style="text-align: center;">Are you sure you want to resend email for this booking?</p>
+    </div>
+    
+    <div class="modal-footer" style="border: none; display: block; text-align: center;">
+      <button type="button" class="btn btn-secondary" (click)="closePopup()">No</button>
+      <button type="button" class="btn btn-primary" (click)="sendEmail(sendEmailId)">Yes</button>
+    </div>
+  </div>
+
+</ng-template>
