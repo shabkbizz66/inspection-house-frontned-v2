@@ -20,6 +20,7 @@ export class ListBookingsComponent implements OnInit {
 
   @ViewChild('basicModal') basicModal: any;
   @ViewChild('deleteModal') deleteModal: any;
+  @ViewChild('emailModal') emailModal: any;
 
   bookingData: any;
   displayStyle = "none";
@@ -34,6 +35,7 @@ export class ListBookingsComponent implements OnInit {
   date: { year: number; month: number };
   minDate: any;
   cancelId: number = 0;
+  sendEmailId: number = 0;
 
   constructor(private bookingService: BookingService,
     private modalService: NgbModal,
@@ -123,9 +125,10 @@ export class ListBookingsComponent implements OnInit {
         obj.data[y].push(element.createdDate);
         let id = "/bookings/edit/"+element.id;
         var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector'><i class='feather icon-user'></i></a>";
-        var popupdelete = "&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' nm='22' title='Cancel Booking'><i class='feather icon-delete'></i></a>";
+        var popupdelete = "&nbsp;&nbsp;&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' nm='22' title='Cancel Booking'><i class='feather icon-delete'></i></span>";
+        var sendmail = "&nbsp;&nbsp;&nbsp;&nbsp;<a id='' class='' name='"+element.id+"'  style='cursor: pointer;' title='Resend Email'><i class='feather icon-mail'></i></a>";
         
-        let url = '<a href="'+id+'" title="View Booking"><i class="feather icon-eye"></i></a>&nbsp;&nbsp;'+popup+popupdelete;
+        let url = '<a href="'+id+'" title="View Booking"><i class="feather icon-eye"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;'+popup+popupdelete+sendmail;
        
        
         //console.log(url)
@@ -161,7 +164,7 @@ export class ListBookingsComponent implements OnInit {
     this.item = new reassignModel();
     const target  = event.target || event.srcElement || event.currentTarget;
     const dataId = event.target.parentElement.id;
-    const statusupate = event.target.parentElement.name;
+    const sendemail = Number(event.target.parentElement.name);
     const cancelsatus = Number(event.target.parentElement.className);
     if(dataId != ''){
       //console.log(event.target.parentElement.id);
@@ -175,8 +178,11 @@ export class ListBookingsComponent implements OnInit {
     }else if(cancelsatus > 0){
       this.cancelId = cancelsatus;
       this.openCancelPopup(this.deleteModal);
+    }else if(sendemail > 0){
+      this.sendEmailId = cancelsatus;
+      this.openMailPopup(this.emailModal);
     }else{
-      console.log(statusupate);
+      
     }
    
   }
@@ -273,6 +279,25 @@ export class ListBookingsComponent implements OnInit {
     this.modalReference.close();
     this.bookingService.create(this.globals.cancelBooking+'?id='+id+'&status=Cancelled',this.item).then((response) => {
       this.showToast('Booking Cancelled Successfully');
+      this.backtoList();
+      //this.SpinnerService.hide();
+    },
+      (rejected: RejectedResponse) => {
+        this.item.id = '';
+        //this.alertService.error('There is something wrong',this.options);
+        //this.alertService.BindServerErrors(this.formGroup, rejected);
+      }
+    );
+  }
+
+  openMailPopup(content: TemplateRef<any>) {
+    this.modalReference = this.modalService.open(content);
+  }
+
+  sendEmail(id: number){
+    this.modalReference.close();
+    this.bookingService.create(this.globals.sendEmail+'?id='+id,this.item).then((response) => {
+      this.showToast('Email has been send Successfully');
       this.backtoList();
       //this.SpinnerService.hide();
     },
