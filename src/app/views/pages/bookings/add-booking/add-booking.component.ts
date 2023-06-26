@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { BookingModel } from '../booking.model';
+import { BookingModel, notesModel } from '../booking.model';
 import { NgbDateStruct, NgbDatepicker,NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { GlobalConstants } from '../../../,,/../../global-constants';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { BookingService } from '../booking.service';
 import { RejectedResponse } from '../../../models/rejected-response';
 import { AlertService } from '../../alert/alert.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DataTable } from "simple-datatables";
 
 @Component({
   selector: 'app-add-booking',
@@ -61,6 +62,12 @@ export class AddBookingComponent implements OnInit {
   showpckg: boolean = false;
   ontheflyInspectorID: string = '0';
   inspectorAlert: string='';
+  defaultNavActiveId = 1;
+  onEditView: string = 'disabled';
+
+  itemNotes: notesModel = new notesModel();
+  notesformGroup: FormGroup;
+  notesData: any;
   
   constructor(private calendar: NgbCalendar,
     public globals: GlobalConstants,
@@ -104,6 +111,39 @@ export class AddBookingComponent implements OnInit {
 
           this.serviceCost = Number(this.item.packagePrice) - Number(this.item.additionalServiceCost);
           this.additionalServicesCost = this.item.additionalServiceCost;
+          
+          this.onEditView = '';
+          this.itemNotes.bookingId = id;
+          //this.getNotesList(id);
+          
+          this.bookingService.get(this.globals.getBookingNotes+'?id='+id).then((Response: any) => {
+            this.notesData = Response.response;
+            
+            let obj: any = {
+              headings: [
+                "No",
+                "Notes",
+                "Created By"
+              ],
+              data: []
+            };
+      
+            let y = 0;
+           
+              this.notesData.forEach((element: any) => {
+                obj.data[y] = [];
+                obj.data[y].push(y+1);
+                obj.data[y].push(element.notes);
+                obj.data[y].push(element.createdBy);
+                y = y+1;
+              }); 
+              console.log(obj)
+              /*let dataTable = new DataTable("#dataTableExample1", {
+                data: obj,
+              });*/  
+           
+            
+          });
           //this.finalServiceCost = this.item.packagePrice;
 
           //this.saveLabel = 'Update Inspector';
@@ -129,6 +169,10 @@ export class AddBookingComponent implements OnInit {
 
   get f() { 
     return this.formGroup.controls; 
+  }
+
+  get f1() { 
+    return this.notesformGroup.controls; 
   }
 
   options: any = {
@@ -224,6 +268,10 @@ export class AddBookingComponent implements OnInit {
       additionalServices: new FormControl(''),
       packagePrice: new FormControl('',Validators.required),
       comments: new FormControl('')
+    });
+
+    this.notesformGroup = new FormGroup({
+      notes: new FormControl('',Validators.required)
     });
   }
 
@@ -575,4 +623,64 @@ export class AddBookingComponent implements OnInit {
     console.log(event)
   }
 
+  saveNotes(event: any){
+    console.log(this.notesformGroup)
+    this.submitted = true;
+    this.notesformGroup.markAllAsTouched();
+    if (this.notesformGroup.invalid) {
+      return;
+    }
+
+    if (this.itemNotes.bookingId) {
+      this.bookingService.create(this.globals.saveBookingNotes,this.itemNotes).then((response) => {
+        this.showToast('Notes added Successfully');
+        this.backToEditList(this.itemNotes.bookingId);
+      },
+        (rejected: RejectedResponse) => {
+          this.item.id = '';
+          this.alertService.error('There is something wrong',this.options);
+          //this.alertService.BindServerErrors(this.formGroup, rejected);
+        }
+      );
+    } 
+  }
+
+  backToEditList(id: string){
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate(['/bookings/edit/'+id]);
+  }
+
+  public getNotesList(id: string){
+    this.bookingService.get(this.globals.getBookingNotes+'?id='+id).then((Response: any) => {
+      this.notesData = Response.response;
+      
+      let obj: any = {
+        headings: [
+          "No",
+          "Notes",
+          "Created By"
+        ],
+        data: []
+      };
+
+      let y = 0;
+     if(this.notesData.length > 0){
+        this.notesData.forEach((element: any) => {
+          obj.data[y] = [];
+          obj.data[y].push(y+1);
+          obj.data[y].push(element.notes);
+          obj.data[y].push(element.createdBy);
+          y = y+1;
+        }); 
+        let dataTable = new DataTable("#dataTableExample", {
+          data: obj,
+        });  
+     }
+      
+    });
+    
+  }
+
+  
 }
