@@ -49,3 +49,10 @@ export class reassignModel{
     id: string;
     inspectorId: string;
 }
+
+export class notesModel{
+    id: string;
+    bookingId: string;
+    notes: string;
+    createdBy: string;
+}
