@@ -160,7 +160,7 @@ export class BookingSlotComponent implements OnInit {
           this.selectedDate = this.calendar.getToday();
           this.item.startDate = this.selectedDate.year+"-"+('0'+this.selectedDate.month).slice(-2)+"-"+('0'+this.selectedDate.day).slice(-2);
           
-          if(editId != ''){
+          if(editId){
             const info = this.savedData.find((x: any) => x.id == editId);
             this.item = info;
             const [year, month, day] = this.item.startDate.split('-');
