@@ -75,9 +75,9 @@ export class ListBookingsComponent implements OnInit {
       let obj: any = {
         // Quickly get the headings
         headings: [
-          "No",
-          "Inspection Type",
+          "Action",
           "Full Name",
+          "Address",
           "Email",
           "Phone",
           "Inspection Date/Time",
@@ -90,7 +90,7 @@ export class ListBookingsComponent implements OnInit {
           'Booking Type',
           'Status',
           "Created At",
-          "Action"
+          
         ],
         data: []
       };
@@ -98,9 +98,22 @@ export class ListBookingsComponent implements OnInit {
       let y = 0;
       this.bookingData.forEach((element: any) => {
         obj.data[y] = [];
-        obj.data[y].push(y+1);
-        obj.data[y].push(element.inspectionType);
+
+
+        let id = "/bookings/edit/"+element.id;
+        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector'><i class='feather icon-user'></i></a>";
+        var popupdelete = "&nbsp;&nbsp;&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' nm='22' title='Cancel Booking'><i class='feather icon-delete'></i></span>";
+        var sendmail = "&nbsp;&nbsp;&nbsp;&nbsp;<a id='' class='' name='"+element.id+"'  style='cursor: pointer;' title='Resend Email'><i class='feather icon-mail'></i></a>";
+        
+        let url = '<a href="'+id+'" title="View Booking"><i class="feather icon-eye"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;'+popup+popupdelete+sendmail;
+       
+       
+        //console.log(url)
+        obj.data[y].push(url);
+
+        //obj.data[y].push(y+1);
         obj.data[y].push(element.firstName+' '+element.lastName);
+        obj.data[y].push(element.address);
         obj.data[y].push(element.email);
         obj.data[y].push(this.formatPhoneNumber(element.phone));
         obj.data[y].push(this.formatDate(element.inspectionDate)+' '+element.inspectionTime);
@@ -123,16 +136,7 @@ export class ListBookingsComponent implements OnInit {
         obj.data[y].push(element.bookingType);
         obj.data[y].push(element.status);
         obj.data[y].push(element.createdDate);
-        let id = "/bookings/edit/"+element.id;
-        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector'><i class='feather icon-user'></i></a>";
-        var popupdelete = "&nbsp;&nbsp;&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' nm='22' title='Cancel Booking'><i class='feather icon-delete'></i></span>";
-        var sendmail = "&nbsp;&nbsp;&nbsp;&nbsp;<a id='' class='' name='"+element.id+"'  style='cursor: pointer;' title='Resend Email'><i class='feather icon-mail'></i></a>";
         
-        let url = '<a href="'+id+'" title="View Booking"><i class="feather icon-eye"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;'+popup+popupdelete+sendmail;
-       
-       
-        //console.log(url)
-        obj.data[y].push(url);
         y = y+1;
       });   
       let dataTable = new DataTable("#dataTableExample", {
