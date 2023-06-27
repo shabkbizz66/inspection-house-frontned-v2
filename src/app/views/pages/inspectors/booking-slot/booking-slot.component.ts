@@ -252,7 +252,7 @@ export class BookingSlotComponent implements OnInit {
     }
 
     if (this.item.id) {
-      this.inspectorService.update(this.globals.updateBlockslot,this.item).then((response) => {
+      this.inspectorService.create(this.globals.updateBlockslot,this.item).then((response) => {
         this.showToast('Slot Updated Successfully');
         this.reloadPage(this.currentId);
         //this.SpinnerService.hide();
