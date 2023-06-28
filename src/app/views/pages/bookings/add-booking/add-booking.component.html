@@ -29,6 +29,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-sm-2">
+
+                                        </div>
+                                        <div class="col-sm-6" *ngIf="!saveButton">
+                                            <b>Payment URL :</b> {{paymentUrl}} &nbsp;&nbsp; <button style="background: #1C315F; border:none;" type="button" class="btn btn-success" (click)="copyURL();">Copy URL</button>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-3">
