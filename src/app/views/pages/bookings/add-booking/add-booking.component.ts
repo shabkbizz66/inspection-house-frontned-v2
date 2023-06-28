@@ -68,6 +68,7 @@ export class AddBookingComponent implements OnInit {
   itemNotes: notesModel = new notesModel();
   notesformGroup: FormGroup;
   notesData: any;
+  paymentUrl: string;
   
   constructor(private calendar: NgbCalendar,
     public globals: GlobalConstants,
@@ -115,6 +116,9 @@ export class AddBookingComponent implements OnInit {
           this.onEditView = '';
           this.itemNotes.bookingId = id;
           //this.getNotesList(id);
+          let url = "https://www.theinspectionhouse.com/payment/?td=";
+          let convertid = btoa(id);
+          this.paymentUrl = url+convertid;
           
           this.bookingService.get(this.globals.getBookingNotes+'?id='+id).then((Response: any) => {
             this.notesData = Response.response;
@@ -680,6 +684,20 @@ export class AddBookingComponent implements OnInit {
       
     });
     
+  }
+
+  copyURL(){
+    let selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = this.paymentUrl;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 
   
