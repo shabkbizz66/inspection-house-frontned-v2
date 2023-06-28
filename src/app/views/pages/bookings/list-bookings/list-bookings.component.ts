@@ -183,7 +183,7 @@ export class ListBookingsComponent implements OnInit {
       this.cancelId = cancelsatus;
       this.openCancelPopup(this.deleteModal);
     }else if(sendemail > 0){
-      this.sendEmailId = cancelsatus;
+      this.sendEmailId = sendemail;
       this.openMailPopup(this.emailModal);
     }else{
       
