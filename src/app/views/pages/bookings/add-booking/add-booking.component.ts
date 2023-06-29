@@ -461,6 +461,8 @@ export class AddBookingComponent implements OnInit {
   }
 
   blockBookingSlots(date: string){
+    this.i1 = true;
+    this.i6 = true;
     this.bookingService.get(this.globals.getAvailableSlots+'?date='+date).then((Response: any) => {
       //console.log(Response);
 
