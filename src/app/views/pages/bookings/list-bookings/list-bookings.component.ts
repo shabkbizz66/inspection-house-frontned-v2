@@ -116,7 +116,13 @@ export class ListBookingsComponent implements OnInit {
         obj.data[y].push(element.address);
         obj.data[y].push(element.email);
         obj.data[y].push(this.formatPhoneNumber(element.phone));
-        obj.data[y].push(this.formatDate(element.inspectionDate)+' '+element.inspectionTime);
+        if(element.inspectionTime == '09:00:00'){
+          var ctime = '09:00 am';
+        }else{
+          var ctime = '02:00 pm';
+        }
+        
+        obj.data[y].push(this.formatDate(element.inspectionDate)+' '+ctime);
 
         obj.data[y].push(element.packageName);
         obj.data[y].push('$'+element.packagePrice);
