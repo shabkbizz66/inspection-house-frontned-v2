@@ -457,6 +457,7 @@ export class AddBookingComponent implements OnInit {
     //console.log(event);
     this.item.inspectionDate = event.year+"-"+('0'+event.month).slice(-2)+"-"+('0'+event.day).slice(-2);
     //console.log(this.item.inspectionDate)
+    this.item.inspectionTime = '';
     this.blockBookingSlots(this.item.inspectionDate);
   }
 
