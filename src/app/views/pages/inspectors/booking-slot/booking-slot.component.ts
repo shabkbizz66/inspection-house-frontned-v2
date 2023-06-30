@@ -251,6 +251,13 @@ export class BookingSlotComponent implements OnInit {
       return;
     }
 
+    let startvalue = new Date(this.item.startDate).valueOf();
+    let endvalue = new Date(this.item.endDate).valueOf();
+    if(startvalue > endvalue){
+      this.showErrorToast('Please enter correct start and end date');
+      return;
+    }
+
     if (this.item.id) {
       this.inspectorService.create(this.globals.updateBlockslot,this.item).then((response) => {
         this.showToast('Slot Updated Successfully');
@@ -282,6 +289,10 @@ export class BookingSlotComponent implements OnInit {
 
   showToast(msg: string){
     swal.fire({ showConfirmButton: false, timer: 1800, title: 'Success!', text: msg, icon: 'success', });
+  }
+
+  showErrorToast(msg:string){
+    swal.fire({ showConfirmButton: false, timer: 2000, title: 'Success!', text: msg, icon: 'error', });
   }
 
   public backToList(){
