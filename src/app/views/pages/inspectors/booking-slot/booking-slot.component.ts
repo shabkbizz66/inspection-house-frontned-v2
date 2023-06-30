@@ -254,6 +254,7 @@ export class BookingSlotComponent implements OnInit {
     let startvalue = new Date(this.item.startDate).valueOf();
     let endvalue = new Date(this.item.endDate).valueOf();
     if(startvalue > endvalue){
+      button.removeAttribute('disabled');
       this.showErrorToast('Please enter correct start and end date');
       return;
     }
