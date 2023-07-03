@@ -45,6 +45,9 @@ export class DashboardComponent implements OnInit {
   currentDate: NgbDateStruct;
   totalInspector: number = 0;
   totalBookings: number = 0;
+  todayBooking: number = 0;
+  thisweekBooking: number = 0;
+  thismonthBooking: number = 0;
 
   constructor(private calendar: NgbCalendar,
     private bookingService: BookingService,
@@ -68,6 +71,9 @@ export class DashboardComponent implements OnInit {
     this.bookingService.get(this.globals.getDashboard).then((Response: any) => {
       this.totalInspector = Response.officerCount;
       this.totalBookings = Response.bookingCount;
+      //this.todayBooking = Response.todaybooking;
+      //this.thisweekBooking = Response.thisweekbooking;
+      //this.thismonthBooking = Response.thismonthbooking;
     });
 
   }

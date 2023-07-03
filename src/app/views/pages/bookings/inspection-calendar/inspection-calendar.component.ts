@@ -60,14 +60,20 @@ export class InspectionCalendarComponent implements OnInit {
       this.bookingData = Response.response;
       let y = 0;
       this.bookingData.forEach((element: any) => {
+        if(element.inspectionTime == '09:00:00'){
+          var endtime = element.inspectionDate+'T13:30:00';
+        }else{
+          var endtime = element.inspectionDate+'T17:30:00';
+        }
         let arr: any = [];
         arr.id = element.id;
         arr.start = element.inspectionDate+'T'+element.inspectionTime;
-        //arr.end = element.inspectionDate+'T09:00:00';
-        arr.title = element.firstName+' '+element.lastName+ ' | '+element.officerName;
+        arr.end = endtime; //element.inspectionDate+'T09:00:00';
+        arr.title = element.firstName+' '+element.lastName+ ' \n '+element.officerName;
         arr.backgroundColor =  'rgba(1,104,250, .15)';
         arr.borderColor = '#0168fa';
         arr.display = 'block';
+        arr.className = 'eventWithComment';
         this.Events.push(arr);
       });
     });

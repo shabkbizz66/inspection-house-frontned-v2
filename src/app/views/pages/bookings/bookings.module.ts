@@ -31,6 +31,10 @@ const routes: Routes = [
         component: ListBookingsComponent
       },
       {
+        path: 'filter/:type',
+        component: ListBookingsComponent
+      },
+      {
         path: 'add',
         component: AddBookingComponent
       },

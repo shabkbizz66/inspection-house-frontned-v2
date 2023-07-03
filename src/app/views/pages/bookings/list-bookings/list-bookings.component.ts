@@ -53,10 +53,10 @@ export class ListBookingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      //type: new FormControl("", Validators.required),
-      //inspectionNewDate: new FormControl(""),
-      //inspectionNewTime: new FormControl(""),
-      inspectorId: new FormControl("",Validators.required),
+      type: new FormControl("", Validators.required),
+      inspectionNewDate: new FormControl(""),
+      inspectionNewTime: new FormControl(""),
+      inspectorId: new FormControl(""),
     });
     this.getBookingList();
   }
@@ -101,7 +101,7 @@ export class ListBookingsComponent implements OnInit {
 
 
         let id = "/bookings/edit/"+element.id;
-        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector'><i class='feather icon-user'></i></a>";
+        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector / Reschedule Booking'><i class='feather icon-user'></i></a>";
         var popupdelete = "&nbsp;&nbsp;&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' nm='22' title='Cancel Booking'><i class='feather icon-delete'></i></span>";
         var sendmail = "&nbsp;&nbsp;&nbsp;&nbsp;<a id='' class='' name='"+element.id+"'  style='cursor: pointer;' title='Resend Email'><i class='feather icon-mail'></i></a>";
         
@@ -222,8 +222,8 @@ export class ListBookingsComponent implements OnInit {
       //this.eventSave.event.srcElement.disabled = false;
       return;
     }
-    console.log(this.item);
-    
+    //console.log(this.item);
+    //return false;
     if (this.item.id) {
       let url = this.globals.updateBookingInspection+'?id='+this.item.id+'&officerId='+this.item.inspectorId; 
       console.log(url);
@@ -252,15 +252,20 @@ export class ListBookingsComponent implements OnInit {
   changeType(event: any){
     if(event.target.value == 'Reassign'){
       this.formGroup.controls['inspectorId'].setValidators([Validators.required]);
+      this.formGroup.controls['inspectionNewTime'].setValidators(null); 
+      this.formGroup.controls['inspectionNewDate'].setValidators(null);
+      this.formGroup.controls["inspectionNewTime"].updateValueAndValidity();
+      this.formGroup.controls["inspectionNewDate"].updateValueAndValidity();
       this.item.inspectionNewDate = '';
       this.item.inspectionNewTime = '';
     }else{
       this.item.inspectorId = '';
       this.inspectionNewDate = this.calendar.getToday();
       this.item.inspectionNewDate = this.inspectionNewDate.year+"-"+('0'+this.inspectionNewDate.month).slice(-2)+"-"+('0'+this.inspectionNewDate.day).slice(-2);
-      this.formGroup.controls['inspectorId'].clearValidators();
       this.formGroup.controls['inspectionNewTime'].setValidators([Validators.required]);
       this.formGroup.controls['inspectionNewDate'].setValidators([Validators.required]);
+      this.formGroup.controls['inspectorId'].setValidators(null);
+      this.formGroup.controls["inspectorId"].updateValueAndValidity();
     }
     this.formGroup.updateValueAndValidity();
   }
