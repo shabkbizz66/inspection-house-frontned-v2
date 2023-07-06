@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { DropzoneDirective, DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
+//import { DropzoneDirective, DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 
 @Component({
   selector: 'app-ngx-dropzone-wrapper',
@@ -9,15 +9,15 @@ import { DropzoneDirective, DropzoneConfigInterface } from 'ngx-dropzone-wrapper
 })
 export class NgxDropzoneWrapperComponent implements OnInit {
 
-  public config: DropzoneConfigInterface = {
+  /*public config: DropzoneConfigInterface = {
     clickable: true,
     maxFiles: 1,
     autoReset: null,
     errorReset: null,
     cancelReset: null
-  };
+  };*/
 
-  @ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
+  //@ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
 
   constructor() { }
 
@@ -32,10 +32,10 @@ export class NgxDropzoneWrapperComponent implements OnInit {
     console.log('onUploadSuccess:', event);
   }
 
-  resetDropzoneUploads(): void {
+  /*resetDropzoneUploads(): void {
     if (this.directiveRef) {
       this.directiveRef.reset();
     }
-  }
+  }*/
 
 }

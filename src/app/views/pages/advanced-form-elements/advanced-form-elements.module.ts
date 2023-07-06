@@ -19,7 +19,7 @@ import { TagInputModule } from 'ngx-chips';
 import { ColorPickerModule } from 'ngx-color-picker';
 
 // Ngx-dropzone-wrapper
-import { DropzoneModule } from 'ngx-dropzone-wrapper';
+/*import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { DROPZONE_CONFIG } from 'ngx-dropzone-wrapper';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
@@ -27,7 +27,7 @@ const DEFAULT_DROPZONE_CONFIG: DropzoneConfigInterface = {
   url: 'https://httpbin.org/post',
   maxFilesize: 50,
   acceptedFiles: 'image/*'
-};
+};*/
 
 import { AdvancedFormElementsComponent } from './advanced-form-elements.component';
 import { FormValidationComponent } from './form-validation/form-validation.component';
@@ -35,7 +35,7 @@ import { InputMaskComponent } from './input-mask/input-mask.component';
 import { NgSelectComponent } from './ng-select/ng-select.component';
 import { NgxChipsComponent } from './ngx-chips/ngx-chips.component';
 import { NgxColorPickerComponent } from './ngx-color-picker/ngx-color-picker.component';
-import { NgxDropzoneWrapperComponent } from './ngx-dropzone-wrapper/ngx-dropzone-wrapper.component';
+//import { NgxDropzoneWrapperComponent } from './ngx-dropzone-wrapper/ngx-dropzone-wrapper.component';
 
 const routes: Routes = [
   {
@@ -67,16 +67,16 @@ const routes: Routes = [
         path: 'ngx-color-picker',
         component: NgxColorPickerComponent
       },
-      {
+      /*{
         path: 'ngx-dropzone-wrapper',
         component: NgxDropzoneWrapperComponent
-      },
+      },*/
     ]
   }
 ]
 
 @NgModule({
-  declarations: [AdvancedFormElementsComponent, FormValidationComponent, InputMaskComponent, NgSelectComponent, NgxChipsComponent, NgxColorPickerComponent, NgxDropzoneWrapperComponent],
+  declarations: [AdvancedFormElementsComponent, FormValidationComponent, InputMaskComponent, NgSelectComponent, NgxChipsComponent, NgxColorPickerComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -86,14 +86,13 @@ const routes: Routes = [
     NgxMaskModule.forRoot({ validation: true}), // Ngx-mask
     NgSelectModule, // Ng-select
     TagInputModule, // Ngx-chips
-    ColorPickerModule, // Ngx-color-picker
-    DropzoneModule, // Ngx-dropzone-wrapper
+    ColorPickerModule, // Ngx-color-picke
   ],
   providers: [
-    {
+    /*{
       provide: DROPZONE_CONFIG,
       useValue: DEFAULT_DROPZONE_CONFIG
-    }, // Ngx-dropzone-wrapper
+    }, // Ngx-dropzone-wrapper*/
   ]
 })
 export class AdvancedFormElementsModule { }
