@@ -87,7 +87,7 @@
         <div class="input-group">
           <select formControlName="type" (change)="changeType($event)" [(ngModel)]="item.type" [ngClass]="{ 'is-invalid': submitted && f.type.errors }" class="form-select">
             <option [ngValue]="undefined" selected>-- Select --</option>
-            <option  value="Reschedule">Reschedule Bookiing</option>
+            <option  value="Reschedule">Reschedule Booking</option>
             <option  value="Reassign">Reassign Inspector</option>
           </select>
           <div *ngIf="submitted && f.type.errors" class="invalid-feedback">
