@@ -183,7 +183,7 @@ export class ListBookingsComponent implements OnInit {
         this.inspectorData = Response.response;
         //console.log(Response.response);
       });
-      this.item.id = dataId;
+      this.item.bookingId = dataId;
       this.openPopup(this.basicModal);
     }else if(cancelsatus > 0){
       this.cancelId = cancelsatus;
@@ -224,16 +224,20 @@ export class ListBookingsComponent implements OnInit {
     }
     //console.log(this.item);
     //return false;
-    if (this.item.id) {
-      let url = this.globals.updateBookingInspection+'?id='+this.item.id+'&officerId='+this.item.inspectorId; 
-      console.log(url);
+    if (this.item.bookingId) {
+      if(this.item.type == 'Reassign'){
+        var url = this.globals.updateBookingInspection+'?id='+this.item.bookingId+'&officerId='+this.item.inspectorId; 
+      }else{
+        var url = this.globals.updateBookingReschedule;
+      }
+      
       this.bookingService.create(url,this.item).then((response) => {
         this.showToast('Inspector Re-assigned Successfully');
         this.modalReference.close();
         this.backtoList();
       },
         (rejected: RejectedResponse) => {
-          this.item.id = '';
+          this.item.bookingId = '';
         }
       );
     }
@@ -298,7 +302,7 @@ export class ListBookingsComponent implements OnInit {
       //this.SpinnerService.hide();
     },
       (rejected: RejectedResponse) => {
-        this.item.id = '';
+        this.item.bookingId = '';
         //this.alertService.error('There is something wrong',this.options);
         //this.alertService.BindServerErrors(this.formGroup, rejected);
       }
@@ -317,7 +321,7 @@ export class ListBookingsComponent implements OnInit {
       //this.SpinnerService.hide();
     },
       (rejected: RejectedResponse) => {
-        this.item.id = '';
+        this.item.bookingId = '';
         //this.alertService.error('There is something wrong',this.options);
         //this.alertService.BindServerErrors(this.formGroup, rejected);
       }

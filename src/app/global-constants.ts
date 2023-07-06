@@ -34,4 +34,5 @@ export class GlobalConstants {
 
     updateBookingInspection = 'v1/booking/updateBookingOfficerId';
     getReassignOfficer = "v1/officer/getOfficerNameList";
+    updateBookingReschedule = 'v1/booking/rescheduleBookingOfficer';
 }

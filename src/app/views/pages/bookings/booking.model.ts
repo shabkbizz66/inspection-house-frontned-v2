@@ -46,7 +46,7 @@ export class reassignModel{
     type: string;
     inspectionNewDate: string;
     inspectionNewTime: string;
-    id: string;
+    bookingId: string;
     inspectorId: string;
 }
 
