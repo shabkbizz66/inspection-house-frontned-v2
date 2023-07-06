@@ -226,13 +226,15 @@ export class ListBookingsComponent implements OnInit {
     //return false;
     if (this.item.bookingId) {
       if(this.item.type == 'Reassign'){
-        var url = this.globals.updateBookingInspection+'?id='+this.item.bookingId+'&officerId='+this.item.inspectorId; 
+        var url = this.globals.updateBookingInspection+'?id='+this.item.bookingId+'&officerId='+this.item.inspectorId;
+        var msg = "Inspector Re-assigned Successfully";
       }else{
         var url = this.globals.updateBookingReschedule;
+        var msg = "Booking has been Rescheduled";
       }
       
       this.bookingService.create(url,this.item).then((response) => {
-        this.showToast('Inspector Re-assigned Successfully');
+        this.showToast(msg);
         this.modalReference.close();
         this.backtoList();
       },
