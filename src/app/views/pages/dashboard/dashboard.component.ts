@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit {
   inspectorData: any;
   ColumnMode = ColumnMode;
   loadingIndicator = true;
-  filterData: any;
+  filterData: any = [];
   public columns: Array<object>;
 
   constructor(private calendar: NgbCalendar,
@@ -90,7 +90,18 @@ export class DashboardComponent implements OnInit {
     });
 
     this.inspectorService.get(this.globals.dashboardFilter+'?id=').then((Response: any) => {
-      this.filterData = Response.response;
+      Response.response.forEach((element:any) => {
+        
+        if(element.inspectionTime == '09:00:00'){
+          element.inspectionTimeChange = '09:00 am';
+        }else{
+          element.inspectionTimeChange = '02:00 pm';
+        }
+        this.filterData.push(element);
+        
+      });
+      console.log(this.filterData)
+      //this.filterData = Response.response;
     });
 
     setTimeout(() => {
@@ -101,6 +112,7 @@ export class DashboardComponent implements OnInit {
     this.columns = [
       { prop: 'customerName',name:'Name' }, 
       { prop: 'officerName', name: 'Inspector Name' }, 
+      { prop: 'inspectionTimeChange', name: 'Inspection Time' }, 
       { prop: 'address', name: 'Address' },
       { prop: 'phone', name: 'Phone' },
       { prop: 'bookingStatus', name: 'Booking Status' }
@@ -115,8 +127,16 @@ export class DashboardComponent implements OnInit {
     }else{
       var id = null;
     }
+    this.filterData = [];
     this.inspectorService.get(this.globals.dashboardFilter+'?id='+id).then((Response: any) => {
-      this.filterData = Response.response;
+      Response.response.forEach((element:any) => {
+        if(element.inspectionTime == '09:00:00'){
+          element.inspectionTimeChange = '09:00 am';
+        }else{
+          element.inspectionTimeChange = '02:00 pm';
+        }
+        this.filterData.push(element);
+      });
     });
   }
 

@@ -170,7 +170,7 @@
               <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal" appFeatherIcon></i>
             </button>
             <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-              <a ngbDropdownItem class="d-flex align-items-center" [routerLink]="['/bookings']" (click)="false"><i data-feather="eye" appFeatherIcon class="icon-sm me-2"></i> <span class="">View</span></a>
+              <a ngbDropdownItem class="d-flex align-items-center" [routerLink]="['/bookings/filter/week']" (click)="false"><i data-feather="eye" appFeatherIcon class="icon-sm me-2"></i> <span class="">View</span></a>
             </div>
           </div>
         </div>
@@ -192,7 +192,7 @@
               <i class="icon-lg text-muted pb-3px" data-feather="more-horizontal" appFeatherIcon></i>
             </button>
             <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-              <a ngbDropdownItem class="d-flex align-items-center" [routerLink]="['/bookings']" (click)="false"><i data-feather="eye" appFeatherIcon class="icon-sm me-2"></i> <span class="">View</span></a>
+              <a ngbDropdownItem class="d-flex align-items-center" [routerLink]="['/bookings/filter/month']" (click)="false"><i data-feather="eye" appFeatherIcon class="icon-sm me-2"></i> <span class="">View</span></a>
             </div>
           </div>
         </div>
@@ -535,7 +535,7 @@
               </select>
           </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive" *ngIf="filterData.length > 0">
           <ngx-datatable
             class="bootstrap"
             [rows]="filterData"

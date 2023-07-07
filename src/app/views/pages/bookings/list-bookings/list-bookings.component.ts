@@ -8,7 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { reassignModel } from '../booking.model';
 import swal from 'sweetalert2'; 
 import { RejectedResponse } from '../../../models/rejected-response';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../alert/alert.service';
 
 @Component({
@@ -36,12 +36,14 @@ export class ListBookingsComponent implements OnInit {
   minDate: any;
   cancelId: number = 0;
   sendEmailId: number = 0;
+  filterType: string= '';
 
   constructor(private bookingService: BookingService,
     private modalService: NgbModal,
     private calendar: NgbCalendar,
     private router: Router,
     public alertService: AlertService,
+    private activatedRoute: ActivatedRoute,
     public globals: GlobalConstants) { 
       const current = new Date();
       this.minDate = {
@@ -58,16 +60,28 @@ export class ListBookingsComponent implements OnInit {
       inspectionNewTime: new FormControl(""),
       inspectorId: new FormControl(""),
     });
-    this.getBookingList();
+
+    this.activatedRoute.params.subscribe((params) => {
+      this.filterType = params['type'];
+      this.getBookingList(this.filterType);
+    });
+    
   }
 
   get f() { 
     return this.formGroup.controls; 
   }
 
-  public getBookingList(){
+  public getBookingList(filtertype:string){
+    console.log(filtertype)
+    if(filtertype){
+      var url = this.globals.getFilterBookingList+'?type='+filtertype;
+    }else{
+      var url = this.globals.getBookingList;
+    }
+
     //this.SpinnerService.show();
-    this.bookingService.get(this.globals.getBookingList).then((Response: any) => {
+    this.bookingService.get(url).then((Response: any) => {
       this.bookingData = Response.response;
       //this.checkval = true;
       //this.SpinnerService.hide();
