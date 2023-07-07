@@ -233,8 +233,13 @@ export class ListBookingsComponent implements OnInit {
         var msg = "Booking has been Rescheduled";
       }
       
-      this.bookingService.create(url,this.item).then((response) => {
-        this.showToast(msg);
+      this.bookingService.create(url,this.item).then((response: any) => {
+        if(response.status){
+          this.showToast(msg);
+        }else{
+          this.errorshowToast(response.responseMessage);
+        }
+        
         this.modalReference.close();
         this.backtoList();
       },
@@ -247,6 +252,10 @@ export class ListBookingsComponent implements OnInit {
 
   showToast(msg: string){
     swal.fire({ showConfirmButton: false, timer: 1800, title: 'Success!', text: msg, icon: 'success', });
+  }
+
+  errorshowToast(msg: string){
+    swal.fire({ showConfirmButton: false, timer: 1800, title: 'Error!', text: msg, icon: 'error', });
   }
 
   backtoList() {
