@@ -80,12 +80,12 @@ export class DashboardComponent implements OnInit {
     this.bookingService.get(this.globals.getDashboard).then((Response: any) => {
       this.totalInspector = Response.officerCount;
       this.totalBookings = Response.bookingCount;
-      this.todayBooking = Response.todaybooking;
-      this.thisweekBooking = Response.thisweekbooking;
-      this.thismonthBooking = Response.thismonthbooking;
+      //this.todayBooking = Response.todaybooking;
+      //this.thisweekBooking = Response.thisweekbooking;
+      //this.thismonthBooking = Response.thismonthbooking;
     });
 
-    this.inspectorService.get(this.globals.getInspectorList).then((Response: any) => {
+    /*this.inspectorService.get(this.globals.getInspectorList).then((Response: any) => {
       this.inspectorData = Response.data;
     });
 
@@ -102,7 +102,7 @@ export class DashboardComponent implements OnInit {
       });
       console.log(this.filterData)
       //this.filterData = Response.response;
-    });
+    });*/
 
     setTimeout(() => {
       this.loadingIndicator = false;
