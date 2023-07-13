@@ -8,7 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { reassignModel } from '../booking.model';
 import swal from 'sweetalert2'; 
 import { RejectedResponse } from '../../../models/rejected-response';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../alert/alert.service';
 
 @Component({
@@ -36,12 +36,14 @@ export class ListBookingsComponent implements OnInit {
   minDate: any;
   cancelId: number = 0;
   sendEmailId: number = 0;
+  filterType: string= '';
 
   constructor(private bookingService: BookingService,
     private modalService: NgbModal,
     private calendar: NgbCalendar,
     private router: Router,
     public alertService: AlertService,
+    private activatedRoute: ActivatedRoute,
     public globals: GlobalConstants) { 
       const current = new Date();
       this.minDate = {
@@ -53,21 +55,33 @@ export class ListBookingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      //type: new FormControl("", Validators.required),
-      //inspectionNewDate: new FormControl(""),
-      //inspectionNewTime: new FormControl(""),
-      inspectorId: new FormControl("",Validators.required),
+      type: new FormControl("", Validators.required),
+      inspectionNewDate: new FormControl(""),
+      inspectionNewTime: new FormControl(""),
+      inspectorId: new FormControl(""),
     });
-    this.getBookingList();
+
+    this.activatedRoute.params.subscribe((params) => {
+      this.filterType = params['type'];
+      this.getBookingList(this.filterType);
+    });
+    
   }
 
   get f() { 
     return this.formGroup.controls; 
   }
 
-  public getBookingList(){
+  public getBookingList(filtertype:string){
+    console.log(filtertype)
+    if(filtertype){
+      var url = this.globals.getFilterBookingList+'?type='+filtertype;
+    }else{
+      var url = this.globals.getBookingList;
+    }
+
     //this.SpinnerService.show();
-    this.bookingService.get(this.globals.getBookingList).then((Response: any) => {
+    this.bookingService.get(url).then((Response: any) => {
       this.bookingData = Response.response;
       //this.checkval = true;
       //this.SpinnerService.hide();
@@ -101,7 +115,7 @@ export class ListBookingsComponent implements OnInit {
 
 
         let id = "/bookings/edit/"+element.id;
-        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector'><i class='feather icon-user'></i></a>";
+        var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector / Reschedule Booking'><i class='feather icon-user'></i></a>";
         var popupdelete = "&nbsp;&nbsp;&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' nm='22' title='Cancel Booking'><i class='feather icon-delete'></i></span>";
         var sendmail = "&nbsp;&nbsp;&nbsp;&nbsp;<a id='' class='' name='"+element.id+"'  style='cursor: pointer;' title='Resend Email'><i class='feather icon-mail'></i></a>";
         
@@ -183,7 +197,7 @@ export class ListBookingsComponent implements OnInit {
         this.inspectorData = Response.response;
         //console.log(Response.response);
       });
-      this.item.id = dataId;
+      this.item.bookingId = dataId;
       this.openPopup(this.basicModal);
     }else if(cancelsatus > 0){
       this.cancelId = cancelsatus;
@@ -222,18 +236,29 @@ export class ListBookingsComponent implements OnInit {
       //this.eventSave.event.srcElement.disabled = false;
       return;
     }
-    console.log(this.item);
-    
-    if (this.item.id) {
-      let url = this.globals.updateBookingInspection+'?id='+this.item.id+'&officerId='+this.item.inspectorId; 
-      console.log(url);
-      this.bookingService.create(url,this.item).then((response) => {
-        this.showToast('Inspector Re-assigned Successfully');
+    //console.log(this.item);
+    //return false;
+    if (this.item.bookingId) {
+      if(this.item.type == 'Reassign'){
+        var url = this.globals.updateBookingInspection+'?id='+this.item.bookingId+'&officerId='+this.item.inspectorId;
+        var msg = "Inspector Re-assigned Successfully";
+      }else{
+        var url = this.globals.updateBookingReschedule;
+        var msg = "Booking has been Rescheduled";
+      }
+      
+      this.bookingService.create(url,this.item).then((response: any) => {
+        if(response.status){
+          this.showToast(msg);
+        }else{
+          this.errorshowToast(response.responseMessage);
+        }
+        
         this.modalReference.close();
         this.backtoList();
       },
         (rejected: RejectedResponse) => {
-          this.item.id = '';
+          this.item.bookingId = '';
         }
       );
     }
@@ -241,6 +266,10 @@ export class ListBookingsComponent implements OnInit {
 
   showToast(msg: string){
     swal.fire({ showConfirmButton: false, timer: 1800, title: 'Success!', text: msg, icon: 'success', });
+  }
+
+  errorshowToast(msg: string){
+    swal.fire({ showConfirmButton: false, timer: 1800, title: 'Error!', text: msg, icon: 'error', });
   }
 
   backtoList() {
@@ -252,15 +281,20 @@ export class ListBookingsComponent implements OnInit {
   changeType(event: any){
     if(event.target.value == 'Reassign'){
       this.formGroup.controls['inspectorId'].setValidators([Validators.required]);
+      this.formGroup.controls['inspectionNewTime'].setValidators(null); 
+      this.formGroup.controls['inspectionNewDate'].setValidators(null);
+      this.formGroup.controls["inspectionNewTime"].updateValueAndValidity();
+      this.formGroup.controls["inspectionNewDate"].updateValueAndValidity();
       this.item.inspectionNewDate = '';
       this.item.inspectionNewTime = '';
     }else{
       this.item.inspectorId = '';
       this.inspectionNewDate = this.calendar.getToday();
       this.item.inspectionNewDate = this.inspectionNewDate.year+"-"+('0'+this.inspectionNewDate.month).slice(-2)+"-"+('0'+this.inspectionNewDate.day).slice(-2);
-      this.formGroup.controls['inspectorId'].clearValidators();
       this.formGroup.controls['inspectionNewTime'].setValidators([Validators.required]);
       this.formGroup.controls['inspectionNewDate'].setValidators([Validators.required]);
+      this.formGroup.controls['inspectorId'].setValidators(null);
+      this.formGroup.controls["inspectorId"].updateValueAndValidity();
     }
     this.formGroup.updateValueAndValidity();
   }
@@ -293,7 +327,7 @@ export class ListBookingsComponent implements OnInit {
       //this.SpinnerService.hide();
     },
       (rejected: RejectedResponse) => {
-        this.item.id = '';
+        this.item.bookingId = '';
         //this.alertService.error('There is something wrong',this.options);
         //this.alertService.BindServerErrors(this.formGroup, rejected);
       }
@@ -312,7 +346,7 @@ export class ListBookingsComponent implements OnInit {
       //this.SpinnerService.hide();
     },
       (rejected: RejectedResponse) => {
-        this.item.id = '';
+        this.item.bookingId = '';
         //this.alertService.error('There is something wrong',this.options);
         //this.alertService.BindServerErrors(this.formGroup, rejected);
       }

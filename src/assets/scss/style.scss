@@ -112,7 +112,7 @@
 @import "./components/plugin-overrides/ngx-quill";
 @import "./components/plugin-overrides/perfect-scrollbar";
 @import "./components/plugin-overrides/sweet-alert";
-@import "./components/plugin-overrides/dropzone";
+//@import "./components/plugin-overrides/dropzone";
 @import "./components/plugin-overrides/angular-archwizard";
 @import "./components/plugin-overrides/apex-charts";
 @import "./components/plugin-overrides/data-tables";
@@ -121,3 +121,10 @@
 
 // Custom scss
 @import "./custom";
+.ngx-datatable.bootstrap .datatable-body .datatable-body-row.datatable-row-even {
+     background-color: #e0e3ff;
+}
+.ngx-datatable.bootstrap .datatable-body .datatable-body-row.datatable-row-odd {
+    background-color: #e0f6f6;
+}
+

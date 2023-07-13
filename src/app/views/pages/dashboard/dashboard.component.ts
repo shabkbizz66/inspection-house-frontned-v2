@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { BookingService } from '../bookings/booking.service';
 import { GlobalConstants } from '../../../global-constants';
+import { InspectorService } from '../inspectors/inspector.service';
+import { ColumnMode } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,9 +47,19 @@ export class DashboardComponent implements OnInit {
   currentDate: NgbDateStruct;
   totalInspector: number = 0;
   totalBookings: number = 0;
+  todayBooking: number = 0;
+  thisweekBooking: number = 0;
+  thismonthBooking: number = 0;
+
+  inspectorData: any;
+  ColumnMode = ColumnMode;
+  loadingIndicator = true;
+  filterData: any = [];
+  public columns: Array<object>;
 
   constructor(private calendar: NgbCalendar,
     private bookingService: BookingService,
+    private inspectorService: InspectorService,
     public globals: GlobalConstants) {}
 
   ngOnInit(): void {
@@ -68,10 +80,65 @@ export class DashboardComponent implements OnInit {
     this.bookingService.get(this.globals.getDashboard).then((Response: any) => {
       this.totalInspector = Response.officerCount;
       this.totalBookings = Response.bookingCount;
+      this.todayBooking = Response.todaybooking;
+      this.thisweekBooking = Response.thisweekbooking;
+      this.thismonthBooking = Response.thismonthbooking;
     });
+
+    this.inspectorService.get(this.globals.getInspectorList).then((Response: any) => {
+      this.inspectorData = Response.data;
+    });
+
+    this.inspectorService.get(this.globals.dashboardFilter+'?id=').then((Response: any) => {
+      Response.response.forEach((element:any) => {
+        
+        if(element.inspectionTime == '09:00:00'){
+          element.inspectionTimeChange = '09:00 am';
+        }else{
+          element.inspectionTimeChange = '02:00 pm';
+        }
+        this.filterData.push(element);
+        
+      });
+      console.log(this.filterData)
+      //this.filterData = Response.response;
+    });
+
+    setTimeout(() => {
+      this.loadingIndicator = false;
+    }, 1500);
+
+
+    this.columns = [
+      { prop: 'customerName',name:'Name' }, 
+      { prop: 'officerName', name: 'Inspector Name' }, 
+      { prop: 'inspectionTimeChange', name: 'Inspection Time' }, 
+      { prop: 'address', name: 'Address' },
+      { prop: 'phone', name: 'Phone' },
+      { prop: 'bookingStatus', name: 'Booking Status' }
+    ];
 
   }
 
+  getTodayData(event: any){
+    console.log(event.target.value);
+    if(event.target.value != '--'){
+      var id = event.target.value;
+    }else{
+      var id = null;
+    }
+    this.filterData = [];
+    this.inspectorService.get(this.globals.dashboardFilter+'?id='+id).then((Response: any) => {
+      Response.response.forEach((element:any) => {
+        if(element.inspectionTime == '09:00:00'){
+          element.inspectionTimeChange = '09:00 am';
+        }else{
+          element.inspectionTimeChange = '02:00 pm';
+        }
+        this.filterData.push(element);
+      });
+    });
+  }
 
   /**
    * Only for RTL (feel free to remove if you are using LTR)

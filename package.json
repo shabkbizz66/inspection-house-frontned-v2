@@ -42,7 +42,6 @@
     "ngx-clipboard": "^15.1.0",
     "ngx-color-picker": "^13.0.0",
     "ngx-custom-validators": "^8.0.0",
-    "ngx-dropzone-wrapper": "^13.0.0",
     "ngx-google-places-autocomplete": "^2.0.5",
     "ngx-highlightjs": "^7.0.1",
     "ngx-mask": "^14.2.4",
