@@ -56,7 +56,30 @@ export class InspectionCalendarComponent implements OnInit {
         });
     }, 2200);*/
 
-    this.bookingService.get(this.globals.getBookingList).then((Response: any) => {
+
+    this.BindMasterAllSearchData().then(() => {
+      console.log(this.bookingData)
+      this.bookingData.forEach((element: any) => {
+        if(element.inspectionTime == '09:00:00'){
+          var endtime = element.inspectionDate+'T13:30:00';
+        }else{
+          var endtime = element.inspectionDate+'T17:30:00';
+        }
+        let arr: any = [];
+        arr.id = element.id;
+        arr.start = element.inspectionDate+'T'+element.inspectionTime;
+        arr.end = endtime; //element.inspectionDate+'T09:00:00';
+        arr.title = element.firstName+' '+element.lastName+ ' \n '+element.officerName;
+        arr.backgroundColor =  'rgba(1,104,250, .15)';
+        arr.borderColor = '#0168fa';
+        arr.display = 'block';
+        arr.className = 'eventWithComment';
+        this.Events.push(arr);
+      });
+      this.setEvents(this.Events);
+    });
+
+    /*this.bookingService.get(this.globals.getBookingList).then((Response: any) => {
       this.bookingData = Response.response;
       let y = 0;
       this.bookingData.forEach((element: any) => {
@@ -76,7 +99,7 @@ export class InspectionCalendarComponent implements OnInit {
         arr.className = 'eventWithComment';
         this.Events.push(arr);
       });
-    });
+    });*/
     
     /*this.Events = [
       {
@@ -90,7 +113,7 @@ export class InspectionCalendarComponent implements OnInit {
         display: 'block'
       }
     ]*/
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.calendarOptions = {
         headerToolbar: {
           left: 'prev,today,next',
@@ -107,7 +130,7 @@ export class InspectionCalendarComponent implements OnInit {
         eventsSet: this.handleEvents.bind(this),
         events: this.Events,
       };
-    }, 1000);
+    }, 1000);*/
     // For external-events dragging
     /*new Draggable(this.externalEvents.nativeElement, {
       itemSelector: '.fc-event',
@@ -120,6 +143,37 @@ export class InspectionCalendarComponent implements OnInit {
       }
     });*/
 
+  }
+
+  public setEvents(data: any){
+    this.calendarOptions = {
+      headerToolbar: {
+        left: 'prev,today,next',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      },
+      weekends: true,
+      editable: true,
+      selectable: true,
+      selectMirror: true,
+      dayMaxEvents: true,
+      select: this.handleDateSelect.bind(this),
+      eventClick: this.handleEventClick.bind(this),
+      eventsSet: this.handleEvents.bind(this),
+      events: this.Events,
+    };
+  }
+
+  private BindMasterAllSearchData(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let current = this;
+      Promise.all<any>([
+        this.bookingService.get(this.globals.getBookingList)
+      ]).then(function (response: any) {
+        current.bookingData = response[0].response;
+        resolve();
+      });
+    });
   }
 
   TODAY_STR()  {
