@@ -304,6 +304,10 @@ export class AddBookingComponent implements OnInit {
       this.item.packagePrice = 0;
       this.packageType = '1';
     }
+
+    if(this.item.inspectionType == 'New Construction' || this.item.inspectionType == 'Builder warranty Inspection'){
+      this.packageType = '3';
+    }
     this.calculateFinalPrice('calculate');
   }
 
@@ -538,13 +542,14 @@ export class AddBookingComponent implements OnInit {
   }
 
   changeInspc(event: any){
+    this.item.packageName = '';
     if(event.target.value == 'Phased'){
       this.subPackage = true;
     }else{
       this.subPackage = false;
     }
 
-    if(event.target.value == 'New Construction' || event.target.value == 'Phased'){
+    if(event.target.value == 'New Construction' || event.target.value == 'Phased' || event.target.value == 'Builder warranty Inspection'){
       this.showpckg = false;
     }else{
       this.showpckg = true;
