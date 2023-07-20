@@ -362,7 +362,9 @@ export class AddBookingComponent implements OnInit {
       if(response.response.inspector_name == 0){
         this.showInspectorName = 'Sorry! No Inspectors are Available';
         this.inspectorAlert = 'inspectorAlert';
+        this.item.officerId = '';
       }else{
+        this.item.officerId = response.response.inspector_id;
         this.showInspectorName = response.response.inspector_name;
         this.ontheflyInspectorID = response.response.inspector_id;
       }
@@ -420,8 +422,7 @@ export class AddBookingComponent implements OnInit {
 
     this.item.packagePrice = Number(this.item.packagePrice) + Number(this.item.additionalServiceCost);*/
     this.item.bookingType = 'Admin';
-    //console.log(this.item)
-    
+   
     if (this.item.id) {
       this.bookingService.update(this.globals.updateBooking,this.item).then((response) => {
         this.showToast('Booking Updated Successfully');
@@ -590,6 +591,11 @@ export class AddBookingComponent implements OnInit {
       this.item.agentName = this.invName;
     }
 
+    if(this.item.officerId == ''){
+      this.showErrorToast('Inpsector Not Available');
+      button.removeAttribute('disabled');
+      return;
+    }
     /*let url = '?package_type='+this.packageType+'&squarefeet='+this.item.squareFeet+'&yearbuilt='+this.item.yearBuilt;
     this.bookingService.get(this.globals.getPricing+url).then((Response: any) => {
       //console.log(Response);
@@ -692,6 +698,10 @@ export class AddBookingComponent implements OnInit {
       
     });
     
+  }
+
+  showErrorToast(msg:string){
+    swal.fire({ showConfirmButton: false, timer: 2000, title: 'Success!', text: msg, icon: 'error', });
   }
 
   copyURL(){
