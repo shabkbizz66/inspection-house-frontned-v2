@@ -7,7 +7,7 @@ import { FeatherIconModule } from 'src/app/core/feather-icon/feather-icon.module
 import { NgbDropdownModule, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Ng-ApexCharts
-import { NgApexchartsModule } from "ng-apexcharts";
+//import { NgApexchartsModule } from "ng-apexcharts";
 
 import { DashboardComponent } from './dashboard.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -28,7 +28,7 @@ const routes: Routes = [
     FeatherIconModule,
     NgbDropdownModule,
     NgbDatepickerModule,
-    NgApexchartsModule,
+    //NgApexchartsModule,
     NgxDatatableModule
   ]
 })

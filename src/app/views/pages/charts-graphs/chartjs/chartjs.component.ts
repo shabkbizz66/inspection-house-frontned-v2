@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+//import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-chartjs',
@@ -8,7 +8,7 @@ import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
   styleUrls: ['./chartjs.component.scss']
 })
 export class ChartjsComponent implements OnInit {
-
+/*
   obj = {
     primary        : "#6571ff",
     secondary      : "#7987a1",
@@ -26,9 +26,7 @@ export class ChartjsComponent implements OnInit {
   }
 
 
-  /**
-   * Bar chart
-   */
+  
   public barChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
@@ -84,9 +82,6 @@ export class ChartjsComponent implements OnInit {
 
 
 
-  /**
-   * Line chart
-   */
   public lineChartData: ChartConfiguration['data'] = {
     labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
     datasets: [{ 
@@ -167,9 +162,7 @@ export class ChartjsComponent implements OnInit {
 
 
 
-  /**
-   * Doughnut chart
-   */
+  
   public doughnutChartOptions: ChartConfiguration['options'] = {
     aspectRatio: 2,
     plugins: {
@@ -203,9 +196,7 @@ export class ChartjsComponent implements OnInit {
 
 
 
-  /**
-   * Area chart
-   */
+  
   public areaChartData: ChartConfiguration['data'] = {
     labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
     datasets: [{ 
@@ -286,9 +277,7 @@ export class ChartjsComponent implements OnInit {
 
 
 
-  /**
-   * Pie chart
-   */
+  
   public pieChartOptions: ChartConfiguration['options'] = {
     aspectRatio: 2,
     plugins: {
@@ -320,9 +309,7 @@ export class ChartjsComponent implements OnInit {
 
 
 
-  /**
-   * Bubble chart
-   */
+  
    public bubbleChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
@@ -439,9 +426,7 @@ export class ChartjsComponent implements OnInit {
 
 
 
-  /**
-   * Radar chart
-   */
+  
   public radarChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     aspectRatio: 2,
@@ -521,9 +506,7 @@ export class ChartjsComponent implements OnInit {
 
 
 
-  /**
-   * Polar area chart
-   */
+  
   public polarChartOptions: ChartConfiguration['options'] = {
     aspectRatio: 2,
     scales: {
@@ -586,9 +569,7 @@ export class ChartjsComponent implements OnInit {
 
 
 
-  /**
-   * Grouped bar chart
-   */
+  
   public groupedBarChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
@@ -658,9 +639,7 @@ export class ChartjsComponent implements OnInit {
 
 
 
-  /**
-   * Mixed chart
-   */
+  
   public mixedChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
@@ -755,7 +734,7 @@ export class ChartjsComponent implements OnInit {
       }
     ],
   };
-
+  */
 
 
   constructor() { }

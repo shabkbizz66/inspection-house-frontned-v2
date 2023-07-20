@@ -38,7 +38,7 @@ export class ApexchartsComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.lineChartOptions = getLineChartOptions(this.obj);
+    /*this.lineChartOptions = getLineChartOptions(this.obj);
     this.barChartOptions = getBarChartOptions(this.obj);
     this.areaChartOptions = getAreaChartOptions(this.obj);
     this.mixedChartOptions = getMixedChartOptions(this.obj);
@@ -47,12 +47,12 @@ export class ApexchartsComponent implements OnInit {
     this.heatMapChartOptions = getHeatMapChartOptions(this.obj);
     this.radarChartOptions = getRadarChartOptions(this.obj);
     this.scatterChartOptions = getScatterChartOptions(this.obj);
-    this.radialBarChartOptions = getRadialBarChartOptions(this.obj);
+    this.radialBarChartOptions = getRadialBarChartOptions(this.obj);*/
 
 
     // Some RTL fixes. (feel free to remove if you are using LTR))
     if (document.querySelector('html')?.getAttribute('dir') === 'rtl') {
-      this.addRtlOptions();
+      //this.addRtlOptions();
     }
 
   }

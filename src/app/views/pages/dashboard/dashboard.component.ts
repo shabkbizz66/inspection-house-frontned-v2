@@ -65,12 +65,12 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.currentDate = this.calendar.getToday();
 
-    this.customersChartOptions = getCustomerseChartOptions(this.obj);
+    /*this.customersChartOptions = getCustomerseChartOptions(this.obj);
     this.ordersChartOptions = getOrdersChartOptions(this.obj);
     this.growthChartOptions = getGrowthChartOptions(this.obj);
     this.revenueChartOptions = getRevenueChartOptions(this.obj);
     this.monthlySalesChartOptions = getMonthlySalesChartOptions(this.obj);
-    this.cloudStorageChartOptions = getCloudStorageChartOptions(this.obj);
+    this.cloudStorageChartOptions = getCloudStorageChartOptions(this.obj);*/
 
     // Some RTL fixes. (feel free to remove if you are using LTR))
     if (document.querySelector('html')?.getAttribute('dir') === 'rtl') {
