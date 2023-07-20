@@ -60,7 +60,7 @@ export class AddBookingComponent implements OnInit {
   subPackage: boolean = false;
   slotBooked: boolean = false;
   showpckg: boolean = false;
-  ontheflyInspectorID: string = '0';
+  ontheflyInspectorID: number = 0;
   inspectorAlert: string='';
   defaultNavActiveId = 1;
   onEditView: string = 'disabled';
@@ -363,6 +363,7 @@ export class AddBookingComponent implements OnInit {
         this.showInspectorName = 'Sorry! No Inspectors are Available';
         this.inspectorAlert = 'inspectorAlert';
         this.item.officerId = '';
+        this.ontheflyInspectorID = 0;
       }else{
         this.item.officerId = response.response.inspector_id;
         this.showInspectorName = response.response.inspector_name;
@@ -560,7 +561,7 @@ export class AddBookingComponent implements OnInit {
 
   getExtracPrice(event: any){
     
-    if(this.ontheflyInspectorID == '0'){
+    if(this.ontheflyInspectorID == 0){
       return;
     }
 
@@ -701,7 +702,7 @@ export class AddBookingComponent implements OnInit {
   }
 
   showErrorToast(msg:string){
-    swal.fire({ showConfirmButton: false, timer: 2000, title: 'Success!', text: msg, icon: 'error', });
+    swal.fire({ showConfirmButton: false, timer: 2000, title: 'Error!', text: msg, icon: 'error', });
   }
 
   copyURL(){
