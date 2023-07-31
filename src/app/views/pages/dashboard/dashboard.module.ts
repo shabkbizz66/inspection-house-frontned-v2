@@ -12,15 +12,36 @@ import { NgbDropdownModule, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstr
 import { DashboardComponent } from './dashboard.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+import interactionPlugin from '@fullcalendar/interaction';
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import { WeekViewComponent } from './week-view/week-view.component';
+import { MonthViewComponent } from './month-view/month-view.component';
+
+FullCalendarModule.registerPlugins([
+  dayGridPlugin,
+  timeGridPlugin,
+  listPlugin,
+  interactionPlugin,
+  resourceTimelinePlugin,
+])
+
 const routes: Routes = [
   {
     path: '',
     component: DashboardComponent
+  },
+  {
+    path: 'monthview/:date',
+    component: MonthViewComponent
   }
 ]
 
 @NgModule({
-  declarations: [DashboardComponent],
+  declarations: [DashboardComponent, WeekViewComponent, MonthViewComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -29,7 +50,8 @@ const routes: Routes = [
     NgbDropdownModule,
     NgbDatepickerModule,
     //NgApexchartsModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    FullCalendarModule
   ]
 })
 export class DashboardModule { }

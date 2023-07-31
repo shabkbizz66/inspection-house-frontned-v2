@@ -54,6 +54,8 @@
               "./node_modules/@fullcalendar/daygrid/main.css",
               "./node_modules/@fullcalendar/timegrid/main.css",
               "./node_modules/@fullcalendar/list/main.css",
+              "./node_modules/@fullcalendar/resource-timeline/main.css",
+              "./node_modules/@fullcalendar/timeline/main.css",
               "src/styles.scss"
             ],
             "scripts": [

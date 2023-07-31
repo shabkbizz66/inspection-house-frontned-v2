@@ -38,4 +38,12 @@ export class GlobalConstants {
     updateBookingReschedule = 'v1/booking/rescheduleBookingOfficer';
 
     dashboardFilter = 'v1/booking/getOfficerBoookings';
+    dashboardBookingList = 'v1/booking/getDashboardBookingList';
+    dashboardMonthBookingList = 'v1/booking/getDashboardMonthWiseBookingList';
+
+    /*--- users ---*/
+    getusersList: string = 'v1/users';
+    getUserById: string = 'v1/getUserbyid';
+    saveUser: string = 'v1/saveuser';
+    updateUser: string = 'v1/updateuser'
 }
