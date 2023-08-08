@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { FeatherIconModule } from 'src/app/core/feather-icon/feather-icon.module';
-import { NgbDropdownModule, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Ng-ApexCharts
 //import { NgApexchartsModule } from "ng-apexcharts";
@@ -20,6 +20,9 @@ import interactionPlugin from '@fullcalendar/interaction';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { WeekViewComponent } from './week-view/week-view.component';
 import { MonthViewComponent } from './month-view/month-view.component';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { NgChartsModule } from 'ng2-charts';
+import { TooltipModule } from 'ng2-tooltip-directive';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -37,6 +40,10 @@ const routes: Routes = [
   {
     path: 'monthview/:date',
     component: MonthViewComponent
+  },
+  {
+    path: 'weekview/:date',
+    component: WeekViewComponent
   }
 ]
 
@@ -44,6 +51,7 @@ const routes: Routes = [
   declarations: [DashboardComponent, WeekViewComponent, MonthViewComponent],
   imports: [
     CommonModule,
+    GoogleMapsModule,
     RouterModule.forChild(routes),
     FormsModule,
     FeatherIconModule,
@@ -51,7 +59,10 @@ const routes: Routes = [
     NgbDatepickerModule,
     //NgApexchartsModule,
     NgxDatatableModule,
-    FullCalendarModule
+    FullCalendarModule,
+    NgChartsModule,
+    NgbModule,
+    TooltipModule
   ]
 })
 export class DashboardModule { }

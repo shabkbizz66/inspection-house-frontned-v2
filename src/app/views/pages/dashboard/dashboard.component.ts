@@ -1,16 +1,18 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
-import { NgbDateStruct, NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbCalendar, NgbDate, NgbModalRef, NgbModal, NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { BookingService } from '../bookings/booking.service';
 import { GlobalConstants } from '../../../global-constants';
 import { InspectorService } from '../inspectors/inspector.service';
 import { ColumnMode } from '@swimlane/ngx-datatable';
-import { formatDate } from "@angular/common";
+import { DOCUMENT, formatDate } from "@angular/common";
 
 import { CalendarOptions, DateSelectArg, EventClickArg, EventApi, FullCalendarComponent, Calendar } from '@fullcalendar/angular';
 import { ResourceInput } from '@fullcalendar/resource-common';
 import { throws } from 'assert';
 import { ActivatedRoute } from '@angular/router';
+import { MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { ChartDataset, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,12 +23,16 @@ import { ActivatedRoute } from '@angular/router';
 export class DashboardComponent implements OnInit {
 
   @ViewChild('fc') calendarComponent: FullCalendarComponent;
+  @ViewChild(MapInfoWindow, { static: false }) info!: MapInfoWindow
+  @ViewChild(NgbDropdown, { static: true })  public dropdown: NgbDropdown
 
+  modalReference: NgbModalRef;
   resources: ResourceInput[] = [];
   currentEvents: EventApi[] = [];
   calendarInst?: Calendar;
   Events: any[] = [];
   bookingData: any;
+  infoContent: string;
 
   calendarOptions: CalendarOptions = {
     initialView: 'resourceTimelineDay',
@@ -56,15 +62,29 @@ export class DashboardComponent implements OnInit {
     ],
     nowIndicator: false,
     weekends: true,
-    editable: false,
+    editable: true,
     selectable: false,
     selectMirror: false,
     dayMaxEvents: false,
-    
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
-    datesSet: this.handleDateChanged.bind(this)
+    datesSet: this.handleDateChanged.bind(this),
+    eventDidMount: function(info:any) {
+      console.log(info.el)
+      //info.el.nativeElement.setAttribute({ 'ngbTooltip': "ddsdsdsd"});
+      //info.el.append("<div ngbDropdown><div ngbDropdownMenu aria-labelledby='dropdownBasic1'><button ngbDropdownItem>Action - 1</button><button ngbDropdownItem>Another Action</button><button ngbDropdownItem>Something else is here</button></div></div>");
+
+
+      
+
+      /*const eventId = info.event.id
+      info.el.addEventListener("contextmenu", (jsEvent:any)=>{
+          jsEvent.preventDefault()
+          
+          console.log("contextMenu", eventId)
+      })*/
+    }
     /* you can update a remote database when these fire:
     eventAdd:
     eventChange:
@@ -79,6 +99,8 @@ export class DashboardComponent implements OnInit {
   thisweekBooking: number = 0;
   thismonthBooking: number = 0;
   workorderToday: number = 0;
+  workorderWeek: number = 0;
+  availableslots:number = 0;
 
   inspectorData: any;
   ColumnMode = ColumnMode;
@@ -93,11 +115,99 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild("fc") fc: NgbCalendar;
   @ViewChild('basicModal') basicModal: any;
+
+  center: google.maps.LatLngLiteral = {
+    lat: 32.779167,
+    lng: -96.808891
+  };
+  zoom = 8;
+  display: any;
+  mapMarkers: any = [];
+  map: google.maps.Map;
+
+  chartData: ChartDataset[] = [
+    {
+      label: '$ in millions',
+      data: [1551, 1688, 1800, 1895, 2124, 2124],
+
+      pointHitRadius: 15, // expands the hover 'detection' area
+      pointHoverRadius: 8, // grows the point when hovered
+
+      pointRadius: 2,
+      borderColor: '#2D2F33', // main line color aka $midnight-medium from @riapacheco/yutes/seasonal.scss
+      pointBackgroundColor: '#2D2F33',
+      pointHoverBackgroundColor: '#2D2F33',
+      borderWidth: 2, // main line width
+      hoverBorderWidth: 0, // borders on points
+      pointBorderWidth: 0, // removes POINT borders
+      tension: 0.3, // makes line more squiggly
+    },
+    {
+      label: '$ in millions',
+      data: [1551, 1688, 1800, 1895, 2124, 2124],
+
+      pointHitRadius: 15, // expands the hover 'detection' area
+      pointHoverRadius: 8, // grows the point when hovered
+
+      pointRadius: 2,
+      borderColor: '#000', // main line color aka $midnight-medium from @riapacheco/yutes/seasonal.scss
+      pointBackgroundColor: '#2D2F33',
+      pointHoverBackgroundColor: '#2D2F33',
+      borderWidth: 2, // main line width
+      hoverBorderWidth: 0, // borders on points
+      pointBorderWidth: 0, // removes POINT borders
+      tension: 0.3, // makes line more squiggly
+    }
+  ];
+  chartLabels: string[] = [ '2016 Revenue', '2017 Revenue', '2018 Revenue', '2019 Revenue', '2020 Revenue', '2021 Revenue' ];
+  chartOptions: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+
+    scales: {
+      xAxis: {
+        display: true,
+        grid: {
+          drawBorder: true
+        }
+      },
+      yAxis: {
+        display: true
+      }
+    },
+
+    plugins: {
+      legend: {
+        display: true
+      },
+
+      tooltip: {
+        // ⤵️ tooltip main styles
+        backgroundColor: 'white',
+        displayColors: false, // removes unnecessary legend
+        padding: 10,
+
+        // ⤵️ title
+        titleColor: '#2D2F33',
+        titleFont: {
+          size: 18
+        },
+
+        // ⤵️ body
+        bodyColor: '#2D2F33',
+        bodyFont: {
+          size: 13
+        }
+      }
+    }
+  };
   
   constructor(private calendar: NgbCalendar,
     private bookingService: BookingService,
     private inspectorService: InspectorService,
+    private modalService: NgbModal,
     private activatedRoute: ActivatedRoute,
+    @Inject(DOCUMENT) document: Document,
     public globals: GlobalConstants) {}
 
   ngOnInit(): void {
@@ -126,6 +236,8 @@ export class DashboardComponent implements OnInit {
         current.totalBookings = response[1].bookingCount;
         current.todayBooking = response[1].todaybooking;
         current.workorderToday = response[1].todayworkorder;
+        current.workorderWeek = response[1].thisweekbooking;
+        current.availableslots = response[1].availableSlots;
         current.getDashboardData(current.currentTodayDate)
         resolve();
       });
@@ -137,7 +249,7 @@ export class DashboardComponent implements OnInit {
       console.log(this.bookingData)
       console.log(this.inspectorData)
       this.Events = [];
-      this.bookingData.forEach((element: any) => {
+      this.bookingData.forEach((element: any,index:any) => {
         if(element.inspectionTime == '09:00:00'){
           var endtime = element.inspectionDate+'T13:30:00';
         }else{
@@ -159,11 +271,13 @@ export class DashboardComponent implements OnInit {
         }else{
           var iconcontent = '<i class="feather icon-phone"></i>';
         }
-        arr.title = '<div class="mcontent">&nbsp;<span class="eventbox"><span class="'+contractclass+'">C</span>&nbsp;<span class="'+contractclass+'">$</span></span>&nbsp;'+element.address+'</div><div class="iconcontent">'+iconcontent+'</div>';
+        arr.title = '<div class="mcontent">&nbsp;<span class="eventbox"><span class="'+contractclass+'">C</span>&nbsp;<span class="'+contractclass+'">$</span></span>&nbsp;'+element.address+'</div><div class="iconcontent">'+iconcontent+'</div><div ngbDropdown placement="end-top" class="btn-group show dropdown"><div ngbDropdownMenu class="dropdown-menu"  id="show'+arr.id+'" aria-labelledby="dropdown'+arr.id+'"><button ngbDropdownItem class="dropdown-item">Action - 1</button><button ngbDropdownItem class="dropdown-item">Another Action</button><button ngbDropdownItem class="dropdown-item">Something else is here</button></div></div>';
        
         arr.borderColor = '#0168fa';
         arr.resourceId = element.officerId;
         arr.textEscape = false;
+        this.addMarker(element.latitude,element.longitude,element.address);
+        
         this.Events.push(arr);
       });
       
@@ -172,16 +286,6 @@ export class DashboardComponent implements OnInit {
       this.calendarOptions.resources = this.resources;
       //this.setEvents(this.Events);
     });
-  }
-
-  eventRender(info: any) {
-    
-    /*var tooltip = new Tooltip(info.el, {
-      title: info.event.extendedProps.description,
-      placement: 'top',
-      trigger: 'hover',
-      container: 'body'
-    });*/
   }
 
   private BindMasterAllSearchData(date: string): Promise<void> {
@@ -250,6 +354,14 @@ export class DashboardComponent implements OnInit {
 
   handleEventClick(clickInfo: EventClickArg) {
     console.log('444');
+    console.log(clickInfo.event);
+    console.log(clickInfo.event['_def'].publicId)
+    var id = clickInfo.event['_def'].publicId;
+    let classinfo = 'show'+id;
+
+    //<HTMLInputElement>document.getElementsByClassName('dropdown-menu')).style.display = 'none';
+    //(<HTMLInputElement>document.getElementById(classinfo)).style.display = 'block';
+    //thisdropdown.open();
     /*if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       clickInfo.event.remove();
     }*/
@@ -307,4 +419,109 @@ export class DashboardComponent implements OnInit {
     let calendarApi = this.calendarComponent.getApi();
     calendarApi.gotoDate(selectedDate);
   }
+
+  openMap(){
+    this.openPopup(this.basicModal);
+  }
+
+  openPopup(content: TemplateRef<any>) {
+    this.modalReference = this.modalService.open(content,{size:'lg'});
+  }
+
+  
+  moveMap(event: google.maps.MapMouseEvent) {
+      if (event.latLng != null) this.center = (event.latLng.toJSON());
+  }
+  move(event: google.maps.MapMouseEvent) {
+      if (event.latLng != null) this.display = event.latLng.toJSON();
+  }
+
+  addMarker(latitude: any,longitude : any,title: string) {
+    this.mapMarkers.push({
+      position: {
+        lat: Number(latitude),
+        lng: Number(longitude),
+      },
+      label: {
+        color: 'red',
+        //text: 'Marker label ' + (this.mapMarkers.length + 1),
+      },
+      info: title,
+      title: title,
+      //options: { animation: google.maps.Animation.BOUNCE },
+    });
+    console.log(this.mapMarkers)
+  }
+
+  openInfo(marker: MapMarker, content: string) {
+    this.infoContent = content;
+    this.info.open(marker);
+  }
+
+  handleEventMouseEnter(e:any) {
+    alert('dd');
+    const event = e.event,
+      startdate = event.start,
+      enddate = event.end ? event.end : null,
+      
+      header = document.createElement("header"),
+      footer = document.createElement("footer");
+
+    
+    if (event.classNames.length) {
+      const classes = event.classNames;
+      if (classes.indexOf('hasattention') > -1) {
+        let iconImage = new Image(20, 20);
+        iconImage.src = '/assets/icons/jina-svg/exclamation-icon.svg';
+        footer.appendChild(iconImage);
+      }
+      if (classes.indexOf('hasdescr') > -1) {
+        let iconImage = new Image(20, 20);
+        iconImage.src = '/assets/icons/jina-svg/star-icon.svg';
+        footer.appendChild(iconImage);
+      }
+      if (classes.indexOf('hasfile') > -1) {
+        let iconImage = new Image(20, 20);
+        iconImage.src = '/assets/icons/jina-svg/file-icon.svg';
+        footer.appendChild(iconImage);
+      }
+    }
+
+    e.el.popover({
+        animation:true,
+        delay: 300,
+        content: '<b>Inicio</b>:'+event.start+"<b>Fin</b>:"+event.end,
+        trigger: 'hover'
+    });
+    /*new Tooltip(e.el, {
+      delay: {
+        show: 500,
+        hide: 50
+      },
+      html: true,
+      title: header.outerHTML + event.title + (event.extendedProps.location ? '<br><em>' + event.extendedProps.location + '</em>' : '') + footer.outerHTML,
+      placement: 'right',
+      trigger: 'hover',
+      container: 'body'
+    });*/
+  }
+
+  /*public onPopupOpen(args: PopupOpenEventArgs): void {
+    const data: Record<string, any> = args.data as Record<string, any>;
+    if (args.type === 'QuickInfo' || args.type === 'Editor' || args.type === 'RecurrenceAlert' || args.type === 'DeleteAlert') {
+      const target: HTMLElement = (args.type === 'RecurrenceAlert' ||
+        args.type === 'DeleteAlert') ? args.element[0] : args.target;
+      if (!isNullOrUndefined(target) && target.classList.contains('e-work-cells')) {
+        if ((target.classList.contains('e-read-only-cells')) ||
+          (!this.scheduleObj.isSlotAvailable(data))) {
+          args.cancel = true;
+        }
+      } else if (!isNullOrUndefined(target) && target.classList.contains('e-appointment') &&
+        (this.isReadOnly(data.EndTime as Date))) {
+        args.cancel = true;
+      }
+    }
+  }*/
+
+  
 }

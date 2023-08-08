@@ -8,6 +8,7 @@ export class InspectorModel{
     email: string;
     trecnumber: string;
     tdanumber: string;
+    colorCode: string;
     latitude: number;
     longitude: number;
     status: string;
