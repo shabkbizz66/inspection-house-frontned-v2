@@ -62,29 +62,14 @@ export class DashboardComponent implements OnInit {
     ],
     nowIndicator: false,
     weekends: true,
-    editable: true,
+    editable: false,
     selectable: false,
     selectMirror: false,
     dayMaxEvents: false,
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
-    datesSet: this.handleDateChanged.bind(this),
-    eventDidMount: function(info:any) {
-      console.log(info.el)
-      //info.el.nativeElement.setAttribute({ 'ngbTooltip': "ddsdsdsd"});
-      //info.el.append("<div ngbDropdown><div ngbDropdownMenu aria-labelledby='dropdownBasic1'><button ngbDropdownItem>Action - 1</button><button ngbDropdownItem>Another Action</button><button ngbDropdownItem>Something else is here</button></div></div>");
-
-
-      
-
-      /*const eventId = info.event.id
-      info.el.addEventListener("contextmenu", (jsEvent:any)=>{
-          jsEvent.preventDefault()
-          
-          console.log("contextMenu", eventId)
-      })*/
-    }
+    datesSet: this.handleDateChanged.bind(this)
     /* you can update a remote database when these fire:
     eventAdd:
     eventChange:
@@ -124,90 +109,12 @@ export class DashboardComponent implements OnInit {
   display: any;
   mapMarkers: any = [];
   map: google.maps.Map;
-
-  chartData: ChartDataset[] = [
-    {
-      label: '$ in millions',
-      data: [1551, 1688, 1800, 1895, 2124, 2124],
-
-      pointHitRadius: 15, // expands the hover 'detection' area
-      pointHoverRadius: 8, // grows the point when hovered
-
-      pointRadius: 2,
-      borderColor: '#2D2F33', // main line color aka $midnight-medium from @riapacheco/yutes/seasonal.scss
-      pointBackgroundColor: '#2D2F33',
-      pointHoverBackgroundColor: '#2D2F33',
-      borderWidth: 2, // main line width
-      hoverBorderWidth: 0, // borders on points
-      pointBorderWidth: 0, // removes POINT borders
-      tension: 0.3, // makes line more squiggly
-    },
-    {
-      label: '$ in millions',
-      data: [1551, 1688, 1800, 1895, 2124, 2124],
-
-      pointHitRadius: 15, // expands the hover 'detection' area
-      pointHoverRadius: 8, // grows the point when hovered
-
-      pointRadius: 2,
-      borderColor: '#000', // main line color aka $midnight-medium from @riapacheco/yutes/seasonal.scss
-      pointBackgroundColor: '#2D2F33',
-      pointHoverBackgroundColor: '#2D2F33',
-      borderWidth: 2, // main line width
-      hoverBorderWidth: 0, // borders on points
-      pointBorderWidth: 0, // removes POINT borders
-      tension: 0.3, // makes line more squiggly
-    }
-  ];
-  chartLabels: string[] = [ '2016 Revenue', '2017 Revenue', '2018 Revenue', '2019 Revenue', '2020 Revenue', '2021 Revenue' ];
-  chartOptions: ChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-
-    scales: {
-      xAxis: {
-        display: true,
-        grid: {
-          drawBorder: true
-        }
-      },
-      yAxis: {
-        display: true
-      }
-    },
-
-    plugins: {
-      legend: {
-        display: true
-      },
-
-      tooltip: {
-        // ⤵️ tooltip main styles
-        backgroundColor: 'white',
-        displayColors: false, // removes unnecessary legend
-        padding: 10,
-
-        // ⤵️ title
-        titleColor: '#2D2F33',
-        titleFont: {
-          size: 18
-        },
-
-        // ⤵️ body
-        bodyColor: '#2D2F33',
-        bodyFont: {
-          size: 13
-        }
-      }
-    }
-  };
   
   constructor(private calendar: NgbCalendar,
     private bookingService: BookingService,
     private inspectorService: InspectorService,
     private modalService: NgbModal,
     private activatedRoute: ActivatedRoute,
-    @Inject(DOCUMENT) document: Document,
     public globals: GlobalConstants) {}
 
   ngOnInit(): void {
