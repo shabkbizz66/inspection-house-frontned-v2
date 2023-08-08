@@ -12,7 +12,6 @@ import { ResourceInput } from '@fullcalendar/resource-common';
 import { throws } from 'assert';
 import { ActivatedRoute } from '@angular/router';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { ChartDataset, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-dashboard',
@@ -430,5 +429,12 @@ export class DashboardComponent implements OnInit {
     }
   }*/
 
+  gotoMonth(){
+    this.router.navigate(['/dashboard/monthview/'+this.currentDynamicDate]);
+  }
+
+  gotoWeek(){
+    this.router.navigate(['/dashboard/weekview/'+this.currentDynamicDate]);
+  }
   
 }

@@ -28,9 +28,9 @@
 
         <div class="row" style="width: 100%;">
           <div class="col-xl-12" style="margin-bottom: 20px;">
-            <button type="button"  [routerLink]="'/dashboard/monthview/'+currentDynamicDate" style="background-color: purple; color:#fff; border-color: #fff;" class="btn btn-primary mb-1 mb-md-0">Month</button>
+            <button type="button"  (click)="gotoMonth()" style="background-color: purple; color:#fff; border-color: #fff;" class="btn btn-primary mb-1 mb-md-0">Month</button>
             <button type="button" (click)="openMap()" style="background-color: skyblue; color:#fff; border-color: #fff;"class="btn btn-primary mb-1 mb-md-0">Map</button>
-            <button type="button" [routerLink]="'/dashboard/weekview/'+currentDynamicDate" style="background-color: orangered; color:#fff; border-color: #fff;" class="btn btn-primary mb-1 mb-md-0">Week</button>
+            <button type="button" (click)="gotoWeek()" style="background-color: orangered; color:#fff; border-color: #fff;" class="btn btn-primary mb-1 mb-md-0">Week</button>
           </div>
           <div class="col-xl-12" style="margin-bottom: 10px;">
             <div class="row">

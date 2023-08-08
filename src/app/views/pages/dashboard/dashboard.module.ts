@@ -21,7 +21,6 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { WeekViewComponent } from './week-view/week-view.component';
 import { MonthViewComponent } from './month-view/month-view.component';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { NgChartsModule } from 'ng2-charts';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -59,7 +58,6 @@ const routes: Routes = [
     //NgApexchartsModule,
     NgxDatatableModule,
     FullCalendarModule,
-    NgChartsModule,
     NgbModule
   ]
 })
