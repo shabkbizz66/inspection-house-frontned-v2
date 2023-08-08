@@ -12,6 +12,7 @@ import { ResourceInput } from '@fullcalendar/resource-common';
 import { throws } from 'assert';
 import { ActivatedRoute } from '@angular/router';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -113,6 +114,7 @@ export class DashboardComponent implements OnInit {
     private bookingService: BookingService,
     private inspectorService: InspectorService,
     private modalService: NgbModal,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     public globals: GlobalConstants) {}
 
@@ -436,5 +438,4 @@ export class DashboardComponent implements OnInit {
   gotoWeek(){
     this.router.navigate(['/dashboard/weekview/'+this.currentDynamicDate]);
   }
-  
 }

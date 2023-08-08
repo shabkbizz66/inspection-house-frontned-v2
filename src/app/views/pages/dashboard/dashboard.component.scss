@@ -4,9 +4,9 @@
   width: 370px;
   min-width: 370px;
   max-width: 370px;
-  height:  250px;
-  min-height:  250px;
-  max-height:  250px;
+  height: 250px;
+  min-height: 250px;
+  max-height: 250px;
   color: red;
   background-image: linear-gradient(to bottom right, white, white);
   background-attachment: fixed;
@@ -14,6 +14,12 @@
 
 
 
+
+  /*
+  i wish this required CSS was better documented :(
+  https://github.com/FezVrasta/popper.js/issues/674
+  derived from this CSS on this page: https://popper.js.org/tooltip-examples.html
+  */
 
 
 
