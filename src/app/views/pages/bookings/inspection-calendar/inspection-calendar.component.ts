@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/angular';
-import { Draggable } from '@fullcalendar/interaction'; // for dateClick
 import { INITIAL_EVENTS, createEventId } from '../event-utils';
 import { BookingService } from '../booking.service';
 import { GlobalConstants } from '../../../../global-constants';

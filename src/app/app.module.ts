@@ -14,6 +14,8 @@ import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './views/services/authconfig.interceptor';
 
+import { FullCalendarModule } from '@fullcalendar/angular';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +26,7 @@ import { AuthInterceptor } from './views/services/authconfig.interceptor';
     AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule,
+    FullCalendarModule
   ],
   providers: [
     AuthGuard,
