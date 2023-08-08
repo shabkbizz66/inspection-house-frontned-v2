@@ -22,7 +22,6 @@ import { WeekViewComponent } from './week-view/week-view.component';
 import { MonthViewComponent } from './month-view/month-view.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { NgChartsModule } from 'ng2-charts';
-import { TooltipModule } from 'ng2-tooltip-directive';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -61,8 +60,7 @@ const routes: Routes = [
     NgxDatatableModule,
     FullCalendarModule,
     NgChartsModule,
-    NgbModule,
-    TooltipModule
+    NgbModule
   ]
 })
 export class DashboardModule { }
