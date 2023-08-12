@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { AlertService } from '../../alert/alert.service';
+import { ConfirmedValidator } from '../confirmed.validator';
 
 @Component({
   selector: 'app-register',
@@ -14,18 +15,12 @@ export class RegisterComponent implements OnInit {
   loading = false;
   submitted = false;
   model: any = {};
-  formGroup = new FormGroup({
-    fullName: new FormControl("", Validators.required),
-    phoneNumber: new FormControl("", Validators.required),
-    jobRole: new FormControl("", Validators.required),
-    email: new FormControl("", [Validators.required, Validators.email]),
-    userId: new FormControl("", Validators.required),
-    password: new FormControl("", Validators.required),
-    confirmPassword: new FormControl('', Validators.required),
- });
+  formGroup: FormGroup = new FormGroup({});
+  
 
   constructor(private router: Router,
     private route: ActivatedRoute,
+    private fb: FormBuilder,
     public alertService: AlertService,
     public authservice: AuthService) { }
 
@@ -33,12 +28,25 @@ export class RegisterComponent implements OnInit {
     if (localStorage.getItem('isLoggedin')) {
       this.router.navigate(['/dashboard']);
     }
+    this.formGroup = this.fb.group({
+      fullName: new FormControl("", Validators.required),
+      phoneNumber: new FormControl("", Validators.required),
+      jobRole: new FormControl("", Validators.required),
+      email: new FormControl("", [Validators.required, Validators.email]),
+      userId: new FormControl("", Validators.required),
+      password: new FormControl("", Validators.required),
+      confirmPassword: new FormControl('', Validators.required)
+    }, { 
+      validator: ConfirmedValidator('password', 'confirmPassword')
+    })
   }
 
 
   get f() { 
     return this.formGroup.controls; 
   }
+
+
 
   Matchpassword(formGroup: FormGroup) {
     const password = formGroup.get('NewPassword');
