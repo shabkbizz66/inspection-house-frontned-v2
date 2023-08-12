@@ -69,7 +69,11 @@ export class DashboardComponent implements OnInit {
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
-    datesSet: this.handleDateChanged.bind(this)
+    datesSet: this.handleDateChanged.bind(this),
+    eventDidMount: function(info) {
+      info.el.style.borderWidth = '3px';
+    },
+    resourceLabelDidMount: this.labelColor.bind(this)
     /* you can update a remote database when these fire:
     eventAdd:
     eventChange:
@@ -134,11 +138,13 @@ export class DashboardComponent implements OnInit {
         current.inspectorData = response[0].data;
         var i = 0;
         current.inspectorData.forEach((element :any) => {
-          current.resources[i] = {
-            id: element.id,
-            title: element.firstName+ ' '+element.lastName
+          if(element.status == 'Active'){
+            current.resources[i] = {
+              id: element.id,
+              title: element.firstName+ ' '+element.lastName
+            }
+            i = i +1;
           }
-          i = i +1;
         });
         current.totalInspector = response[1].officerCount;
         current.totalBookings = response[1].bookingCount;
@@ -158,6 +164,9 @@ export class DashboardComponent implements OnInit {
       console.log(this.inspectorData)
       this.Events = [];
       this.bookingData.forEach((element: any,index:any) => {
+
+        let backcolorinfo = this.inspectorData.filter((x:any) => x.id == element.officerId);
+
         if(element.inspectionTime == '09:00:00'){
           var endtime = element.inspectionDate+'T13:30:00';
         }else{
@@ -181,7 +190,7 @@ export class DashboardComponent implements OnInit {
         }
         arr.title = '<div class="mcontent">&nbsp;<span class="eventbox"><span class="'+contractclass+'">C</span>&nbsp;<span class="'+contractclass+'">$</span></span>&nbsp;'+element.address+'</div><div class="iconcontent">'+iconcontent+'</div><div ngbDropdown placement="end-top" class="btn-group show dropdown"><div ngbDropdownMenu class="dropdown-menu"  id="show'+arr.id+'" aria-labelledby="dropdown'+arr.id+'"><button ngbDropdownItem class="dropdown-item">Action - 1</button><button ngbDropdownItem class="dropdown-item">Another Action</button><button ngbDropdownItem class="dropdown-item">Something else is here</button></div></div>';
        
-        arr.borderColor = '#0168fa';
+        arr.borderColor = backcolorinfo[0].colorCode; //'#0168fa';
         arr.resourceId = element.officerId;
         arr.textEscape = false;
         this.addMarker(element.latitude,element.longitude,element.address);
@@ -264,15 +273,25 @@ export class DashboardComponent implements OnInit {
     console.log('444');
     console.log(clickInfo.event);
     console.log(clickInfo.event['_def'].publicId)
+
+    var bookingId = clickInfo.event['_def'].publicId;
+    this.router.navigate(['/bookings/update/'+bookingId]);
     var id = clickInfo.event['_def'].publicId;
     let classinfo = 'show'+id;
-
+    this.inspectorData.forEach((element:any) => {
+      if(element.status == 'Active'){
+        console.log(element);
+        let vid = 'show'+element.id;
+        //(<HTMLInputElement>document.getElementById(vid)).style.display = 'none';
+      }
+    });
     //<HTMLInputElement>document.getElementsByClassName('dropdown-menu')).style.display = 'none';
     //(<HTMLInputElement>document.getElementById(classinfo)).style.display = 'block';
     //thisdropdown.open();
     /*if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       clickInfo.event.remove();
     }*/
+    //this.router.navigate(['/update/'+element.id])
   }
 
   handleEvents(events: any) {
@@ -438,4 +457,11 @@ export class DashboardComponent implements OnInit {
   gotoWeek(){
     this.router.navigate(['/dashboard/weekview/'+this.currentDynamicDate]);
   }
+
+  labelColor(info:any){
+    let backcolorinfo = this.inspectorData.filter((x:any) => x.id == info.resource.id);
+    info.el.style.color = backcolorinfo[0].colorCode;
+    info.el.style.fontWeight = 'bold';      
+  }
+
 }

@@ -18,6 +18,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { InspectionCalendarComponent } from './inspection-calendar/inspection-calendar.component';
 import { FeatherIconModule } from '../../../core/feather-icon/feather-icon.module';
 import { BookingAgreementComponent } from './booking-agreement/booking-agreement.component';
+import { EditBookingComponent } from './edit-booking/edit-booking.component';
+import { QuillModule } from 'ngx-quill';
 
 
 
@@ -41,6 +43,10 @@ const routes: Routes = [
       {
         path: 'edit/:id',
         component: AddBookingComponent
+      },
+      {
+        path: 'update/:id',
+        component: EditBookingComponent
       },
       {
         path: 'agreement/:id',
@@ -67,7 +73,8 @@ FullCalendarModule.registerPlugins([
     ListBookingsComponent,
     AddBookingComponent,
     InspectionCalendarComponent,
-    BookingAgreementComponent
+    BookingAgreementComponent,
+    EditBookingComponent
   ],
   imports: [
     CommonModule,
@@ -76,6 +83,7 @@ FullCalendarModule.registerPlugins([
     FormsModule,
     FullCalendarModule,
     NgxMaskModule.forRoot({ validation: true}), // Ngx-mask
+    QuillModule.forRoot(), // ngx-quill
     GooglePlaceModule,
     NgbModule,
     FeatherIconModule

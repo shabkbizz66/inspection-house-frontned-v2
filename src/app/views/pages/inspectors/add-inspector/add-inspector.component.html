@@ -91,12 +91,14 @@
                 </div>
               </div>
             </div>
+            
             <div class="col-sm-6">
                 <div class="mb-3">
                   <label class="form-label">TDA Number </label>
                   <input type="text" formControlName="tdanumber" [(ngModel)]="item.tdanumber" class="form-control" placeholder="Enter TDA Number">
                 </div>
             </div>
+            
           </div>
 
           <div class="row">
@@ -111,6 +113,15 @@
                 <div *ngIf="submitted && f.status.errors" class="invalid-feedback">
                   <div *ngIf="f.status.errors.required">Staus is required</div>
                 </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="mb-3">
+                <label class="form-label">Color Code </label>
+                <input type="text" formControlName="colorCode" [(ngModel)]="item.colorCode" [ngClass]="{ 'is-invalid': submitted && f.colorCode.errors }" class="form-control" placeholder="Enter Color Code">
+                <!--<div *ngIf="submitted && f.colorCode.errors" class="invalid-feedback">
+                  <div *ngIf="f.colorCode.errors.required">TREC Number is required</div>
+                </div>-->
               </div>
             </div>
             

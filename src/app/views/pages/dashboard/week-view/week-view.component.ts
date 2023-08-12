@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CalendarOptions, FullCalendarComponent } from '@fullcalendar/angular';
+import { CalendarOptions, EventClickArg, FullCalendarComponent } from '@fullcalendar/angular';
 import { ResourceInput } from '@fullcalendar/resource-common';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { BookingService } from '../../bookings/booking.service';
 import { InspectorService } from '../../inspectors/inspector.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalConstants } from '../../../../global-constants';
 
 @Component({
@@ -45,6 +45,10 @@ export class WeekViewComponent implements OnInit {
     eventContent: function( info ) {
       return {html: info.event.title};
     },  
+    eventDidMount: function(info) {
+      info.el.style.borderWidth = '3px';
+    },
+    resourceLabelDidMount: this.labelColor.bind(this),
     /*resourceAreaColumns: [
       {
         field: 'title',
@@ -57,6 +61,7 @@ export class WeekViewComponent implements OnInit {
     selectable: false,
     selectMirror: false,
     dayMaxEvents: false,
+    eventClick: this.handleEventClick.bind(this)
     
     //select: this.handleDateSelect.bind(this),
     //eventClick: this.handleEventClick.bind(this),
@@ -68,11 +73,12 @@ export class WeekViewComponent implements OnInit {
   constructor(private calendar: NgbCalendar,
     private bookingService: BookingService,
     private inspectorService: InspectorService,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     public globals: GlobalConstants) { }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe((params) => {
+    this.activatedRoute.params.subscribe((params:any) => {
       var getid = params["date"].split("-");
       this.currentDynamicDate = params['date'];
       if (getid) {
@@ -97,11 +103,13 @@ export class WeekViewComponent implements OnInit {
         current.inspectorData = response[0].data;
         var i = 0;
         current.inspectorData.forEach((element :any) => {
-          current.resources[i] = {
-            id: element.id,
-            title: element.firstName+ ' '+element.lastName
+          if(element.status == 'Active'){
+            current.resources[i] = {
+              id: element.id,
+              title: element.firstName+ ' '+element.lastName
+            }
+            i = i +1;
           }
-          i = i +1;
         });
         current.getDashboardData(current.currentTodayDate)
         resolve();
@@ -115,6 +123,9 @@ export class WeekViewComponent implements OnInit {
       console.log(this.inspectorData)
       this.Events = [];
       this.bookingData.forEach((element: any) => {
+
+        let backcolorinfo = this.inspectorData.filter((x:any) => x.id == element.officerId);
+
         if(element.inspectionTime == '09:00:00'){
           var endtime = element.inspectionDate+'T13:30:00';
         }else{
@@ -138,7 +149,7 @@ export class WeekViewComponent implements OnInit {
         }
         arr.title = '<div class="mcontent">&nbsp;<span class="eventbox"><span class="'+contractclass+'">C</span>&nbsp;<span class="'+contractclass+'">$</span></span>&nbsp;'+element.address+'</div><div class="iconcontent">'+iconcontent+'</div>';
        
-        arr.borderColor = '#0168fa';
+        arr.borderColor = backcolorinfo[0].colorCode; //'#0168fa';
         arr.resourceId = element.officerId;
         arr.textEscape = false;
         this.Events.push(arr);
@@ -163,6 +174,21 @@ export class WeekViewComponent implements OnInit {
         resolve();
       });
     });
+  }
+
+  labelColor(info:any){
+    let backcolorinfo = this.inspectorData.filter((x:any) => x.id == info.resource.id);
+    info.el.style.color = backcolorinfo[0].colorCode;
+    info.el.style.fontWeight = 'bold';      
+  }
+
+  handleEventClick(clickInfo: EventClickArg) {
+    console.log('444');
+    console.log(clickInfo.event);
+    console.log(clickInfo.event['_def'].publicId)
+
+    var bookingId = clickInfo.event['_def'].publicId;
+    this.router.navigate(['/bookings/update/'+bookingId]);
   }
 
 }

@@ -31,7 +31,7 @@ export class AddInspectorComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe((params) => {
+    this.activatedRoute.params.subscribe((params:any) => {
       var id = params["id"];
       if (id) {
         console.log(id);
@@ -73,6 +73,7 @@ export class AddInspectorComponent implements OnInit {
       email: new FormControl(null, [Validators.required,Validators.email]),
       trecnumber: new FormControl(null, Validators.required),
       tdanumber: new FormControl(''),
+      colorCode: new FormControl(''),
       status: new FormControl(null, Validators.required)
     });
   }
