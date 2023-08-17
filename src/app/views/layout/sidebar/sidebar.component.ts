@@ -6,6 +6,7 @@ import MetisMenu from 'metismenujs';
 import { MENU } from './menu';
 import { MenuItem } from './menu.model';
 import { Router, NavigationEnd } from '@angular/router';
+import { InspectorService } from '../../pages/inspectors/inspector.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -21,7 +22,11 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   menuItems: MenuItem[] = [];
   @ViewChild('sidebarMenu') sidebarMenu: ElementRef;
 
-  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, router: Router) { 
+  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, router: Router,
+  private inspectorService: InspectorService) { 
+      this.inspectorService.alertCount.subscribe((response:any)=>{
+        this.showCount(response);
+      })
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
 
@@ -191,6 +196,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     }
   };
 
+
+  showCount(data:any){
+    this.alertCount = Number(data);
+  }
 
   /**
    * Toggles the menu items

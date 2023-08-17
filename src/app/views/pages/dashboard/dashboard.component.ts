@@ -158,6 +158,7 @@ export class DashboardComponent implements OnInit,OnDestroy  {
         current.workorderWeek = response[1].thisweekbooking;
         current.availableslots = response[1].availableSlots;
         localStorage.setItem('alert',response[1].alertCounts);
+        current.inspectorService.alertCount.next(response[1].alertCounts);
         current.getDashboardData(current.currentTodayDate)
         resolve();
       });
@@ -169,6 +170,7 @@ export class DashboardComponent implements OnInit,OnDestroy  {
       console.log(this.bookingData)
       console.log(this.inspectorData)
       this.Events = [];
+      this.mapMarkers = [];
       this.bookingData.forEach((element: any,index:any) => {
 
         let backcolorinfo = this.inspectorData.filter((x:any) => x.id == element.officerId);
@@ -179,6 +181,7 @@ export class DashboardComponent implements OnInit,OnDestroy  {
           var endtime = element.inspectionDate+'T18:30:00';
         }
         let arr: any = [];
+        
         arr.id = element.id;
         arr.start = element.inspectionDate+'T'+element.inspectionTime;
         arr.end = endtime; //element.inspectionDate+'T09:00:00';
@@ -281,7 +284,7 @@ export class DashboardComponent implements OnInit,OnDestroy  {
     console.log(clickInfo.event['_def'].publicId);
 
     var bookingId = clickInfo.event['_def'].publicId;
-    this.router.navigate(['/bookings/update/'+bookingId]);
+    this.router.navigate(['/bookings/edit/'+bookingId]);
     var id = clickInfo.event['_def'].publicId;
     let classinfo = 'show'+id;
     this.inspectorData.forEach((element:any) => {

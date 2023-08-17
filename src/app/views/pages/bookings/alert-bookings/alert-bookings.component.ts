@@ -60,7 +60,7 @@ export class AlertBookingsComponent implements OnInit {
         obj.data[y] = [];
 
 
-        let id = "/bookings/update/"+element.id;
+        let id = "/bookings/edit/"+element.id;
         let url = '<a href="'+id+'" title="Update Booking"><i class="feather icon-eye"></i></a>';
        
        

@@ -33,10 +33,6 @@ export const MENU: MenuItem[] = [
         link: '/bookings',
       },
       {
-        label:"Pending Bookings",
-        link: '/bookings/pending',
-      },
-      {
         label:"Add Booking",
         link: '/bookings/add',
       },
@@ -54,6 +50,11 @@ export const MENU: MenuItem[] = [
       variant: 'danger',
       text: '2',
     }
+  },
+  {
+    label:"Pending Bookings",
+    icon: "file-text",
+    link: '/bookings/pending',
   },
   /*{
     label: 'Email',

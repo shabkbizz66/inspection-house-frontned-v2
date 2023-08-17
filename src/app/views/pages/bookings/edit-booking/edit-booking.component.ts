@@ -34,7 +34,7 @@ export class EditBookingComponent implements OnInit {
   item: BookingModel = new BookingModel();
   paymentUrl: string;
 
-  alltabs: any = ['tabclientinfo', 'tabaddress','tabproperty','tabdatetime','tabagent','tabcontract','tabinspectiontype','tabnotes']
+  alltabs: any = ['tabclientinfo', 'tabaddress','tabproperty','tabdatetime','tabagent','tabcontract','tabinspectiontype','tabnotes','tabemail']
   tabclientinfo: boolean = true;
   tabaddress: boolean = false;
   tabagent: boolean = false;
@@ -801,6 +801,7 @@ export class EditBookingComponent implements OnInit {
     } else{
       this.bookingService.create(this.globals.saveAgent,this.itemAgent).then((response) => {
         this.showToast('Agent Saved Successfully');
+        this.closePopup();
       },
         (rejected: RejectedResponse) => {
           this.itemAgent.id = '';

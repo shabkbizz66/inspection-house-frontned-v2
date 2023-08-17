@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { AlertService } from '../../alert/alert.service';
 import { ConfirmedValidator } from '../confirmed.validator';
+import swal from 'sweetalert2'; 
 
 @Component({
   selector: 'app-register',
@@ -62,6 +63,7 @@ export class RegisterComponent implements OnInit {
 
   onRegister(event: any) {
 
+    this.alertService.success('ddsdsd','');
     const button = (event.srcElement.disabled === undefined) ? event.srcElement.parentElement : event.srcElement;
     button.setAttribute('disabled', true);
 
@@ -84,7 +86,8 @@ export class RegisterComponent implements OnInit {
   
     this.authservice.registerForm(this.model).subscribe((response: any) => {
       if (response.status && response.authToken != '') {
-          this.alertService.success(response.responseMessage,'');
+          //this.alertService.success(response.responseMessage,'');
+          this.showToast('User registered Successfully!');
           setTimeout(() => {
             this.router.navigate(['/auth/login']);
           }, 2200);
@@ -97,6 +100,10 @@ export class RegisterComponent implements OnInit {
     if (localStorage.getItem('isLoggedin')) {
       this.router.navigate(['/']);
     }*/
+  }
+
+  showToast(msg: string){
+    swal.fire({ showConfirmButton: false, timer: 1800, title: 'Success!', text: msg, icon: 'success', });
   }
 
 }

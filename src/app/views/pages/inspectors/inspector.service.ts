@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommonService } from '../../services/common.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { environment } from '../../../../environments/environment';
 export class InspectorService {
 
   basePath: string;
+  alertCount = new Subject();
 
   constructor(private router: Router,
     private commonService: CommonService,
