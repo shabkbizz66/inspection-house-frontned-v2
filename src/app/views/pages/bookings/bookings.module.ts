@@ -20,6 +20,8 @@ import { FeatherIconModule } from '../../../core/feather-icon/feather-icon.modul
 import { BookingAgreementComponent } from './booking-agreement/booking-agreement.component';
 import { EditBookingComponent } from './edit-booking/edit-booking.component';
 import { QuillModule } from 'ngx-quill';
+import { FailedBookingsComponent } from './failed-bookings/failed-bookings.component';
+import { AlertBookingsComponent } from './alert-bookings/alert-bookings.component';
 
 
 
@@ -33,12 +35,24 @@ const routes: Routes = [
         component: ListBookingsComponent
       },
       {
+        path: 'pending',
+        component: FailedBookingsComponent
+      },
+      {
+        path: 'alerts',
+        component: AlertBookingsComponent
+      },
+      {
         path: 'filter/:type',
         component: ListBookingsComponent
       },
       {
         path: 'add',
         component: AddBookingComponent
+      },
+      {
+        path: 'tempadd',
+        component: EditBookingComponent
       },
       {
         path: 'edit/:id',
@@ -74,7 +88,9 @@ FullCalendarModule.registerPlugins([
     AddBookingComponent,
     InspectionCalendarComponent,
     BookingAgreementComponent,
-    EditBookingComponent
+    EditBookingComponent,
+    FailedBookingsComponent,
+    AlertBookingsComponent
   ],
   imports: [
     CommonModule,

@@ -136,3 +136,9 @@
 .iconcontent{width:10%; float: right;}
 .fc-license-message{display: none;}
 .monthview .fc-datagrid-cell-cushion{text-align: right;}
+
+#contextMenu{
+    position: absolute;
+    width: 200px;
+    z-index: 9999;
+  }

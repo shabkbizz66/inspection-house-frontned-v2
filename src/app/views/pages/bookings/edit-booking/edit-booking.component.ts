@@ -81,7 +81,7 @@ export class EditBookingComponent implements OnInit {
 
   checkboxArr: any = [];
   checkboxVal: any = [];
-
+  saveButton: boolean = true;
 
   options: any = {
     componentRestrictions: { country: 'US' }
@@ -124,7 +124,6 @@ export class EditBookingComponent implements OnInit {
   itemAgent: agentModel = new agentModel();
   itemEmail: emailModel = new emailModel();
 
-
   constructor(private calendar: NgbCalendar,
     public globals: GlobalConstants,
     public alertService: AlertService,
@@ -140,13 +139,14 @@ export class EditBookingComponent implements OnInit {
       if (id) {
         this.bookingService.get(this.globals.getBookingById+'/?id='+id).then((Response: any) => {
           this.item = Response.response;
+          this.addUpdateLabel = 'Update';
           if(this.item.paymentStatus == 'PENDING'){
-            //this.saveButton = true;
+            this.saveButton = true;
             this.saveLabel = 'Update Booking';
-            this.addUpdateLabel = 'Update';
+            //this.addUpdateLabel = 'Update';
           }else{
-            //this.saveButton = false;
-            this.addUpdateLabel = 'View'
+            this.saveButton = false;
+            //this.addUpdateLabel = 'Create'
           }
 
           //this.saveButton = false;
@@ -221,13 +221,14 @@ export class EditBookingComponent implements OnInit {
           }
         });
       }else{
-        /*this.inspectionDate = this.calendar.getToday();
+        this.inspectionDate = this.calendar.getToday();
         this.startDateMonth = ''; 
         this.item.inspectionDate = this.inspectionDate.year+"-"+('0'+this.inspectionDate.month).slice(-2)+"-"+('0'+this.inspectionDate.day).slice(-2);
-        this.blockBookingSlots(this.item.inspectionDate);*/
+        this.blockBookingSlots(this.item.inspectionDate);
+        this.addUpdateLabel = 'Create';
       }
     });
-    this.addUpdateLabel = 'Update';
+    
     this.BindFormGroup();
 
     
@@ -323,6 +324,7 @@ export class EditBookingComponent implements OnInit {
       (this as any)[element] =  false;
     });
     (this as any)[type] = true;
+    
   }
 
   copyURL(){

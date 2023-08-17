@@ -16,6 +16,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   @ViewChild('sidebarToggler') sidebarToggler: ElementRef;
 
+  alertCount: number= 4;
+
   menuItems: MenuItem[] = [];
   @ViewChild('sidebarMenu') sidebarMenu: ElementRef;
 
@@ -41,7 +43,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.menuItems = MENU;
-
+    this.alertCount = Number(localStorage.getItem('alert'));
     /**
      * Sidebar-folded on desktop (min-width:992px and max-width: 1199px)
      */

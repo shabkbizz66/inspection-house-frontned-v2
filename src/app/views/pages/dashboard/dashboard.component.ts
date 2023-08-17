@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 
 import { NgbDateStruct, NgbCalendar, NgbDate, NgbModalRef, NgbModal, NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { BookingService } from '../bookings/booking.service';
@@ -14,13 +14,14 @@ import { ActivatedRoute } from '@angular/router';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   preserveWhitespaces: true
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit,OnDestroy  {
 
   @ViewChild('fc') calendarComponent: FullCalendarComponent;
   @ViewChild(MapInfoWindow, { static: false }) info!: MapInfoWindow
@@ -70,9 +71,7 @@ export class DashboardComponent implements OnInit {
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
     datesSet: this.handleDateChanged.bind(this),
-    eventDidMount: function(info) {
-      info.el.style.borderWidth = '3px';
-    },
+    eventDidMount: this.handleEventDidMount.bind(this),
     resourceLabelDidMount: this.labelColor.bind(this)
     /* you can update a remote database when these fire:
     eventAdd:
@@ -119,6 +118,7 @@ export class DashboardComponent implements OnInit {
     private inspectorService: InspectorService,
     private modalService: NgbModal,
     private router: Router,
+    private elRef: ElementRef,
     private activatedRoute: ActivatedRoute,
     public globals: GlobalConstants) {}
 
@@ -127,6 +127,11 @@ export class DashboardComponent implements OnInit {
     this.BindMaster();
   }
 
+  ngOnDestroy():void{
+    const contextMenu = (<HTMLInputElement>document.getElementById('contextMenu'));
+    contextMenu.style.display = 'none';
+  }
+  
   private BindMaster(): Promise<void> {
     return new Promise((resolve, reject) => {
       let current = this;
@@ -152,6 +157,7 @@ export class DashboardComponent implements OnInit {
         current.workorderToday = response[1].todayworkorder;
         current.workorderWeek = response[1].thisweekbooking;
         current.availableslots = response[1].availableSlots;
+        localStorage.setItem('alert',response[1].alertCounts);
         current.getDashboardData(current.currentTodayDate)
         resolve();
       });
@@ -188,7 +194,7 @@ export class DashboardComponent implements OnInit {
         }else{
           var iconcontent = '<i class="feather icon-phone"></i>';
         }
-        arr.title = '<div class="mcontent">&nbsp;<span class="eventbox"><span class="'+contractclass+'">C</span>&nbsp;<span class="'+contractclass+'">$</span></span>&nbsp;'+element.address+'</div><div class="iconcontent">'+iconcontent+'</div><div ngbDropdown placement="end-top" class="btn-group show dropdown"><div ngbDropdownMenu class="dropdown-menu"  id="show'+arr.id+'" aria-labelledby="dropdown'+arr.id+'"><button ngbDropdownItem class="dropdown-item">Action - 1</button><button ngbDropdownItem class="dropdown-item">Another Action</button><button ngbDropdownItem class="dropdown-item">Something else is here</button></div></div>';
+        arr.title = '<div class="mcontent" id="ctm'+element.id+'">&nbsp;<span class="eventbox"><span class="'+contractclass+'">C</span>&nbsp;<span class="'+contractclass+'">$</span></span>&nbsp;'+element.address+'</div><div class="iconcontent">'+iconcontent+'</div></div>';
        
         arr.borderColor = backcolorinfo[0].colorCode; //'#0168fa';
         arr.resourceId = element.officerId;
@@ -272,7 +278,7 @@ export class DashboardComponent implements OnInit {
   handleEventClick(clickInfo: EventClickArg) {
     console.log('444');
     console.log(clickInfo.event);
-    console.log(clickInfo.event['_def'].publicId)
+    console.log(clickInfo.event['_def'].publicId);
 
     var bookingId = clickInfo.event['_def'].publicId;
     this.router.navigate(['/bookings/update/'+bookingId]);
@@ -386,7 +392,8 @@ export class DashboardComponent implements OnInit {
   }
 
   handleEventMouseEnter(e:any) {
-    alert('dd');
+    //alert('dd');
+    console.log(e);
     const event = e.event,
       startdate = event.start,
       enddate = event.end ? event.end : null,
@@ -463,5 +470,66 @@ export class DashboardComponent implements OnInit {
     info.el.style.color = backcolorinfo[0].colorCode;
     info.el.style.fontWeight = 'bold';      
   }
+  
+  handleEventDidMount(info:any) {
+    info.el.style.borderWidth = '3px';
+    
+   
+    
+    info.el.addEventListener('contextmenu', (e: MouseEvent) => {
+      e.preventDefault();
+      
 
+      const element = e.target as HTMLElement;
+      let mainid = info.event._def.publicId;
+      let ext = 'ctm'+mainid;
+
+      const ctmnu = (<HTMLInputElement>document.getElementById(ext));
+      console.log(ctmnu.offsetTop);
+
+      const contextMenu = (<HTMLInputElement>document.getElementById('contextMenu'));
+      var rectangle = element.getBoundingClientRect();
+      //console.log(rectangle.left);
+      //console.log(rectangle.top);
+      //console.log(e.clientX)
+      contextMenu.style.display = 'block';
+
+      /*console.log(e.clientY);
+      console.log(e.offsetY);
+      console.log(e.screenY);
+      console.log(e.y);
+      console.log(e.pageY)*/
+      
+
+      contextMenu.style.left = (e.pageX) + 'px';
+      contextMenu.style.top = (e.pageY) + 'px';
+      contextMenu.setAttribute('data-id',mainid);
+
+      const action1 = contextMenu.querySelector('#workorder');
+      //action1.setAttribute('data-id',mainid);
+      /*action1.addEventListener('click', () => {
+        // Handle action 1
+        var bookingId = info.event._def.publicId;
+        this.router.navigate(['/bookings/update/'+bookingId]);
+        contextMenu.style.display = 'none';
+      });*/
+    });
+
+    
+
+    
+    /*info.el.addEventListener("contextmenu",  (event:any) => {
+      event.preventDefault();
+      //ID of the event - will be needed for setting the state later on
+      console.log("eventDidMount", info.event.id);
+      //(<HTMLInputElement>document.getElementById('contextMenu')).style.display = 'block';
+     
+      //this.contextMenu.contextMenuData = event; // Pass event data to the context menu
+     // this.contextMenu.show.next({ event });
+
+      return false;
+    }, false);*/
+  }
+
+  
 }

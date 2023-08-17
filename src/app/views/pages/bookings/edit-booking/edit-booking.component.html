@@ -11,13 +11,13 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
             <div>
-                <h4 class="card-title mb-3 mb-md-0">Update Booking</h4>
+                <h4 class="card-title mb-3 mb-md-0">{{addUpdateLabel}} Booking</h4>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap">
                 <!--<button type="button" routerLink="/booking/add" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
                 Add Booking
                 </button>-->
-                <div class="col-sm-6" *ngIf="item.paymentStatus == 'PENDING'">
+                <div class="col-sm-6" *ngIf="item.paymentStatus == 'PENDING' && !saveButton">
                     <b>Payment URL :</b> {{paymentUrl}} &nbsp;&nbsp; <button style="background: #1C315F; border:none;" type="button" class="btn btn-success" (click)="copyURL();">Copy URL</button>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                     <div class="col-sm-3">
                         <div class="mb-3 partsection" (click)="tabon('tabclientinfo')">
                             <h5 class="boxtitle">Client Information</h5>
-                            <span class="textcl"><b>Client 1:</b> {{item.firstName}} {{item.lastName}} <br /></span>
+                            <span class="textcl" *ngIf="item.firstName"><b>Client 1:</b> {{item.firstName}} {{item.lastName}} <br /></span>
                             <span class="textcl" *ngIf="item.secondaryFullName"><b>Client 2:</b> {{item.secondaryFullName}} <br /></span>
                             <span class="textcl" *ngIf="item.transFullName"><b>Client 3:</b> {{item.transFullName}} <br /></span>
                         </div>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="mb-3 partsection" (click)="tabon('tabproperty')">
                             <h5 class="boxtitle">Property Description</h5>
-                            <span class="textcl" *ngIf="item.buildingType"><b>Building Type: </b>{{item.buildingType}} ,</span> <span class="textcl" *ngIf="item.dwelling"><b>Dwelling: </b>{{item.dwelling}} ,</span> <span class="textcl" *ngIf="item.stories"><b>Stories: </b>{{item.stories}} ,</span> <span class="textcl" *ngIf="item.rooms"><b>Rooms: </b>{{item.rooms}} ,</span> <span class="textcl" *ngIf="item.bedrooms"><b>Bedrooms: </b>{{item.bedrooms}} ,</span> <span class="textcl" *ngIf="item.bathrooms"><b>Bathrooms: </b>{{item.bathrooms}} ,</span> <span class="textcl"><b>Square Feet: </b>{{item.squareFeet}}</span>, <span class="textcl"><b>Year Built: </b>{{item.yearBuilt}}</span>
+                            <span class="textcl" *ngIf="item.buildingType"><b>Building Type: </b>{{item.buildingType}}, </span> <span class="textcl" *ngIf="item.dwelling"><b>Dwelling: </b>{{item.dwelling}}, </span> <span class="textcl" *ngIf="item.stories"><b>Stories: </b>{{item.stories}}, </span> <span class="textcl" *ngIf="item.rooms"><b>Rooms: </b>{{item.rooms}}, </span> <span class="textcl" *ngIf="item.bedrooms"><b>Bedrooms: </b>{{item.bedrooms}}, </span> <span class="textcl" *ngIf="item.bathrooms"><b>Bathrooms: </b>{{item.bathrooms}}, </span> <span class="textcl" *ngIf="item.squareFeet"><b>Square Feet: </b>{{item.squareFeet}}, </span> <span class="textcl" *ngIf="item.yearBuilt"><b>Year Built: </b>{{item.yearBuilt}}</span>
                         </div>
                         <div class="mb-3 partsection" (click)="tabon('tabdatetime')">
                             <h5 class="boxtitle">Date/Time/Inspector</h5>

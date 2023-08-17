@@ -29,7 +29,8 @@ export class RegisterComponent implements OnInit {
       this.router.navigate(['/dashboard']);
     }
     this.formGroup = this.fb.group({
-      fullName: new FormControl("", Validators.required),
+      firstName: new FormControl("", Validators.required),
+      lastName: new FormControl("", Validators.required),
       phoneNumber: new FormControl("", Validators.required),
       jobRole: new FormControl("", Validators.required),
       email: new FormControl("", [Validators.required, Validators.email]),
@@ -71,13 +72,15 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    this.model.fullName = this.f.fullName.value;
+    this.model.firstName = this.f.firstName.value;
+    this.model.lastName = this.f.lastName.value;
     this.model.jobRole = this.f.jobRole.value;
     this.model.phoneNumber = this.f.phoneNumber.value;
     this.model.email = this.f.email.value;
     this.model.userId = this.f.userId.value;
     this.model.password = this.f.password.value;
     this.model.status = 'Active';
+    this.model.userType = 'user';
   
     this.authservice.registerForm(this.model).subscribe((response: any) => {
       if (response.status && response.authToken != '') {

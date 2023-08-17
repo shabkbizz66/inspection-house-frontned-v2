@@ -19,6 +19,11 @@ export const MENU: MenuItem[] = [
     icon: "unlock",
     link: '/inspectors',
   },
+  /*{
+    label: 'Users',
+    icon: "users",
+    link: '/users',
+  },*/
   {
     label:"Bookings",
     icon: 'file-text',
@@ -26,6 +31,10 @@ export const MENU: MenuItem[] = [
       {
         label:"List Bookings",
         link: '/bookings',
+      },
+      {
+        label:"Pending Bookings",
+        link: '/bookings/pending',
       },
       {
         label:"Add Booking",
@@ -36,6 +45,15 @@ export const MENU: MenuItem[] = [
         link: '/bookings/calendar',
       }
     ]
+  },
+  {
+    label: 'Alerts',
+    icon: "calendar",
+    link: '/bookings/alerts',
+    badge: {
+      variant: 'danger',
+      text: '2',
+    }
   },
   /*{
     label: 'Email',

@@ -30,7 +30,7 @@ export class AuthService {
     public router: Router) 
   {
     this.basePath = environment.apiUrl+'/v1/login';
-    this.registerPath = environment.apiUrl+'/v1/register';
+    this.registerPath = environment.apiUrl+'/v1/signup';
   }
   
   //Get Bearer Token

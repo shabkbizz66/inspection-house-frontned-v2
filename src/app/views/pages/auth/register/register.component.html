@@ -17,10 +17,17 @@
 
             <form class="forms-sample" [formGroup]="formGroup">
               <div class="mb-3">
-                <label for="fullName" class="form-label">Full Name</label>
-                <input type="text" formControlName="fullName" class="form-control" id="fullName" placeholder="Full Name" [ngClass]="{ 'is-invalid': submitted && f.fullName.errors }">
-                <div *ngIf="submitted && f.fullName.errors" class="invalid-feedback">
-                  <div *ngIf="f.fullName.errors.required">Full name is required</div>
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" formControlName="firstName" class="form-control" id="firstName" placeholder="First Name" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }">
+                <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                  <div *ngIf="f.firstName.errors.required">First name is required</div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" formControlName="lastName" class="form-control" id="lastName" placeholder="Last Name" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }">
+                <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                  <div *ngIf="f.lastName.errors.required">Last name is required</div>
                 </div>
               </div>
               <div class="mb-3">
