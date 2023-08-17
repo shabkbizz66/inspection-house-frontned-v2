@@ -11,11 +11,13 @@ export class GlobalConstants {
 
     getBookingList: string = "v1/booking";
     saveBooking: string = 'v1/booking';
-    updateBooking: string = 'v1/updateBooking';
+    updateBooking: string = 'v1/booking/updateBooking';
     cancelBooking: string = 'v1/booking/bookingStatusUpdate';
     getBookingById: string = 'v1/booking/getBooking';
     sendEmail: string = 'v1/booking/sendPaymentLinkEmail';
     getFilterBookingList = 'v1/booking/getTypeWiseBookings';
+    pendingBookingList = 'v1/booking/pendingBookings';
+    alertBookingList = 'v1/booking/bookingAlerts';
 
     saveBookingNotes: string = 'v1/bookingNotes/notes';
     getBookingNotes: string = 'v1/bookingNotes/getNotes';
@@ -47,4 +49,7 @@ export class GlobalConstants {
     getUserById: string = 'v1/getUserbyid';
     saveUser: string = 'v1/saveuser';
     updateUser: string = 'v1/updateuser'
+
+    saveAgent: string= 'v1/agents/saveAgent';
+    sendConfirmationEmail: string = 'v1/sendemail';
 }

@@ -21,6 +21,10 @@ const routes: Routes = [
         loadChildren: () => import('./views/pages/inspectors/inspectors.module').then(m => m.InspectorsModule)
       },
       {
+        path: 'users',
+        loadChildren: () => import('./views/pages/users/users.module').then(m => m.UsersModule)
+      },
+      {
         path: 'bookings',
         loadChildren: () => import('./views/pages/bookings/bookings.module').then(m => m.BookingsModule)
       },

@@ -6,6 +6,7 @@ import MetisMenu from 'metismenujs';
 import { MENU } from './menu';
 import { MenuItem } from './menu.model';
 import { Router, NavigationEnd } from '@angular/router';
+import { InspectorService } from '../../pages/inspectors/inspector.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,10 +17,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   @ViewChild('sidebarToggler') sidebarToggler: ElementRef;
 
+  alertCount: number= 4;
+
   menuItems: MenuItem[] = [];
   @ViewChild('sidebarMenu') sidebarMenu: ElementRef;
 
-  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, router: Router) { 
+  constructor(@Inject(DOCUMENT) private document: Document, private renderer: Renderer2, router: Router,
+  private inspectorService: InspectorService) { 
+      this.inspectorService.alertCount.subscribe((response:any)=>{
+        this.showCount(response);
+      })
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
 
@@ -41,7 +48,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.menuItems = MENU;
-
+    this.alertCount = Number(localStorage.getItem('alert'));
     /**
      * Sidebar-folded on desktop (min-width:992px and max-width: 1199px)
      */
@@ -189,6 +196,10 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     }
   };
 
+
+  showCount(data:any){
+    this.alertCount = Number(data);
+  }
 
   /**
    * Toggles the menu items

@@ -25,6 +25,14 @@ export class BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  
   }
 
+  workorder(event:any){
+    const contextMenu = (<HTMLInputElement>document.getElementById('contextMenu'));
+    var id = contextMenu.getAttribute('data-id');
+    console.log(id);
+    contextMenu.style.display = 'none';
+    this.router.navigate(['/bookings/edit/'+id]);
+  }
 }

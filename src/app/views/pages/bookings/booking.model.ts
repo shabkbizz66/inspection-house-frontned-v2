@@ -32,6 +32,7 @@ export class BookingModel{
     reportreView: string;
     comments: string;
     officerId: string;
+    officerName: string;
     additionalServices: string;
     additionalServiceCost: number;
     paymentStatus: string = 'PENDING';
@@ -39,6 +40,13 @@ export class BookingModel{
     longitude: string;
     bookingType: string;
     //timeZone: string;
+
+    buildingType: string;
+    dwelling: string;
+    stories: string;
+    rooms: string;
+    bedrooms: string;
+    bathrooms: string;
     status: string;
 }
 
@@ -55,4 +63,29 @@ export class notesModel{
     bookingId: string;
     notes: string;
     createdBy: string;
+}
+
+export class agentModel{
+    id: string;
+    name: string;
+    license:string;
+    phone: string;
+    email: string;
+    address: string;
+    companyName: string;
+    notes: string;
+}
+
+export class emailModel{
+    emailTo: string;
+    emailCC:string;
+    emailBCC: string;
+    subject: string;
+    message: string;
+    salutation: string;
+    address: boolean;
+    datetime: boolean;
+    fee: boolean;
+    duration: boolean;
+    contract: boolean;
 }

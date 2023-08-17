@@ -25,10 +25,12 @@ export class AuthService {
   currentUser = {};
 
   basePath: string = '';
+  registerPath:string = '';
   constructor(private http: HttpClient, 
     public router: Router) 
   {
     this.basePath = environment.apiUrl+'/v1/login';
+    this.registerPath = environment.apiUrl+'/v1/signup';
   }
   
   //Get Bearer Token
@@ -44,6 +46,11 @@ export class AuthService {
   //Login Users
   loginForm(email: string,password: string): Observable<any> {
       return this.http.post<any>(this.basePath, { email, password },{ headers: this.headers})
+          .pipe();
+  }
+
+  registerForm(item: any){
+    return this.http.post<any>(this.registerPath, item,{ headers: this.headers})
           .pipe();
   }
 
