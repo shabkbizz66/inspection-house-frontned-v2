@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { BookingService } from '../booking.service';
 import { GlobalConstants } from '../../../../global-constants';
 import { DataTable } from "simple-datatables";
 import { formatDate } from "@angular/common";
 import { AlertService } from '../../alert/alert.service';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import swal from 'sweetalert2';
+import { Router } from '@angular/router';
+import { RejectedResponse } from '../../../models/rejected-response';
 
 @Component({
   selector: 'app-failed-bookings',
@@ -13,9 +17,14 @@ import { AlertService } from '../../alert/alert.service';
 export class FailedBookingsComponent implements OnInit {
 
   bookingData: any;
+  cancelId: number;
+  modalReference: NgbModalRef;
+  @ViewChild('deleteModal') deleteModal: any;
 
   constructor(private bookingService: BookingService,
     public alertService: AlertService,
+    private router: Router,
+    private modalService: NgbModal,
     public globals: GlobalConstants) { }
 
   ngOnInit(): void {
@@ -44,7 +53,6 @@ export class FailedBookingsComponent implements OnInit {
           "Package Name",
           "Package Price",
           "Inspector Name",
-          "Square Footage",
           "Payment Status",
           "Agreement",
           'Booking Type',
@@ -59,9 +67,10 @@ export class FailedBookingsComponent implements OnInit {
       this.bookingData.forEach((element: any) => {
         obj.data[y] = [];
 
-
+        var popupdelete = "&nbsp;&nbsp;&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' title='Cancel Booking'><i class='feather icon-delete'></i></span>";
+        
         let id = "/bookings/edit/"+element.id;
-        let url = '<a href="'+id+'" title="Update Booking"><i class="feather icon-eye"></i></a>';
+        let url = '<a href="'+id+'" title="Update Booking"><i class="feather icon-eye"></i></a>'+popupdelete;
        
        
         //console.log(url)
@@ -70,8 +79,11 @@ export class FailedBookingsComponent implements OnInit {
         //obj.data[y].push(y+1);
         obj.data[y].push(element.firstName+' '+element.lastName);
         obj.data[y].push(element.address);
-        obj.data[y].push(element.email);
-        obj.data[y].push(this.formatPhoneNumber(element.phone));
+        obj.data[y].push('<i class="feather icon-mail" title="'+element.email+'"></i>');
+
+        var phn = this.formatPhoneNumber(element.phone);
+
+        obj.data[y].push('<i class="feather icon-phone" title="'+phn+'"></i>');
         if(element.inspectionTime == '09:00:00'){
           var ctime = '09:00 am';
         }else{
@@ -80,10 +92,15 @@ export class FailedBookingsComponent implements OnInit {
         
         obj.data[y].push(this.formatDate(element.inspectionDate)+' '+ctime);
 
-        obj.data[y].push(element.packageName);
+        if(element.packageName == 'Total Solutions Bundle'){
+          var pckname = 'TSB';
+        }else{
+          var pckname = 'T5';
+        }
+        obj.data[y].push(pckname);
         obj.data[y].push('$'+element.packagePrice);
         obj.data[y].push(element.officerName);
-        obj.data[y].push(element.squareFeet);
+        //obj.data[y].push(element.squareFeet);
         /*if(element.paymentStatus == 'PENDING'){
           element.paymentStatus = '<a id="" name="'+element.id+'" (click)="updatePaymentStatus('+element.id+')"><span>Awaiting</span></a>';
         }*/
@@ -124,4 +141,52 @@ export class FailedBookingsComponent implements OnInit {
     return formattedDate;
   }
 
+  openModal(event: any){
+    const dataId = event.target.parentElement.id;
+    const cancelsatus = Number(event.target.parentElement.className);
+    if(dataId != ''){
+      
+    }else if(cancelsatus > 0){
+      this.cancelId = cancelsatus;
+      this.openCancelPopup(this.deleteModal);
+    }else {
+      
+    }
+  }
+
+  openCancelPopup(content: TemplateRef<any>) {
+    this.modalReference = this.modalService.open(content);
+  }
+
+  closePopup(){
+    this.modalReference.close();
+  }
+
+  showToast(msg: string){
+    swal.fire({ showConfirmButton: false, timer: 1800, title: 'Success!', text: msg, icon: 'success', });
+  }
+
+  errorshowToast(msg: string){
+    swal.fire({ showConfirmButton: false, timer: 1800, title: 'Error!', text: msg, icon: 'error', });
+  }
+
+  cancelBooking(id: number){
+    this.modalReference.close();
+    let item: any;
+    this.bookingService.create(this.globals.cancelBooking+'?id='+id+'&status=Cancelled',item).then((response) => {
+      this.showToast('Booking Cancelled Successfully');
+      this.backtoList();
+      //this.SpinnerService.hide();
+    },
+      (rejected: RejectedResponse) => {
+        
+      }
+    );
+  }
+
+  backtoList() {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate(['/bookings']);
+  }
 }
