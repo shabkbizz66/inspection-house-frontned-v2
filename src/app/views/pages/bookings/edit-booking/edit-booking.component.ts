@@ -46,6 +46,7 @@ export class EditBookingComponent implements OnInit {
 
   tabemail: boolean= false;
   
+  templateData: any;
   startDateMonth: any;
   showInspectorName: string;
   inspectorAlert: string='';
@@ -134,6 +135,9 @@ export class EditBookingComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
+    this.bookingService.get(this.globals.getTemplates).then((Response: any) => {
+      this.templateData = Response.response;
+    });
     this.activatedRoute.params.subscribe((params) => {
       var id = params["id"];
       if (id) {
@@ -219,6 +223,9 @@ export class EditBookingComponent implements OnInit {
           }else{
             this.modifiedTime = '02:00 PM';
           }
+
+          this.itemEmail.to = this.item.email;
+          this.itemEmail.salutation = 'Hello '+this.item.firstName+' '+this.item.lastName;
         });
       }else{
         this.inspectionDate = this.calendar.getToday();
@@ -305,17 +312,20 @@ export class EditBookingComponent implements OnInit {
     });
 
     this.emailformGroup = new FormGroup({
-      emailTo: new FormControl('',Validators.required),
-      emailCC:new FormControl(''),
-      emailBCC:new FormControl(''),
+      to: new FormControl('',Validators.required),
+      cc:new FormControl(''),
+      bcc:new FormControl(''),
       subject: new FormControl('',Validators.required),
       message: new FormControl('',Validators.required),
       salutation: new FormControl('',Validators.required),
       address: new FormControl(''),
-      datetime: new FormControl(''),
+      time: new FormControl(''),
       fee: new FormControl(''),
       duration: new FormControl(''),
-      contract: new FormControl('')
+      includeLink: new FormControl(''),
+      inspectorName: new FormControl(''),
+      inspectorLicense: new FormControl(''),
+      consultationTime:  new FormControl('')
     });
   }
 
@@ -835,6 +845,13 @@ export class EditBookingComponent implements OnInit {
         //this.alertService.BindServerErrors(this.formGroup, rejected);
       }
     );
+  }
+
+  subjectChange(event:any){
+    const info = this.templateData.find((x: any) => x.id == event.target.value);
+    this.itemEmail.message = info.body;
+    this.itemEmail.templateId = event.target.value;
+    this.itemEmail.bookingId = this.item.id;
   }
 
 }
