@@ -230,6 +230,7 @@ export class EditBookingComponent implements OnInit {
       }else{
         this.inspectionDate = this.calendar.getToday();
         this.startDateMonth = ''; 
+        this.saveLabel = 'Save Booking';
         this.item.inspectionDate = this.inspectionDate.year+"-"+('0'+this.inspectionDate.month).slice(-2)+"-"+('0'+this.inspectionDate.day).slice(-2);
         this.blockBookingSlots(this.item.inspectionDate);
         this.addUpdateLabel = 'Create';
@@ -651,9 +652,9 @@ export class EditBookingComponent implements OnInit {
   }
 
   getExtracPrice(event: any){
-    if(this.ontheflyInspectorID == 0){
+    /*if(this.ontheflyInspectorID == 0){
       return;
-    }
+    }*/
 
     const button = (event.srcElement.disabled === undefined) ? event.srcElement.parentElement : event.srcElement;
     button.setAttribute('disabled', true);

@@ -115,7 +115,7 @@ export class BookingAgreementComponent implements OnInit {
         pdf.addImage(imgData, 'png', topLeftMargin, - (pdfHeight * i) + (topLeftMargin * 4), canvasImageWidth, canvasImageHeight);
       }
 
-      pdf.save(`Document ${new Date().toLocaleString()}.pdf`);
+      pdf.save(`Contract ${new Date().toLocaleString()}.pdf`);
     });
   }
 
