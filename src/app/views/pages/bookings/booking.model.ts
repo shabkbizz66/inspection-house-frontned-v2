@@ -48,6 +48,15 @@ export class BookingModel{
     bedrooms: string;
     bathrooms: string;
     status: string;
+
+    op1: boolean;
+    op2: boolean;
+    op3: boolean;
+    op4: boolean;
+    op5: boolean;
+    op6: boolean;
+    op7: boolean;
+    op8: boolean;
 }
 
 export class reassignModel{

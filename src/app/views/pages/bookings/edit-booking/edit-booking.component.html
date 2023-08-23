@@ -54,7 +54,7 @@
                         </div>
                         <div class="mb-3 partsection" (click)="tabon('tabdatetime')">
                             <h5 class="boxtitle">Date/Time/Inspector</h5>
-                            <span class="textcl">{{item.officerName}}</span> <br /><span class="textcl">{{item.inspectionDate | date:'EEE, MMM dd, yyyy'}}  {{modifiedTime}}</span>
+                            <span class="textcl">{{showInspectorName}}</span> <br /><span class="textcl">{{item.inspectionDate | date:'EEE, MMM dd, yyyy'}}  {{modifiedTime}}</span>
                         </div>
                         <div class="mb-3 partsection" (click)="tabon('tabinspectiontype')">
                             <h5 class="boxtitle">Inspection Type/Fee</h5>
@@ -326,34 +326,35 @@
                                                 </li>
                                             </ul>
                                         </div>
+                                        
                                         <div class="row" style="padding-bottom: 5px;">
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="100" data-id="Swimming Pool/Hot Tub">&nbsp;Swimming Pool/Hot Tub - $100
+                                                <input type="checkbox" class="form-check-input" formControlName="op1" [(ngModel)]="item.op1" (change)="checkValue($event)" value="100" data-id="Swimming Pool/Hot Tub">&nbsp;Swimming Pool/Hot Tub - $100
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices"  value="225" data-id="Septic">&nbsp;Septic - $225
+                                                <input type="checkbox" class="form-check-input" formControlName="op2" [(ngModel)]="item.op2" value="225" data-id="Septic">&nbsp;Septic - $225
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="100" data-id="Storage/Shed w/out Utilities">&nbsp;Storage/Shed w/out Utilities - $100
+                                                <input type="checkbox" class="form-check-input" formControlName="op3" [(ngModel)]="item.op3" (change)="checkValue($event)" value="100" data-id="Storage/Shed w/out Utilities">&nbsp;Storage/Shed w/out Utilities - $100
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="100" data-id="Storage/Shed with Utilities">&nbsp;Storage/Shed withUtilities - $100
+                                                <input type="checkbox" class="form-check-input" formControlName="op4" [(ngModel)]="item.op4" (change)="checkValue($event)" value="100" data-id="Storage/Shed with Utilities">&nbsp;Storage/Shed withUtilities - $100
                                             </div>
                                             
                                         </div>
                                         <div class="row" style="padding: 5px 0px;">
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="100" data-id="Barn w/out Utilities">&nbsp;Barn w/out Utilities - $100
+                                                <input type="checkbox" class="form-check-input" formControlName="op5" [(ngModel)]="item.op5" (change)="checkValue($event)" value="100" data-id="Barn w/out Utilities">&nbsp;Barn w/out Utilities - $100
                                                 
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="50" data-id="Outdoor Kitchen Appliances">&nbsp;Outdoor Kitchen Appliances - $50
+                                                <input type="checkbox" class="form-check-input" formControlName="op6" [(ngModel)]="item.op6" (change)="checkValue($event)" value="50" data-id="Outdoor Kitchen Appliances">&nbsp;Outdoor Kitchen Appliances - $50
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="250" data-id="Guest House">&nbsp;Guest House - $250
+                                                <input type="checkbox" class="form-check-input" formControlName="op7" [(ngModel)]="item.op7" (change)="checkValue($event)" value="250" data-id="Guest House">&nbsp;Guest House - $250
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="100" data-id="Workshop with Utilities">&nbsp;Workshop with Utilities - $100
+                                                <input type="checkbox" class="form-check-input" formControlName="op8" [(ngModel)]="item.op8" (change)="checkValue($event)" value="100" data-id="Workshop with Utilities">&nbsp;Workshop with Utilities - $100
                                             </div>
                 
                                         </div>
@@ -406,7 +407,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Building Type</label>
                                         <select formControlName="buildingType" [(ngModel)]="item.buildingType"class="form-select">
-                                            <option *ngFor="let btype of buildingTypeData">{{btype}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let btype of buildingTypeData" value="{{btype}}">{{btype}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -414,7 +416,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Dwelling</label>
                                         <select formControlName="dwelling" [(ngModel)]="item.dwelling"class="form-select">
-                                            <option *ngFor="let dwell of dwellingData">{{dwell}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let dwell of dwellingData" value="{{dwell}}">{{dwell}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -422,7 +425,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Stories</label>
                                         <select formControlName="stories" [(ngModel)]="item.stories"class="form-select">
-                                            <option *ngFor="let stor of storiesData">{{stor}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let stor of storiesData" value="{{stor}}">{{stor}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -430,7 +434,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Rooms</label>
                                         <select formControlName="rooms" [(ngModel)]="item.rooms"class="form-select">
-                                            <option *ngFor="let room of roomsData">{{room}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let room of roomsData" value="{{room}}">{{room}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -440,7 +445,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Bedrooms</label>
                                         <select formControlName="bedrooms" [(ngModel)]="item.bedrooms"class="form-select">
-                                            <option *ngFor="let bedrom of bedroomData">{{bedrom}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let bedrom of bedroomData" value="{{bedrom}}">{{bedrom}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -448,7 +454,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Bathrooms</label>
                                         <select formControlName="bathrooms" [(ngModel)]="item.bathrooms"class="form-select">
-                                            <option *ngFor="let bathroom of bathroomData">{{bathroom}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let bathroom of bathroomData" value="{{bathroom}}">{{bathroom}}</option>
                                         </select>
                                     </div>
                                 </div>
