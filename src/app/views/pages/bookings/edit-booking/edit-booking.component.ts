@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { BookingModel, agentModel, emailModel, notesModel } from '../booking.model';
@@ -138,6 +138,7 @@ export class EditBookingComponent implements OnInit {
     public globals: GlobalConstants,
     public alertService: AlertService,
     private modalService: NgbModal,
+    private el: ElementRef,
     private bookingService: BookingService,
     private http: HttpClient, 
     private activatedRoute: ActivatedRoute,
@@ -147,12 +148,17 @@ export class EditBookingComponent implements OnInit {
     this.bookingService.get(this.globals.getTemplates).then((Response: any) => {
       this.templateData = Response.response;
     });
+    
+    this.BindFormGroup();
+
     this.activatedRoute.params.subscribe((params) => {
       var id = params["id"];
       if (id) {
         this.bookingService.get(this.globals.getBookingById+'/?id='+id).then((Response: any) => {
           this.item = Response.response;
+          console.log(this.item)
           this.addUpdateLabel = 'Update';
+
           if(this.item.paymentStatus == 'PENDING'){
             this.saveButton = true;
             this.saveLabel = 'Update Booking';
@@ -235,6 +241,20 @@ export class EditBookingComponent implements OnInit {
 
           this.itemEmail.to = this.item.email;
           this.itemEmail.salutation = 'Hello '+this.item.firstName+' '+this.item.lastName;
+
+          this.formGroup.patchValue({address:this.item.address,
+            squarefeet:this.item.squareFeet,
+            yearbuilt: this.item.yearBuilt,
+            inspectiontype: this.item.inspectionType,
+            inspectiontime: this.item.inspectionTime,
+            city: this.item.city,
+            state: this.item.state,
+            packagePrice: this.item.packagePrice,
+            packagename: this.item.packageName,
+            reportreview: this.item.reportreView,
+            zipcode: this.item.zipcode
+          });
+          this.formGroup.updateValueAndValidity();
         });
       }else{
         this.inspectionDate = this.calendar.getToday();
@@ -245,8 +265,6 @@ export class EditBookingComponent implements OnInit {
         this.addUpdateLabel = 'Create';
       }
     });
-    
-    this.BindFormGroup();
 
     
   }
@@ -674,7 +692,6 @@ export class EditBookingComponent implements OnInit {
   }
 
   getExtracPrice(event: any){
-    console.log(this.formGroup);
     if(this.ontheflyInspectorID == 0){
       alert('Inspector not assigned yet')
       return;
@@ -882,14 +899,4 @@ export class EditBookingComponent implements OnInit {
     this.item.buildingType = event.target.value;
   }
 
-  onCheckboxChange(event:any){
-    const selectedServices = (this.formGroup.controls['selectedServices'] as FormArray);
-    if (event.target.checked) {
-      selectedServices.push(new FormControl(event.target.value));
-    } else {
-      const index = selectedServices.controls
-      .findIndex(x => x.value === event.target.value);
-      selectedServices.removeAt(index);
-    }
-  }
 }
