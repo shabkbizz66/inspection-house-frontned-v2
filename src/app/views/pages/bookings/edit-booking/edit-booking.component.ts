@@ -168,6 +168,7 @@ export class EditBookingComponent implements OnInit {
             //this.addUpdateLabel = 'Create'
           }
 
+          this.saveLabel = 'Update Booking';
           //this.saveButton = false;
           
           if(this.item.inspectionType == 'Phased'){

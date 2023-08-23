@@ -729,7 +729,7 @@
                                                 <input type="checkbox" class="form-check-input" formControlName="address" [(ngModel)]="itemEmail.address" value="true">&nbsp;Address: {{item.address}}
                                             </div>
                                             <div class="col-sm-8">
-                                                <input type="checkbox" class="form-check-input" formControlName="time" [(ngModel)]="itemEmail.time" value="true">&nbsp;Fee: {{item.inspectionDate | date:'EEE, MMM dd, yyyy'}}
+                                                <input type="checkbox" class="form-check-input" formControlName="time" [(ngModel)]="itemEmail.time" value="true">&nbsp;Date: {{item.inspectionDate | date:'EEE, MMM dd, yyyy'}}
                                             </div>
                                             <div class="col-sm-8">
                                                 <input type="checkbox" class="form-check-input" formControlName="fee" [(ngModel)]="itemEmail.fee" value="true">&nbsp;Fee: ${{item.packagePrice}}
