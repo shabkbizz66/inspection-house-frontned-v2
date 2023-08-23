@@ -740,8 +740,6 @@ export class EditBookingComponent implements OnInit {
         }
       );
     } else {
-      console.log(this.item);
-      return;
       this.bookingService.create(this.globals.saveBooking,this.item).then((response) => {
         this.showToast('Booking Inserted Successfully');
         this.backToList();

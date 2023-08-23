@@ -66,7 +66,7 @@
                             <span class="textcl" *ngIf="item.agentName"><b>Email: </b>{{item.agentEmail}} <br /></span>
                             <span class="textcl" *ngIf="item.agentName"><b>Agent Phone: </b>{{formatPhoneNumber(item.agentPhone)}}</span>
                         </div>
-                        <div class="mb-3 partsection" (click)="tabon('tabnotes')">
+                        <div class="mb-3 partsection" *ngIf="item.id" (click)="tabon('tabnotes')">
                             <h5 class="boxtitle">Notes</h5>
                             <span class="textcl"></span>
                         </div>
@@ -74,7 +74,7 @@
                             <h5 class="boxtitle">Contract</h5>
                             <span class="textcl">THIS CONTRACT LIMITS THE LIABILITY OF THE HOME INSPECTION COMPANY....</span>
                         </div>
-                        <div class="mb-3 partsection" (click)="tabon('tabemail')">
+                        <div class="mb-3 partsection" *ngIf="item.id" (click)="tabon('tabemail')">
                             <h5 class="boxtitle">Confirmation Email</h5>
                         </div>
                     </div>
@@ -332,7 +332,7 @@
                                                 <input type="checkbox" class="form-check-input" formControlName="op1" [(ngModel)]="item.op1" (change)="checkValue($event)" value="100" data-id="Swimming Pool/Hot Tub">&nbsp;Swimming Pool/Hot Tub - $100
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" formControlName="op2" [(ngModel)]="item.op2" value="225" data-id="Septic">&nbsp;Septic - $225
+                                                <input type="checkbox" class="form-check-input" formControlName="op2" [(ngModel)]="item.op2" (change)="checkValue($event)" value="225" data-id="Septic">&nbsp;Septic - $225
                                             </div>
                                             <div class="col-sm-3">
                                                 <input type="checkbox" class="form-check-input" formControlName="op3" [(ngModel)]="item.op3" (change)="checkValue($event)" value="100" data-id="Storage/Shed w/out Utilities">&nbsp;Storage/Shed w/out Utilities - $100
