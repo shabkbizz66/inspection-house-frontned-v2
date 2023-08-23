@@ -161,14 +161,14 @@ export class EditBookingComponent implements OnInit {
 
           if(this.item.paymentStatus == 'PENDING'){
             this.saveButton = true;
-            this.saveLabel = 'Update Booking';
+            this.saveLabel = 'Save';
             //this.addUpdateLabel = 'Update';
           }else{
             this.saveButton = false;
             //this.addUpdateLabel = 'Create'
           }
 
-          this.saveLabel = 'Update Booking';
+          this.saveLabel = 'Save';
           //this.saveButton = false;
           
           if(this.item.inspectionType == 'Phased'){
@@ -260,7 +260,7 @@ export class EditBookingComponent implements OnInit {
       }else{
         this.inspectionDate = this.calendar.getToday();
         this.startDateMonth = ''; 
-        this.saveLabel = 'Save Booking';
+        this.saveLabel = 'Save';
         this.item.inspectionDate = this.inspectionDate.year+"-"+('0'+this.inspectionDate.month).slice(-2)+"-"+('0'+this.inspectionDate.day).slice(-2);
         this.blockBookingSlots(this.item.inspectionDate);
         this.addUpdateLabel = 'Create';
@@ -898,6 +898,14 @@ export class EditBookingComponent implements OnInit {
 
   changeBuildingType(event:any){
     this.item.buildingType = event.target.value;
+  }
+
+  changeNewTime(event:any){
+
+  }
+
+  changeDuration(event:any){
+
   }
 
 }

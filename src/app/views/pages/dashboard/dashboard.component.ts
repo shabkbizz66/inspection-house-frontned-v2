@@ -288,7 +288,7 @@ export class DashboardComponent implements OnInit,OnDestroy  {
     console.log(clickInfo.event['_def'].publicId);
 
     var bookingId = clickInfo.event['_def'].publicId;
-    this.router.navigate(['/bookings/edit/'+bookingId]);
+    this.router.navigate(['/bookings/update/'+bookingId]);
     var id = clickInfo.event['_def'].publicId;
     let classinfo = 'show'+id;
     this.inspectorData.forEach((element:any) => {

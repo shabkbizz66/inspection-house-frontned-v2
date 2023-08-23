@@ -69,7 +69,7 @@ export class BaseComponent implements OnInit {
     var id = contextMenu.getAttribute('data-id');
     console.log(id);
     contextMenu.style.display = 'none';
-    this.router.navigate(['/bookings/edit/'+id]);
+    this.router.navigate(['/bookings/update/'+id]);
   }
 
   openModal(){

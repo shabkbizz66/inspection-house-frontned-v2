@@ -69,7 +69,7 @@ export class FailedBookingsComponent implements OnInit {
 
         var popupdelete = "&nbsp;&nbsp;&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' title='Cancel Booking'><i class='feather icon-delete'></i></span>";
         
-        let id = "/bookings/edit/"+element.id;
+        let id = "/bookings/update/"+element.id;
         let url = '<a href="'+id+'" title="Update Booking"><i class="feather icon-eye"></i></a>'+popupdelete;
        
        

@@ -113,7 +113,7 @@ export class ListBookingsComponent implements OnInit {
         obj.data[y] = [];
 
 
-        let id = "/bookings/edit/"+element.id;
+        let id = "/bookings/update/"+element.id;
         var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector / Reschedule Booking'><i class='feather icon-user'></i></a>";
         var popupdelete = "&nbsp;&nbsp;&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' nm='22' title='Cancel Booking'><i class='feather icon-delete'></i></span>";
         var sendmail = "&nbsp;&nbsp;&nbsp;&nbsp;<a id='' class='' name='"+element.id+"'  style='cursor: pointer;' title='Resend Email'><i class='feather icon-mail'></i></a>";

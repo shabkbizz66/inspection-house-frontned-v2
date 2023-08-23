@@ -213,7 +213,7 @@ export class InspectionCalendarComponent implements OnInit {
     }*/
     console.log(clickInfo.event._def.publicId);
     let id = clickInfo.event._def.publicId;
-    this.router.navigate(['/bookings/edit/'+id]);
+    this.router.navigate(['/bookings/update/'+id]);
   }
 
   handleEvents(events: EventApi[]) {

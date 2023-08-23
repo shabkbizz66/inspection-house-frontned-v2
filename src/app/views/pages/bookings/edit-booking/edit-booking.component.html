@@ -1,4 +1,4 @@
-<nav class="page-breadcrumb">
+<!--<nav class="page-breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a routerLink="/bookings">Bookings</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{addUpdateLabel}}</li>
@@ -14,9 +14,7 @@
                 <h4 class="card-title mb-3 mb-md-0">{{addUpdateLabel}} Booking</h4>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap">
-                <!--<button type="button" routerLink="/booking/add" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
-                Add Booking
-                </button>-->
+                
                 <div class="col-sm-6" *ngIf="item.paymentStatus == 'PENDING' && !saveButton">
                     <b>Payment URL :</b> {{paymentUrl}} &nbsp;&nbsp; <button style="background: #1C315F; border:none;" type="button" class="btn btn-success" (click)="copyURL();">Copy URL</button>
                 </div>
@@ -25,7 +23,7 @@
         </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <div class="row">
     <div class="col-md-12 stretch-card">
@@ -35,7 +33,6 @@
 
                
             <form [formGroup]="formGroup">
-                
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="mb-3 partsection" (click)="tabon('tabclientinfo')">
@@ -256,7 +253,7 @@
                             <h4 class="maintitle">Inspection Type & Fee</h4>
                            
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="mb-3">
                                         <label class="form-label">Reason For Inspection <span style="color:red;">*</span></label>
                                         <select formControlName="inspectiontype" (change)="changeInspc($event)" [(ngModel)]="item.inspectionType" [ngClass]="{ 'is-invalid': submitted && f.inspectiontype.errors }" class="form-select">
@@ -272,7 +269,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4" *ngIf="subPackage">
+                                <div class="col-sm-3" *ngIf="subPackage">
                                     <div class="mb-3">
                                         <label class="form-label">Phase</label>
                                         <select formControlName="inspectionSubType" [(ngModel)]="item.inspectionSubType" [ngClass]="{ 'is-invalid': submitted && f.inspectionSubType.errors }" class="form-select">
@@ -286,9 +283,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="mb-3">
                                         <label class="form-label">Package <span style="color:red;">*</span></label>
                                         <select formControlName="packagename" (change)="packageChange($event)" [(ngModel)]="item.packageName" [ngClass]="{ 'is-invalid': submitted && f.packagename.errors }" class="form-select">
@@ -301,7 +296,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="mb-3">
                                         <label class="form-label">Review <span style="color:red;">*</span></label>
                                         <select formControlName="reportreview" [(ngModel)]="item.reportreView" [ngClass]="{ 'is-invalid': submitted && f.reportreview.errors }" class="form-select">
@@ -315,10 +310,11 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="mb-3">
-                                        <label class="form-label" style="width:100%">Select Ancillary Services </label>
+                                        <label class="form-label" style="width:100%"><b>Select Ancillary Services</b></label>
                                         <div class="row" *ngIf="item.additionalServices">
                                             <ul>
                                                 <li *ngFor="let p of servicesArr">
@@ -524,6 +520,49 @@
                                         </div>-->
                                     </div>
                                 </div>
+                                <!--<div class="col-sm-3">
+                                    <label class="form-label">Start Time </label>
+                                    <div class="mb-3">    
+                                        <select formControlName="inspectionTime"  (change)="changeNewTime($event)" [(ngModel)]="item.inspectionTime" [ngClass]="{ 'is-invalid': emailSubmitted && f.inspectionTime.errors }" class="form-select">
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option value="08:00:00">8 am</option>
+                                            <option value="09:00:00">9 am</option>
+                                            <option value="10:00:00">10 am</option>
+                                            <option value="11:00:00">11 am</option>
+                                            <option value="12:00:00">12 pm</option>
+                                            <option value="13:00:00">01 pm</option>
+                                            <option value="14:00:00">02 pm</option>
+                                            <option value="15:00:00">03 pm</option>
+                                            <option value="16:00:00">04 pm</option>
+                                            <option value="17:00:00">05 pm</option>
+                                            <option value="18:00:00">06 pm</option>
+                                            <option value="19:00:00">07 pm</option>
+                                            <option value="20:00:00">08 pm</option>
+                                        </select>
+                                        <div *ngIf="submitted && f.inspectionTime.errors" class="invalid-feedback">
+                                        <div *ngIf="f.inspectionTime.errors.required">Inspection Time is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label">Start Time </label>
+                                    <div class="mb-3">    
+                                        <select formControlName="duration"  (change)="changeDuration($event)" [(ngModel)]="item.duration" [ngClass]="{ 'is-invalid': emailSubmitted && f.inspectionTime.errors }" class="form-select">
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option value="2">2</option>
+                                            <option value="2.5">2.5</option>
+                                            <option value="3">3</option>
+                                            <option value="3.5">3.45</option>
+                                            <option value="4">4</option>
+                                            <option value="4.5">4.5</option>
+                                            <option value="5">5</option>
+                                            <option value="5.5">5.5</option>
+                                        </select>
+                                        <div *ngIf="submitted && f.inspectionTime.errors" class="invalid-feedback">
+                                        <div *ngIf="f.inspectionTime.errors.required">Inspection Time is required</div>
+                                        </div>
+                                    </div>
+                                </div>-->
                                 <div class="col-sm-6">
                                     <div class="mb-3">
                                         <label class="form-label">Inspection Time <span style="color:red;">*</span></label>
@@ -531,27 +570,11 @@
                                             <div class="time-sloat" *ngIf="i1">
                                                 <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" id="i1" value="09:00:00"> 9:00 am</label>
                                             </div>
-                                            <!--<div class="time-sloat" *ngIf="i2">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="10:00:00"> 10:00 am</label>
-                                            </div>
-                                            <div class="time-sloat" *ngIf="i3">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="11:00:00"> 11:00 am</label>
-                                            </div> 
-                                            <div class="time-sloat"  *ngIf="i4">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="12:00:00"> 12:00 pm</label>
-                                            </div>
-                                            <div class="time-sloat" *ngIf="i5">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="13:00:00"> 1:00 pm</label>
-                                            </div>-->
+                                            
                                             <div class="time-sloat" *ngIf="i6">
                                                 <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="14:00:00"> 2:00 pm</label>
                                             </div>
-                                            <!--<div class="time-sloat" *ngIf="i7">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="15:00:00"> 3:00 pm</label>
-                                            </div>
-                                            <div class="time-sloat" *ngIf="i8">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="16:00:00"> 4:00 pm</label>
-                                            </div>-->
+                                            
                                         </div>
                                         <div>
                                             <div style="font-size: 0.875em; color: #ff3366;" *ngIf="submitted && f.inspectiontime.errors?.required">Inspection Time is required</div>
@@ -663,7 +686,7 @@
                             <h4 class="maintitle">Contract</h4>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <quill-editor [ngModelOptions]="{standalone: true}" [(ngModel)]="contracttext"
+                                    <quill-editor style="height: 300px" [ngModelOptions]="{standalone: true}" [(ngModel)]="contracttext"
           placeholder="Enter Text"
           [modules]="quillConfig"
           (onSelectionChanged)="onSelectionChanged($event)"
@@ -789,17 +812,19 @@
                             </form>
                         </div>
 
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4" style="margin-top: 20px; text-align: right;">
+                                <button type="button" style="background: #1C315F; border:none; margin-right: 10px;"  class="btn btn-success submit" (click)="getExtracPrice($event)">{{saveLabel}}</button>
+                                <button type="button" style="background: #1C315F; border:none;" class="btn btn-primary submit" [routerLink]="['/dashboard']">Back</button>
+                            </div>
+                        </div>
+
                     </div>
                     
                 </div>
-                <div class="row">
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-4" style="margin-top: 20px; text-align: right;">
-                        <button type="button" style="background: #1C315F; border:none; margin-right: 10px;"  class="btn btn-success submit" (click)="getExtracPrice($event)">{{saveLabel}}</button>
-                        <button type="button" style="background: #1C315F; border:none;" class="btn btn-primary submit" [routerLink]="['/dashboard']">Back</button>
-                    </div>
-                </div>
+                
                 
                 
     
