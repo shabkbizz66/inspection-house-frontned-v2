@@ -539,7 +539,6 @@ export class EditBookingComponent implements OnInit {
       this.checkboxArr.push(event.target.value);
       this.checkboxVal.push(event.target.dataset.id)
     }else{
-      alert(1);
       const index: number = this.checkboxArr.indexOf(event.target.value);
       this.checkboxArr.splice(index, 1);
 
@@ -675,6 +674,7 @@ export class EditBookingComponent implements OnInit {
   }
 
   getExtracPrice(event: any){
+    console.log(this.formGroup);
     if(this.ontheflyInspectorID == 0){
       alert('Inspector not assigned yet')
       return;
