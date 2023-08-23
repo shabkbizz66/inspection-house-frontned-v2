@@ -1,5 +1,5 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { BookingModel, agentModel, emailModel, notesModel } from '../booking.model';
 import { NgbDateStruct, NgbDatepicker,NgbCalendar, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -46,6 +46,7 @@ export class EditBookingComponent implements OnInit {
 
   tabemail: boolean= false;
   
+  templateData: any;
   startDateMonth: any;
   showInspectorName: string;
   inspectorAlert: string='';
@@ -124,31 +125,50 @@ export class EditBookingComponent implements OnInit {
   itemAgent: agentModel = new agentModel();
   itemEmail: emailModel = new emailModel();
 
+  op1:boolean = false;
+  op2:boolean = false;
+  op3:boolean = false;
+  op4:boolean = false;
+  op5:boolean = false;
+  op6:boolean = false;
+  op7:boolean = false;
+  op8:boolean = false;
+
   constructor(private calendar: NgbCalendar,
     public globals: GlobalConstants,
     public alertService: AlertService,
     private modalService: NgbModal,
+    private el: ElementRef,
     private bookingService: BookingService,
     private http: HttpClient, 
     private activatedRoute: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit(): void {
+    this.bookingService.get(this.globals.getTemplates).then((Response: any) => {
+      this.templateData = Response.response;
+    });
+    
+    this.BindFormGroup();
+
     this.activatedRoute.params.subscribe((params) => {
       var id = params["id"];
       if (id) {
         this.bookingService.get(this.globals.getBookingById+'/?id='+id).then((Response: any) => {
           this.item = Response.response;
+          console.log(this.item)
           this.addUpdateLabel = 'Update';
+
           if(this.item.paymentStatus == 'PENDING'){
             this.saveButton = true;
-            this.saveLabel = 'Update Booking';
+            this.saveLabel = 'Save';
             //this.addUpdateLabel = 'Update';
           }else{
             this.saveButton = false;
             //this.addUpdateLabel = 'Create'
           }
 
+          this.saveLabel = 'Save';
           //this.saveButton = false;
           
           if(this.item.inspectionType == 'Phased'){
@@ -185,13 +205,13 @@ export class EditBookingComponent implements OnInit {
           this.additionalServicesCost = this.item.additionalServiceCost;
           
           //this.onEditView = '';
-          //this.itemNotes.bookingId = id;
+          this.itemNotes.bookingId = id;
           
           let url = "https://www.theinspectionhouse.com/payment/?td=";
           let convertid = btoa(id);
           this.paymentUrl = url+convertid;
           
-          /*this.bookingService.get(this.globals.getBookingNotes+'?id='+id).then((Response: any) => {
+          this.bookingService.get(this.globals.getBookingNotes+'?id='+id).then((Response: any) => {
             this.notesData = Response.response;
             
             let obj: any = {
@@ -212,24 +232,40 @@ export class EditBookingComponent implements OnInit {
                 obj.data[y].push(element.createdBy);
                 y = y+1;
               });             
-          });*/
+          });
 
           if(this.item.inspectionTime == '09:00:00'){
             this.modifiedTime = '09:00 AM';
           }else{
             this.modifiedTime = '02:00 PM';
           }
+
+          this.itemEmail.to = this.item.email;
+          this.itemEmail.salutation = 'Hello '+this.item.firstName+' '+this.item.lastName;
+
+          this.formGroup.patchValue({address:this.item.address,
+            squarefeet:this.item.squareFeet,
+            yearbuilt: this.item.yearBuilt,
+            inspectiontype: this.item.inspectionType,
+            inspectiontime: this.item.inspectionTime,
+            city: this.item.city,
+            state: this.item.state,
+            packagePrice: this.item.packagePrice,
+            packagename: this.item.packageName,
+            reportreview: this.item.reportreView,
+            zipcode: this.item.zipcode
+          });
+          this.formGroup.updateValueAndValidity();
         });
       }else{
         this.inspectionDate = this.calendar.getToday();
         this.startDateMonth = ''; 
+        this.saveLabel = 'Save';
         this.item.inspectionDate = this.inspectionDate.year+"-"+('0'+this.inspectionDate.month).slice(-2)+"-"+('0'+this.inspectionDate.day).slice(-2);
         this.blockBookingSlots(this.item.inspectionDate);
         this.addUpdateLabel = 'Create';
       }
     });
-    
-    this.BindFormGroup();
 
     
   }
@@ -287,7 +323,15 @@ export class EditBookingComponent implements OnInit {
       rooms: new FormControl(''),
       bedrooms: new FormControl(''),
       bathrooms: new FormControl(''),
-      comments: new FormControl('')
+      comments: new FormControl(''),
+      op1: new FormControl(''),
+      op2: new FormControl(''),
+      op3: new FormControl(''),
+      op4: new FormControl(''),
+      op5: new FormControl(''),
+      op6: new FormControl(''),
+      op7: new FormControl(''),
+      op8: new FormControl('')
     });
 
     this.notesformGroup = new FormGroup({
@@ -305,17 +349,20 @@ export class EditBookingComponent implements OnInit {
     });
 
     this.emailformGroup = new FormGroup({
-      emailTo: new FormControl('',Validators.required),
-      emailCC:new FormControl(''),
-      emailBCC:new FormControl(''),
+      to: new FormControl('',Validators.required),
+      cc:new FormControl(''),
+      bcc:new FormControl(''),
       subject: new FormControl('',Validators.required),
       message: new FormControl('',Validators.required),
       salutation: new FormControl('',Validators.required),
       address: new FormControl(''),
-      datetime: new FormControl(''),
+      time: new FormControl(''),
       fee: new FormControl(''),
       duration: new FormControl(''),
-      contract: new FormControl('')
+      includeLink: new FormControl(''),
+      inspectorName: new FormControl(''),
+      inspectorLicense: new FormControl(''),
+      consultationTime:  new FormControl('')
     });
   }
 
@@ -523,6 +570,11 @@ export class EditBookingComponent implements OnInit {
   changeDate(event: any){
     //console.log(event);
     this.item.inspectionDate = event.year+"-"+('0'+event.month).slice(-2)+"-"+('0'+event.day).slice(-2);
+    
+    this.startDateMonth = { year :Number(event.year),month: Number(event.month)}
+    const obj: NgbDateStruct =  { year: Number(event.year), month: Number(event.month), day: Number(event.day) }
+    this.inspectionDate = obj;
+
     //console.log(this.item.inspectionDate)
     this.item.inspectionTime = '';
     this.blockBookingSlots(this.item.inspectionDate);
@@ -642,6 +694,7 @@ export class EditBookingComponent implements OnInit {
 
   getExtracPrice(event: any){
     if(this.ontheflyInspectorID == 0){
+      alert('Inspector not assigned yet')
       return;
     }
 
@@ -693,7 +746,7 @@ export class EditBookingComponent implements OnInit {
     this.item.bookingType = 'Admin';
    
     if (this.item.id) {
-      this.bookingService.update(this.globals.updateBooking,this.item).then((response) => {
+      this.bookingService.create(this.globals.updateBooking,this.item).then((response) => {
         this.showToast('Booking Updated Successfully');
         this.backToList();
         //this.SpinnerService.hide();
@@ -705,8 +758,6 @@ export class EditBookingComponent implements OnInit {
         }
       );
     } else {
-      console.log(this.item);
-      return;
       this.bookingService.create(this.globals.saveBooking,this.item).then((response) => {
         this.showToast('Booking Inserted Successfully');
         this.backToList();
@@ -723,7 +774,7 @@ export class EditBookingComponent implements OnInit {
 
   saveNotes(event: any){
     console.log(this.notesformGroup)
-    this.submitted = true;
+    //this.notesubmitted = true;
     this.notesformGroup.markAllAsTouched();
     if (this.notesformGroup.invalid) {
       return;
@@ -745,7 +796,7 @@ export class EditBookingComponent implements OnInit {
   backToEditList(id: string){
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate(['/bookings/edit/'+id]);
+    this.router.navigate(['/bookings/update/'+id]);
   }
 
   public getNotesList(id: string){
@@ -819,6 +870,7 @@ export class EditBookingComponent implements OnInit {
   closePopup(){
     this.modalReference.close();
     this.formGroup.reset();
+    this.agentformGroup.reset();
   }
 
   sendEmail(event:any){
@@ -835,6 +887,25 @@ export class EditBookingComponent implements OnInit {
         //this.alertService.BindServerErrors(this.formGroup, rejected);
       }
     );
+  }
+
+  subjectChange(event:any){
+    const info = this.templateData.find((x: any) => x.id == event.target.value);
+    this.itemEmail.message = info.body;
+    this.itemEmail.templateId = event.target.value;
+    this.itemEmail.bookingId = this.item.id;
+  }
+
+  changeBuildingType(event:any){
+    this.item.buildingType = event.target.value;
+  }
+
+  changeNewTime(event:any){
+
+  }
+
+  changeDuration(event:any){
+
   }
 
 }

@@ -98,7 +98,6 @@ export class ListBookingsComponent implements OnInit {
           "Package Name",
           "Package Price",
           "Inspector Name",
-          "Square Footage",
           "Payment Status",
           "Agreement",
           'Booking Type',
@@ -114,7 +113,7 @@ export class ListBookingsComponent implements OnInit {
         obj.data[y] = [];
 
 
-        let id = "/bookings/edit/"+element.id;
+        let id = "/bookings/update/"+element.id;
         var popup = "<a id='"+element.id+"'  (click)='openModal($event)' title='Re-Assign Inspector / Reschedule Booking'><i class='feather icon-user'></i></a>";
         var popupdelete = "&nbsp;&nbsp;&nbsp;&nbsp;<span id='' style='cursor: pointer;' class='"+element.id+"' nm='22' title='Cancel Booking'><i class='feather icon-delete'></i></span>";
         var sendmail = "&nbsp;&nbsp;&nbsp;&nbsp;<a id='' class='' name='"+element.id+"'  style='cursor: pointer;' title='Resend Email'><i class='feather icon-mail'></i></a>";
@@ -128,8 +127,11 @@ export class ListBookingsComponent implements OnInit {
         //obj.data[y].push(y+1);
         obj.data[y].push(element.firstName+' '+element.lastName);
         obj.data[y].push(element.address);
-        obj.data[y].push(element.email);
-        obj.data[y].push(this.formatPhoneNumber(element.phone));
+        obj.data[y].push('<i class="feather icon-mail" title="'+element.email+'"></i>');
+
+        var phn = this.formatPhoneNumber(element.phone);
+
+        obj.data[y].push('<i class="feather icon-phone" title="'+phn+'"></i>');
         if(element.inspectionTime == '09:00:00'){
           var ctime = '09:00 am';
         }else{
@@ -137,11 +139,15 @@ export class ListBookingsComponent implements OnInit {
         }
         
         obj.data[y].push(this.formatDate(element.inspectionDate)+' '+ctime);
-
-        obj.data[y].push(element.packageName);
+        if(element.packageName == 'Total Solutions Bundle'){
+          var pckname = 'TSB';
+        }else{
+          var pckname = 'T5';
+        }
+        obj.data[y].push(pckname);
         obj.data[y].push('$'+element.packagePrice);
         obj.data[y].push(element.officerName);
-        obj.data[y].push(element.squareFeet);
+        //obj.data[y].push(element.squareFeet);
         /*if(element.paymentStatus == 'PENDING'){
           element.paymentStatus = '<a id="" name="'+element.id+'" (click)="updatePaymentStatus('+element.id+')"><span>Awaiting</span></a>';
         }*/

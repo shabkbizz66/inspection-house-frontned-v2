@@ -51,5 +51,6 @@ export class GlobalConstants {
     updateUser: string = 'v1/updateuser'
 
     saveAgent: string= 'v1/agents/saveAgent';
-    sendConfirmationEmail: string = 'v1/sendemail';
+    sendConfirmationEmail: string = 'v1/booking/sendEmail';
+    getTemplates: string = 'v1/booking/getEmailTemplates';
 }

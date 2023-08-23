@@ -48,6 +48,15 @@ export class BookingModel{
     bedrooms: string;
     bathrooms: string;
     status: string;
+
+    op1: boolean;
+    op2: boolean;
+    op3: boolean;
+    op4: boolean;
+    op5: boolean;
+    op6: boolean;
+    op7: boolean;
+    op8: boolean;
 }
 
 export class reassignModel{
@@ -77,15 +86,22 @@ export class agentModel{
 }
 
 export class emailModel{
-    emailTo: string;
-    emailCC:string;
-    emailBCC: string;
-    subject: string;
+    templateId: string;
+    bookingId: string;
+    to: string;
+    cc:string;
+    bcc: string;
     message: string;
     salutation: string;
     address: boolean;
-    datetime: boolean;
+    time: boolean;
     fee: boolean;
     duration: boolean;
+    subject: string;
+    includeLink: boolean;
     contract: boolean;
+
+    inspectorName:boolean;
+    inspectorLicense: boolean;
+    consultationTime: boolean;
 }

@@ -34,6 +34,8 @@ export class DashboardComponent implements OnInit,OnDestroy  {
   Events: any[] = [];
   bookingData: any;
   infoContent: string;
+  sidebarCounts: any = [];
+        
 
   calendarOptions: CalendarOptions = {
     initialView: 'resourceTimelineDay',
@@ -158,7 +160,9 @@ export class DashboardComponent implements OnInit,OnDestroy  {
         current.workorderWeek = response[1].thisweekbooking;
         current.availableslots = response[1].availableSlots;
         localStorage.setItem('alert',response[1].alertCounts);
-        current.inspectorService.alertCount.next(response[1].alertCounts);
+        current.sidebarCounts.alertCount = response[1].alertCounts;
+        current.sidebarCounts.pendingCount = response[1].pendingCount;
+        current.inspectorService.alertCount.next(current.sidebarCounts);
         current.getDashboardData(current.currentTodayDate)
         resolve();
       });
@@ -284,7 +288,7 @@ export class DashboardComponent implements OnInit,OnDestroy  {
     console.log(clickInfo.event['_def'].publicId);
 
     var bookingId = clickInfo.event['_def'].publicId;
-    this.router.navigate(['/bookings/edit/'+bookingId]);
+    this.router.navigate(['/bookings/update/'+bookingId]);
     var id = clickInfo.event['_def'].publicId;
     let classinfo = 'show'+id;
     this.inspectorData.forEach((element:any) => {

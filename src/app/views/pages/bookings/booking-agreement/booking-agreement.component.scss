@@ -7,7 +7,9 @@
     border-radius: 5px;
     margin-top: 10px;
 }
-
+#htmlData p{font-size:18px;}
+#invoiceData p{font-size:18px;}
+.my-modal-popup {width:70%;}
 @media print {
     body * {
       display: none;

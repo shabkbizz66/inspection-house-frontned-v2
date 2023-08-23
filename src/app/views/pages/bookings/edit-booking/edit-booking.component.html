@@ -1,4 +1,4 @@
-<nav class="page-breadcrumb">
+<!--<nav class="page-breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a routerLink="/bookings">Bookings</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{addUpdateLabel}}</li>
@@ -14,9 +14,7 @@
                 <h4 class="card-title mb-3 mb-md-0">{{addUpdateLabel}} Booking</h4>
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap">
-                <!--<button type="button" routerLink="/booking/add" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
-                Add Booking
-                </button>-->
+                
                 <div class="col-sm-6" *ngIf="item.paymentStatus == 'PENDING' && !saveButton">
                     <b>Payment URL :</b> {{paymentUrl}} &nbsp;&nbsp; <button style="background: #1C315F; border:none;" type="button" class="btn btn-success" (click)="copyURL();">Copy URL</button>
                 </div>
@@ -25,7 +23,7 @@
         </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <div class="row">
     <div class="col-md-12 stretch-card">
@@ -35,7 +33,6 @@
 
                
             <form [formGroup]="formGroup">
-                
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="mb-3 partsection" (click)="tabon('tabclientinfo')">
@@ -54,7 +51,7 @@
                         </div>
                         <div class="mb-3 partsection" (click)="tabon('tabdatetime')">
                             <h5 class="boxtitle">Date/Time/Inspector</h5>
-                            <span class="textcl">{{item.officerName}}</span> <br /><span class="textcl">{{item.inspectionDate | date:'EEE, MMM dd, yyyy'}}  {{modifiedTime}}</span>
+                            <span class="textcl">{{showInspectorName}}</span> <br /><span class="textcl">{{item.inspectionDate | date:'EEE, MMM dd, yyyy'}}  {{modifiedTime}}</span>
                         </div>
                         <div class="mb-3 partsection" (click)="tabon('tabinspectiontype')">
                             <h5 class="boxtitle">Inspection Type/Fee</h5>
@@ -66,7 +63,7 @@
                             <span class="textcl" *ngIf="item.agentName"><b>Email: </b>{{item.agentEmail}} <br /></span>
                             <span class="textcl" *ngIf="item.agentName"><b>Agent Phone: </b>{{formatPhoneNumber(item.agentPhone)}}</span>
                         </div>
-                        <div class="mb-3 partsection" (click)="tabon('tabnotes')">
+                        <div class="mb-3 partsection" *ngIf="item.id" (click)="tabon('tabnotes')">
                             <h5 class="boxtitle">Notes</h5>
                             <span class="textcl"></span>
                         </div>
@@ -74,7 +71,7 @@
                             <h5 class="boxtitle">Contract</h5>
                             <span class="textcl">THIS CONTRACT LIMITS THE LIABILITY OF THE HOME INSPECTION COMPANY....</span>
                         </div>
-                        <div class="mb-3 partsection" (click)="tabon('tabemail')">
+                        <div class="mb-3 partsection" *ngIf="item.id" (click)="tabon('tabemail')">
                             <h5 class="boxtitle">Confirmation Email</h5>
                         </div>
                     </div>
@@ -256,7 +253,7 @@
                             <h4 class="maintitle">Inspection Type & Fee</h4>
                            
                             <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="mb-3">
                                         <label class="form-label">Reason For Inspection <span style="color:red;">*</span></label>
                                         <select formControlName="inspectiontype" (change)="changeInspc($event)" [(ngModel)]="item.inspectionType" [ngClass]="{ 'is-invalid': submitted && f.inspectiontype.errors }" class="form-select">
@@ -272,7 +269,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4" *ngIf="subPackage">
+                                <div class="col-sm-3" *ngIf="subPackage">
                                     <div class="mb-3">
                                         <label class="form-label">Phase</label>
                                         <select formControlName="inspectionSubType" [(ngModel)]="item.inspectionSubType" [ngClass]="{ 'is-invalid': submitted && f.inspectionSubType.errors }" class="form-select">
@@ -286,9 +283,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="mb-3">
                                         <label class="form-label">Package <span style="color:red;">*</span></label>
                                         <select formControlName="packagename" (change)="packageChange($event)" [(ngModel)]="item.packageName" [ngClass]="{ 'is-invalid': submitted && f.packagename.errors }" class="form-select">
@@ -301,7 +296,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <div class="mb-3">
                                         <label class="form-label">Review <span style="color:red;">*</span></label>
                                         <select formControlName="reportreview" [(ngModel)]="item.reportreView" [ngClass]="{ 'is-invalid': submitted && f.reportreview.errors }" class="form-select">
@@ -315,10 +310,11 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="mb-3">
-                                        <label class="form-label" style="width:100%">Select Ancillary Services </label>
+                                        <label class="form-label" style="width:100%"><b>Select Ancillary Services</b></label>
                                         <div class="row" *ngIf="item.additionalServices">
                                             <ul>
                                                 <li *ngFor="let p of servicesArr">
@@ -326,34 +322,35 @@
                                                 </li>
                                             </ul>
                                         </div>
+                                        
                                         <div class="row" style="padding-bottom: 5px;">
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="100" data-id="Swimming Pool/Hot Tub">&nbsp;Swimming Pool/Hot Tub - $100
+                                                <input type="checkbox" class="form-check-input" formControlName="op1" [(ngModel)]="item.op1" (change)="checkValue($event)" value="100" data-id="Swimming Pool/Hot Tub">&nbsp;Swimming Pool/Hot Tub - $100
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices"  value="225" data-id="Septic">&nbsp;Septic - $225
+                                                <input type="checkbox" class="form-check-input" formControlName="op2" [(ngModel)]="item.op2" (change)="checkValue($event)" value="225" data-id="Septic">&nbsp;Septic - $225
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="100" data-id="Storage/Shed w/out Utilities">&nbsp;Storage/Shed w/out Utilities - $100
+                                                <input type="checkbox" class="form-check-input" formControlName="op3" [(ngModel)]="item.op3" (change)="checkValue($event)" value="100" data-id="Storage/Shed w/out Utilities">&nbsp;Storage/Shed w/out Utilities - $100
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="100" data-id="Storage/Shed with Utilities">&nbsp;Storage/Shed withUtilities - $100
+                                                <input type="checkbox" class="form-check-input" formControlName="op4" [(ngModel)]="item.op4" (change)="checkValue($event)" value="100" data-id="Storage/Shed with Utilities">&nbsp;Storage/Shed withUtilities - $100
                                             </div>
                                             
                                         </div>
                                         <div class="row" style="padding: 5px 0px;">
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="100" data-id="Barn w/out Utilities">&nbsp;Barn w/out Utilities - $100
+                                                <input type="checkbox" class="form-check-input" formControlName="op5" [(ngModel)]="item.op5" (change)="checkValue($event)" value="100" data-id="Barn w/out Utilities">&nbsp;Barn w/out Utilities - $100
                                                 
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="50" data-id="Outdoor Kitchen Appliances">&nbsp;Outdoor Kitchen Appliances - $50
+                                                <input type="checkbox" class="form-check-input" formControlName="op6" [(ngModel)]="item.op6" (change)="checkValue($event)" value="50" data-id="Outdoor Kitchen Appliances">&nbsp;Outdoor Kitchen Appliances - $50
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="250" data-id="Guest House">&nbsp;Guest House - $250
+                                                <input type="checkbox" class="form-check-input" formControlName="op7" [(ngModel)]="item.op7" (change)="checkValue($event)" value="250" data-id="Guest House">&nbsp;Guest House - $250
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="100" data-id="Workshop with Utilities">&nbsp;Workshop with Utilities - $100
+                                                <input type="checkbox" class="form-check-input" formControlName="op8" [(ngModel)]="item.op8" (change)="checkValue($event)" value="100" data-id="Workshop with Utilities">&nbsp;Workshop with Utilities - $100
                                             </div>
                 
                                         </div>
@@ -406,7 +403,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Building Type</label>
                                         <select formControlName="buildingType" [(ngModel)]="item.buildingType"class="form-select">
-                                            <option *ngFor="let btype of buildingTypeData">{{btype}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let btype of buildingTypeData" value="{{btype}}">{{btype}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -414,7 +412,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Dwelling</label>
                                         <select formControlName="dwelling" [(ngModel)]="item.dwelling"class="form-select">
-                                            <option *ngFor="let dwell of dwellingData">{{dwell}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let dwell of dwellingData" value="{{dwell}}">{{dwell}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -422,7 +421,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Stories</label>
                                         <select formControlName="stories" [(ngModel)]="item.stories"class="form-select">
-                                            <option *ngFor="let stor of storiesData">{{stor}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let stor of storiesData" value="{{stor}}">{{stor}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -430,7 +430,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Rooms</label>
                                         <select formControlName="rooms" [(ngModel)]="item.rooms"class="form-select">
-                                            <option *ngFor="let room of roomsData">{{room}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let room of roomsData" value="{{room}}">{{room}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -440,7 +441,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Bedrooms</label>
                                         <select formControlName="bedrooms" [(ngModel)]="item.bedrooms"class="form-select">
-                                            <option *ngFor="let bedrom of bedroomData">{{bedrom}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let bedrom of bedroomData" value="{{bedrom}}">{{bedrom}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -448,7 +450,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Bathrooms</label>
                                         <select formControlName="bathrooms" [(ngModel)]="item.bathrooms"class="form-select">
-                                            <option *ngFor="let bathroom of bathroomData">{{bathroom}}</option>
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option *ngFor="let bathroom of bathroomData" value="{{bathroom}}">{{bathroom}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -517,6 +520,49 @@
                                         </div>-->
                                     </div>
                                 </div>
+                                <!--<div class="col-sm-3">
+                                    <label class="form-label">Start Time </label>
+                                    <div class="mb-3">    
+                                        <select formControlName="inspectionTime"  (change)="changeNewTime($event)" [(ngModel)]="item.inspectionTime" [ngClass]="{ 'is-invalid': emailSubmitted && f.inspectionTime.errors }" class="form-select">
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option value="08:00:00">8 am</option>
+                                            <option value="09:00:00">9 am</option>
+                                            <option value="10:00:00">10 am</option>
+                                            <option value="11:00:00">11 am</option>
+                                            <option value="12:00:00">12 pm</option>
+                                            <option value="13:00:00">01 pm</option>
+                                            <option value="14:00:00">02 pm</option>
+                                            <option value="15:00:00">03 pm</option>
+                                            <option value="16:00:00">04 pm</option>
+                                            <option value="17:00:00">05 pm</option>
+                                            <option value="18:00:00">06 pm</option>
+                                            <option value="19:00:00">07 pm</option>
+                                            <option value="20:00:00">08 pm</option>
+                                        </select>
+                                        <div *ngIf="submitted && f.inspectionTime.errors" class="invalid-feedback">
+                                        <div *ngIf="f.inspectionTime.errors.required">Inspection Time is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label">Start Time </label>
+                                    <div class="mb-3">    
+                                        <select formControlName="duration"  (change)="changeDuration($event)" [(ngModel)]="item.duration" [ngClass]="{ 'is-invalid': emailSubmitted && f.inspectionTime.errors }" class="form-select">
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option value="2">2</option>
+                                            <option value="2.5">2.5</option>
+                                            <option value="3">3</option>
+                                            <option value="3.5">3.45</option>
+                                            <option value="4">4</option>
+                                            <option value="4.5">4.5</option>
+                                            <option value="5">5</option>
+                                            <option value="5.5">5.5</option>
+                                        </select>
+                                        <div *ngIf="submitted && f.inspectionTime.errors" class="invalid-feedback">
+                                        <div *ngIf="f.inspectionTime.errors.required">Inspection Time is required</div>
+                                        </div>
+                                    </div>
+                                </div>-->
                                 <div class="col-sm-6">
                                     <div class="mb-3">
                                         <label class="form-label">Inspection Time <span style="color:red;">*</span></label>
@@ -524,27 +570,11 @@
                                             <div class="time-sloat" *ngIf="i1">
                                                 <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" id="i1" value="09:00:00"> 9:00 am</label>
                                             </div>
-                                            <!--<div class="time-sloat" *ngIf="i2">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="10:00:00"> 10:00 am</label>
-                                            </div>
-                                            <div class="time-sloat" *ngIf="i3">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="11:00:00"> 11:00 am</label>
-                                            </div> 
-                                            <div class="time-sloat"  *ngIf="i4">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="12:00:00"> 12:00 pm</label>
-                                            </div>
-                                            <div class="time-sloat" *ngIf="i5">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="13:00:00"> 1:00 pm</label>
-                                            </div>-->
+                                            
                                             <div class="time-sloat" *ngIf="i6">
                                                 <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="14:00:00"> 2:00 pm</label>
                                             </div>
-                                            <!--<div class="time-sloat" *ngIf="i7">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="15:00:00"> 3:00 pm</label>
-                                            </div>
-                                            <div class="time-sloat" *ngIf="i8">
-                                                <label><input type="radio" (change)="onTimeChange($event)" [(ngModel)]="item.inspectionTime" formControlName="inspectiontime" value="16:00:00"> 4:00 pm</label>
-                                            </div>-->
+                                            
                                         </div>
                                         <div>
                                             <div style="font-size: 0.875em; color: #ff3366;" *ngIf="submitted && f.inspectiontime.errors?.required">Inspection Time is required</div>
@@ -656,7 +686,7 @@
                             <h4 class="maintitle">Contract</h4>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <quill-editor [ngModelOptions]="{standalone: true}" [(ngModel)]="contracttext"
+                                    <quill-editor style="height: 300px" [ngModelOptions]="{standalone: true}" [(ngModel)]="contracttext"
           placeholder="Enter Text"
           [modules]="quillConfig"
           (onSelectionChanged)="onSelectionChanged($event)"
@@ -675,28 +705,32 @@
                                     <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">To <span style="color:red;">*</span></label>
                                         <div class="col-sm-7">
-                                            <input type="text" formControlName="emailTo" [(ngModel)]="itemEmail.emailTo" [ngClass]="{ 'is-invalid': emailSubmitted && f3.emailTo.errors }" class="form-control">
-                                            <div *ngIf="emailSubmitted && f3.emailTo.errors" class="invalid-feedback">
-                                                <div *ngIf="f3.emailTo.errors.required">Email To is required</div>
+                                            <input type="text" formControlName="to" [(ngModel)]="itemEmail.to" [ngClass]="{ 'is-invalid': emailSubmitted && f3.to.errors }" class="form-control">
+                                            <div *ngIf="emailSubmitted && f3.to.errors" class="invalid-feedback">
+                                                <div *ngIf="f3.to.errors.required">Email To is required</div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">CC </label>
                                         <div class="col-sm-7">
-                                            <input type="text" formControlName="emailCC" [(ngModel)]="itemEmail.emailCC" class="form-control">
+                                            <input type="text" formControlName="cc" [(ngModel)]="itemEmail.cc" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">BCC </label>
                                         <div class="col-sm-7">
-                                            <input type="text" formControlName="emailBCC" [(ngModel)]="itemEmail.emailBCC" class="form-control">
+                                            <input type="text" formControlName="bcc" [(ngModel)]="itemEmail.bcc" class="form-control">
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">Subject <span style="color:red;">*</span></label>
                                         <div class="col-sm-7">
-                                            <input type="text" formControlName="subject" [(ngModel)]="itemEmail.subject" [ngClass]="{ 'is-invalid': emailSubmitted && f3.subject.errors }" class="form-control">
+                                            <select formControlName="subject"  (change)="subjectChange($event)" [(ngModel)]="itemEmail.subject" [ngClass]="{ 'is-invalid': emailSubmitted && f3.subject.errors }" class="form-select">
+                                                <option [ngValue]="undefined" selected>-- Select --</option>
+                                                <option *ngFor="let data of templateData" [value]="data.id">{{data.subject}}</option>
+                                            </select>
+                                            <!--<input type="text" formControlName="subject" [(ngModel)]="itemEmail.subject" [ngClass]="{ 'is-invalid': emailSubmitted && f3.subject.errors }" class="form-control">-->
                                             <div *ngIf="emailSubmitted && f3.subject.errors" class="invalid-feedback">
                                                 <div *ngIf="f3.subject.errors.required">Subject is required</div>
                                             </div>
@@ -718,7 +752,7 @@
                                                 <input type="checkbox" class="form-check-input" formControlName="address" [(ngModel)]="itemEmail.address" value="true">&nbsp;Address: {{item.address}}
                                             </div>
                                             <div class="col-sm-8">
-                                                <input type="checkbox" class="form-check-input" formControlName="datetime" [(ngModel)]="itemEmail.datetime" value="true">&nbsp;Fee: {{item.inspectionDate | date:'EEE, MMM dd, yyyy'}}
+                                                <input type="checkbox" class="form-check-input" formControlName="time" [(ngModel)]="itemEmail.time" value="true">&nbsp;Date: {{item.inspectionDate | date:'EEE, MMM dd, yyyy'}}
                                             </div>
                                             <div class="col-sm-8">
                                                 <input type="checkbox" class="form-check-input" formControlName="fee" [(ngModel)]="itemEmail.fee" value="true">&nbsp;Fee: ${{item.packagePrice}}
@@ -727,8 +761,19 @@
                                                 <input type="checkbox" class="form-check-input" formControlName="duration" [(ngModel)]="itemEmail.duration" value="true">&nbsp;Duration : 4hr(s)
                                             </div>
                                             <div class="col-sm-8">
-                                                <input type="checkbox" class="form-check-input" formControlName="contract" [(ngModel)]="itemEmail.contract" value="true">&nbsp;Include link to contract in email
+                                                <input type="checkbox" class="form-check-input" formControlName="includeLink" [(ngModel)]="itemEmail.includeLink" value="true">&nbsp;Include link for payment in email
                                             </div>
+                                            <div class="col-sm-8">
+                                                <input type="checkbox" class="form-check-input" formControlName="consultationTime" [(ngModel)]="itemEmail.consultationTime" value="true">&nbsp;Consultation Time
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input type="checkbox" class="form-check-input" formControlName="inspectorName" [(ngModel)]="itemEmail.inspectorName" value="true">&nbsp;Inspector Name
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input type="checkbox" class="form-check-input" formControlName="inspectorLicense" [(ngModel)]="itemEmail.inspectorLicense" value="true">&nbsp;Inspector License Number
+                                            </div>
+                                            
+                                            
                                             
                                             <!--<div class="col-sm-3">
                                                 <input type="checkbox" class="form-check-input" (change)="checkValue($event)" formControlName="additionalServices" value="50" data-id="Outdoor Kitchen Appliances">&nbsp;Outdoor Kitchen Appliances - $50
@@ -743,14 +788,21 @@
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">Body <span style="color:red;">*</span></label>
-                                        <div class="col-sm-7">
-                                            <textarea type="text" rows="10" cols="20" formControlName="message" [(ngModel)]="itemEmail.message" [ngClass]="{ 'is-invalid': emailSubmitted && f3.salutation.errors }" class="form-control"></textarea>
+                                        <div class="col-sm-9">
+                                            <!--<quill-editor [ngModelOptions]="{standalone: true}" [(ngModel)]="itemEmail.message"
+                                                placeholder="Enter Text"
+                                                [modules]="quillConfig"
+                                                (onSelectionChanged)="onSelectionChanged($event)"
+                                                (onContentChanged)="onContentChanged($event)"
+                                                >
+                                                </quill-editor>-->
+                                            <textarea type="text" rows="10" cols="20" formControlName="message" [(ngModel)]="itemEmail.message" [ngClass]="{ 'is-invalid': emailSubmitted && f3.message.errors }" class="form-control"></textarea>
                                             <div *ngIf="emailSubmitted && f3.message.errors" class="invalid-feedback">
                                                 <div *ngIf="f3.message.errors.required">Message is required</div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
+                                    <div class="row mb-3" *ngIf="item.id">
                                         <label class="col-sm-2 col-form-label"></label>
                                         <div class="col-sm-7">
                                             <button type="button" class="btn btn-primary" (click)="sendEmail($event)">Send Email</button>
@@ -760,17 +812,19 @@
                             </form>
                         </div>
 
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4" style="margin-top: 20px; text-align: right;">
+                                <button type="button" style="background: #1C315F; border:none; margin-right: 10px;"  class="btn btn-success submit" (click)="getExtracPrice($event)">{{saveLabel}}</button>
+                                <button type="button" style="background: #1C315F; border:none;" class="btn btn-primary submit" [routerLink]="['/dashboard']">Back</button>
+                            </div>
+                        </div>
+
                     </div>
                     
                 </div>
-                <div class="row">
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-4"></div>
-                    <div class="col-sm-4" style="margin-top: 20px; text-align: right;">
-                        <button type="button" style="background: #1C315F; border:none; margin-right: 10px;"  class="btn btn-success submit" (click)="getExtracPrice($event)">Update Booking</button>
-                        <button type="button" style="background: #1C315F; border:none;" class="btn btn-primary submit" [routerLink]="['/dashboard']">Back</button>
-                    </div>
-                </div>
+                
                 
                 
     

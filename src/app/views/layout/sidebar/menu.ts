@@ -48,13 +48,17 @@ export const MENU: MenuItem[] = [
     link: '/bookings/alerts',
     badge: {
       variant: 'danger',
-      text: '2',
+      text: 'alertCount',
     }
   },
   {
     label:"Pending Bookings",
     icon: "file-text",
     link: '/bookings/pending',
+    badge: {
+      variant: 'danger',
+      text: 'pendingCount',
+    }
   },
   /*{
     label: 'Email',
