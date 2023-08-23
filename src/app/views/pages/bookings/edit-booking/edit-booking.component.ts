@@ -204,13 +204,13 @@ export class EditBookingComponent implements OnInit {
           this.additionalServicesCost = this.item.additionalServiceCost;
           
           //this.onEditView = '';
-          //this.itemNotes.bookingId = id;
+          this.itemNotes.bookingId = id;
           
           let url = "https://www.theinspectionhouse.com/payment/?td=";
           let convertid = btoa(id);
           this.paymentUrl = url+convertid;
           
-          /*this.bookingService.get(this.globals.getBookingNotes+'?id='+id).then((Response: any) => {
+          this.bookingService.get(this.globals.getBookingNotes+'?id='+id).then((Response: any) => {
             this.notesData = Response.response;
             
             let obj: any = {
@@ -231,7 +231,7 @@ export class EditBookingComponent implements OnInit {
                 obj.data[y].push(element.createdBy);
                 y = y+1;
               });             
-          });*/
+          });
 
           if(this.item.inspectionTime == '09:00:00'){
             this.modifiedTime = '09:00 AM';
@@ -745,7 +745,7 @@ export class EditBookingComponent implements OnInit {
     this.item.bookingType = 'Admin';
    
     if (this.item.id) {
-      this.bookingService.update(this.globals.updateBooking,this.item).then((response) => {
+      this.bookingService.create(this.globals.updateBooking,this.item).then((response) => {
         this.showToast('Booking Updated Successfully');
         this.backToList();
         //this.SpinnerService.hide();
@@ -773,7 +773,7 @@ export class EditBookingComponent implements OnInit {
 
   saveNotes(event: any){
     console.log(this.notesformGroup)
-    this.submitted = true;
+    //this.notesubmitted = true;
     this.notesformGroup.markAllAsTouched();
     if (this.notesformGroup.invalid) {
       return;
@@ -795,7 +795,7 @@ export class EditBookingComponent implements OnInit {
   backToEditList(id: string){
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate(['/bookings/edit/'+id]);
+    this.router.navigate(['/bookings/update/'+id]);
   }
 
   public getNotesList(id: string){
