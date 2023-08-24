@@ -3,7 +3,7 @@
         <li class="breadcrumb-item"><a routerLink="/bookings">Bookings</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{addUpdateLabel}}</li>
     </ol>
-</nav>
+</nav>-->
 
 <div class="row">
     <div class="col-md-12 grid-margin stretch-card">
@@ -15,7 +15,7 @@
             </div>
             <div class="d-flex align-items-center flex-wrap text-nowrap">
                 
-                <div class="col-sm-6" *ngIf="item.paymentStatus == 'PENDING' && !saveButton">
+                <div class="col-sm-6" *ngIf="item && item.id && item.paymentStatus == 'PENDING'">
                     <b>Payment URL :</b> {{paymentUrl}} &nbsp;&nbsp; <button style="background: #1C315F; border:none;" type="button" class="btn btn-success" (click)="copyURL();">Copy URL</button>
                 </div>
             </div>
@@ -23,7 +23,7 @@
         </div>
         </div>
     </div>
-</div>-->
+</div>
 
 <div class="row">
     <div class="col-md-12 stretch-card">
@@ -816,7 +816,7 @@
                             <div class="col-sm-4"></div>
                             <div class="col-sm-4"></div>
                             <div class="col-sm-4" style="margin-top: 20px; text-align: right;">
-                                <button type="button" style="background: #1C315F; border:none; margin-right: 10px;"  class="btn btn-success submit" (click)="getExtracPrice($event)">{{saveLabel}}</button>
+                                <button type="button" style="background: #1C315F; border:none; margin-right: 10px;"  class="btn btn-success submit" (click)="getExtracPrice($event)">Save</button>
                                 <button type="button" style="background: #1C315F; border:none;" class="btn btn-primary submit" [routerLink]="['/dashboard']">Back</button>
                             </div>
                         </div>
