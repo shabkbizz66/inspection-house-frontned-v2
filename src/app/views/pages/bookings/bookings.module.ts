@@ -22,6 +22,7 @@ import { EditBookingComponent } from './edit-booking/edit-booking.component';
 import { QuillModule } from 'ngx-quill';
 import { FailedBookingsComponent } from './failed-bookings/failed-bookings.component';
 import { AlertBookingsComponent } from './alert-bookings/alert-bookings.component';
+import { Bookingv2Component } from './bookingv2/bookingv2.component';
 
 
 
@@ -51,8 +52,8 @@ const routes: Routes = [
         component: EditBookingComponent //AddBookingComponent
       },
       {
-        path: 'tempadd',
-        component: EditBookingComponent
+        path: 'tempaddv2',
+        component: Bookingv2Component
       },
       {
         path: 'edit/:id',
@@ -90,7 +91,8 @@ FullCalendarModule.registerPlugins([
     BookingAgreementComponent,
     EditBookingComponent,
     FailedBookingsComponent,
-    AlertBookingsComponent
+    AlertBookingsComponent,
+    Bookingv2Component
   ],
   imports: [
     CommonModule,

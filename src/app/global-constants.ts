@@ -28,6 +28,7 @@ export class GlobalConstants {
     getPricing: string = 'v1/booking/getPrices';
     getDashboard: string = 'v1/booking/getDashboardCounts';
     getInspectorDetalils: string = 'v1/officer/getOfficerName';
+    getBlockOffList: string = 'v1/bookingslot/getOffInspectorList';
      
 
     saveBlockSlot = 'v1/bookingslot';
@@ -45,12 +46,18 @@ export class GlobalConstants {
     dashboardWeekBookingList = 'v1/booking/getDashboardWeekWiseBookingList';
 
     /*--- users ---*/
-    getusersList: string = 'v1/users';
-    getUserById: string = 'v1/getUserbyid';
+    getusersList: string = 'v1/getAllUsers';
+    getUserById: string = 'v1/getUserById';
     saveUser: string = 'v1/saveuser';
-    updateUser: string = 'v1/updateuser'
+    updateUser: string = 'v1/updateUser';
+    deleteUser: string = 'v1/deleteUser';
 
     saveAgent: string= 'v1/agents/saveAgent';
     sendConfirmationEmail: string = 'v1/booking/sendEmail';
     getTemplates: string = 'v1/booking/getEmailTemplates';
+
+
+    saveBookingv2: string = 'v1/booking/saveBookingv2';
+    updateBookingv2: string = 'v1/booking/updateBookingv2';
+    blockSlotAPIv2: string = 'v1/officer/getOfficerNamev2';
 }

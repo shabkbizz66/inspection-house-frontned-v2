@@ -19,10 +19,10 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 export class ListUsersComponent implements OnInit {
 
   @ViewChild('basicModal') basicModal: any;
+  @ViewChild('agentModal') agentModal: any;
   formGroup: FormGroup;
   submitted: boolean = false;
   item: UserModel = new UserModel();
-  addUpdateLabel = 'Add User';
   saveLabel = 'Save';
   options: any = {
     componentRestrictions: { country: 'US' }
@@ -47,6 +47,8 @@ export class ListUsersComponent implements OnInit {
     this.columns = [
       { name: 'First Name'},
       { name: 'Last Name' },
+      { name: 'Job Role' },
+      { name: 'User ID' },
       { name: 'Phone' },
       { name: 'Email' },
       { name: 'Action' }
@@ -67,6 +69,8 @@ export class ListUsersComponent implements OnInit {
               headings: [
                 "First Name",
                 "Last Name",
+                "Job Role",
+                "User ID",
                 "Phone",
                 "Email",
                 "Action"
@@ -110,6 +114,59 @@ export class ListUsersComponent implements OnInit {
 
         
         
+      }else{
+        this.userService.get(this.globals.getusersList).then((Response: any) => {
+          if(Response.status){
+            //this.item = Response.data;
+            this.savedData = Response.response;
+
+            let obj: any = {
+              // Quickly get the headings
+              headings: [
+                "First Name",
+                "Last Name",
+                "Job Role",
+                "User ID",
+                "Phone",
+                "Email",
+                "Action"
+              ],
+              data: []
+            };
+      
+            let y = 0;
+            this.savedData.forEach((element: any) => {
+              obj.data[y] = [];
+              obj.data[y].push(element.firstName);
+              obj.data[y].push(element.lastName);
+              obj.data[y].push(element.jobRole);
+              obj.data[y].push(element.userId);
+              obj.data[y].push(this.formatPhoneNumber(element.phoneNumber));
+              obj.data[y].push(element.email);
+
+              var popup = "<a id='"+element.id+"' title='Delete User'><i class='feather icon-delete'></i></a>";
+              let url = '<a name="'+element.id+'" title="Edit User"><i class="feather icon-edit"></i></a>&nbsp;&nbsp;'+popup;
+      
+              obj.data[y].push(url);
+
+              //obj.data[y].push(element.endTime);
+              y = y+1;
+            });    
+            let dataTable = new DataTable("#dataTableExample", {
+              data: obj
+            });
+
+          }else{
+            //this.item.inspectorId = id;
+            //this.selectedDate = this.calendar.getToday();
+            //this.item.startDate = this.selectedDate.year+"-"+('0'+this.selectedDate.month).slice(-2)+"-"+('0'+this.selectedDate.day).slice(-2);
+          }
+
+          
+          
+
+
+        });
       }
     });
     this.BindFormGroup();
@@ -119,9 +176,21 @@ export class ListUsersComponent implements OnInit {
     this.formGroup = new FormGroup({
       firstName: new FormControl("", Validators.required),
       lastName: new FormControl(null, Validators.required),
-      phone: new FormControl(null, Validators.required),
-      email: new FormControl(null, Validators.required)
+      jobRole: new FormControl(null, Validators.required),
+      userId: new FormControl(null, Validators.required),
+      phoneNumber: new FormControl(null, Validators.required),
+      email: new FormControl(null, [Validators.required,Validators.email]),
+      status: new FormControl(null, Validators.required)
     });
+  }
+
+  public formatPhoneNumber(phoneNumberString: string) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+    }
+    return null;
   }
 
   get f() { 
@@ -141,13 +210,12 @@ export class ListUsersComponent implements OnInit {
       return;
     }
 
-    console.log(this.item);
-    return;
     if (this.item.id) {
-      this.userService.create(this.globals.updateUser,this.item).then((response) => {
+      this.userService.update(this.globals.updateUser,this.item).then((response) => {
         this.showToast('User Updated Successfully');
         this.reloadPage();
         //this.SpinnerService.hide();
+        this.closePopup();
       },
         (rejected: RejectedResponse) => {
           this.item.id = '';
@@ -189,14 +257,21 @@ export class ListUsersComponent implements OnInit {
   deleteSlot(event: any){
     const target  = event.target || event.srcElement || event.currentTarget;
     this.deleteId = event.target.parentElement.id;
+    const edituserinfo = Number(event.target.parentElement.name);
+
     if(this.deleteId != ''){
       this.openPopup(this.basicModal);
+    }else if(edituserinfo != 0){
+      this.userService.get(this.globals.getUserById+'?id='+edituserinfo).then((response:any) => {
+       this.item = response.response;
+       this.openPopup(this.agentModal);
+      });
     }
   }
 
   deleteSlotDe(id: string){
     this.modalReference.close();
-    this.userService.create(this.globals.deleteBlockSlot+'?id='+id,this.item).then((response) => {
+    this.userService.update(this.globals.deleteUser+'?id='+id,this.item).then((response) => {
       this.showToast('Delete Successfully');
       this.reloadPage();
       //this.SpinnerService.hide();
@@ -217,4 +292,6 @@ export class ListUsersComponent implements OnInit {
     this.modalReference.close();
     this.formGroup.reset();
   }
+
+  
 }
