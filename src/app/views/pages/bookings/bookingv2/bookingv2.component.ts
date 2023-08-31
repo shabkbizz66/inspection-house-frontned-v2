@@ -247,11 +247,18 @@ export class Bookingv2Component implements OnInit {
               });             
           });
 
-          if(this.item.inspectionTime == '09:00:00'){
+          var mo = this.item.inspectionTime.split(':');
+          if(Number(mo[0]) > 11){
+            var timepar = 'PM';
+          }else{
+            var timepar = 'AM';
+          }
+          this.modifiedTime = mo[0]+':'+mo[1]+' '+timepar;
+          /*if(this.item.inspectionTime == '09:00:00'){
             this.modifiedTime = '09:00 AM';
           }else{
             this.modifiedTime = '02:00 PM';
-          }
+          }*/
 
           this.itemEmail.to = this.item.email;
           this.itemEmail.salutation = 'Hello '+this.item.firstName+' '+this.item.lastName;
@@ -447,7 +454,6 @@ export class Bookingv2Component implements OnInit {
       }
     }
     this.item.address = address.formatted_address;
-    this.item.duration = '';
     this.item.latitude = String(address.geometry.location.lat());
     this.item.longitude = String(address.geometry.location.lng());
   }
@@ -979,7 +985,12 @@ export class Bookingv2Component implements OnInit {
     console.log('database-'+this.item.inspectionEndTime);
     console.log('api-'+finalendtime);
 
-    this.bookingService.get(this.globals.blockSlotAPIv2+'?date='+this.item.inspectionDate+'&time='+this.item.inspectionTime+'&lat='+this.item.latitude+'&long='+this.item.longitude+'&endtime='+finalendtime).then((response:any) => {
+    if(this.item.id){
+      var bkid = this.item.id;
+    }else{
+      var bkid = '0';
+    }
+    this.bookingService.get(this.globals.blockSlotAPIv2+'?date='+this.item.inspectionDate+'&time='+this.item.inspectionTime+'&lat='+this.item.latitude+'&long='+this.item.longitude+'&endtime='+finalendtime+'&bookingId='+bkid).then((response:any) => {
       if(response.response.inspector_name == 0){
         this.showInspectorName = 'Sorry! No Inspectors are Available';
         this.inspectorAlert = 'inspectorAlert';
