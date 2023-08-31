@@ -56,6 +56,10 @@ const routes: Routes = [
         component: Bookingv2Component
       },
       {
+        path: 'updatev2/:id',
+        component: Bookingv2Component
+      },
+      {
         path: 'edit/:id',
         component: EditBookingComponent  //AddBookingComponent
       },

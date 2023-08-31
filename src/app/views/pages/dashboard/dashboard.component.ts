@@ -181,9 +181,9 @@ export class DashboardComponent implements OnInit,OnDestroy  {
         let backcolorinfo = this.inspectorData.filter((x:any) => x.id == element.officerId);
 
         if(element.inspectionTime == '09:00:00'){
-          var endtime = element.inspectionDate+'T13:30:00';
+          var endtime = element.inspectionDate+'T13:00:00';
         }else{
-          var endtime = element.inspectionDate+'T18:30:00';
+          var endtime = element.inspectionDate+'T18:00:00';
         }
         let arr: any = [];
         

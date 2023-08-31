@@ -19,11 +19,11 @@ export const MENU: MenuItem[] = [
     icon: "unlock",
     link: '/inspectors',
   },
-  /*{
+  {
     label: 'Users',
     icon: "users",
     link: '/users',
-  },*/
+  },
   {
     label:"Bookings",
     icon: 'file-text',

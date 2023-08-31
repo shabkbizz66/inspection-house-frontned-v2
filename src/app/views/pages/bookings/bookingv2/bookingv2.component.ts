@@ -155,7 +155,7 @@ export class Bookingv2Component implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       var id = params["id"];
       if (id) {
-        this.bookingService.get(this.globals.getBookingById+'/?id='+id).then((Response: any) => {
+        this.bookingService.get(this.globals.getBookingDataV2+'/?id='+id).then((Response: any) => {
           this.item = Response.response;
           console.log(this.item)
           this.addUpdateLabel = 'Update';
@@ -208,6 +208,18 @@ export class Bookingv2Component implements OnInit {
           //this.onEditView = '';
           this.itemNotes.bookingId = id;
           
+          var dur = this.item.inspectionEndTime.split(':');
+          var dur2 =  this.item.inspectionTime.split(':');
+          var current_dur = Number(dur[0]) - Number(dur2[0]);
+          if(dur[1] == '30'){
+            this.item.duration = current_dur+':30';
+          }else{
+            this.item.duration = current_dur+':0';
+          }
+
+
+          
+
           let url = "https://www.theinspectionhouse.com/payment/?td=";
           let convertid = btoa(id);
           this.paymentUrl = url+convertid;
@@ -580,6 +592,7 @@ export class Bookingv2Component implements OnInit {
     const obj: NgbDateStruct =  { year: Number(event.year), month: Number(event.month), day: Number(event.day) }
     this.inspectionDate = obj;
 
+    this.item.duration = '';
     //console.log(this.item.inspectionDate)
     //this.item.inspectionTime = '';
     //this.blockBookingSlots(this.item.inspectionDate);

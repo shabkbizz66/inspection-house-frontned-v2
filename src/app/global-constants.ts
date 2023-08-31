@@ -60,4 +60,6 @@ export class GlobalConstants {
     saveBookingv2: string = 'v1/booking/saveBookingv2';
     updateBookingv2: string = 'v1/booking/updateBookingv2';
     blockSlotAPIv2: string = 'v1/officer/getOfficerNamev2';
+    getBookingDataV2: string = 'v1/booking/getBookingv2';
+
 }
