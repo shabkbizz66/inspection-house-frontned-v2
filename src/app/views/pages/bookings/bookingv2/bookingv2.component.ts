@@ -779,7 +779,7 @@ export class Bookingv2Component implements OnInit {
     }
     
     if (this.item.id) {
-      this.bookingService.create(this.globals.updateBookingv2,this.item).then((response) => {
+      this.bookingService.update(this.globals.updateBookingv2,this.item).then((response) => {
         this.showToast('Booking Updated Successfully');
         this.backToList();
         //this.SpinnerService.hide();
