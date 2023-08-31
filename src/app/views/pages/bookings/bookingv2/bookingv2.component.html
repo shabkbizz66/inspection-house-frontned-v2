@@ -759,7 +759,7 @@
                                                 <input type="checkbox" class="form-check-input" formControlName="fee" [(ngModel)]="itemEmail.fee" value="true">&nbsp;Fee: ${{item.packagePrice}}
                                             </div>
                                             <div class="col-sm-8">
-                                                <input type="checkbox" class="form-check-input" formControlName="duration" [(ngModel)]="itemEmail.duration" value="true">&nbsp;Duration : 4hr(s)
+                                                <input type="checkbox" class="form-check-input" formControlName="duration" [(ngModel)]="itemEmail.duration" value="true">&nbsp;Duration : {{showDuration}} hr(s)
                                             </div>
                                             <div class="col-sm-8">
                                                 <input type="checkbox" class="form-check-input" formControlName="includeLink" [(ngModel)]="itemEmail.includeLink" value="true">&nbsp;Include link for payment in email

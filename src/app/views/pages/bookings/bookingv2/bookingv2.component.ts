@@ -84,6 +84,7 @@ export class Bookingv2Component implements OnInit {
   checkboxArr: any = [];
   checkboxVal: any = [];
   saveButton: boolean = true;
+  showDuration: string;
 
   options: any = {
     componentRestrictions: { country: 'US' }
@@ -208,6 +209,7 @@ export class Bookingv2Component implements OnInit {
           //this.onEditView = '';
           this.itemNotes.bookingId = id;
           
+          this.showDuration = this.item.duration;
           var dur = this.item.inspectionEndTime.split(':');
           var dur2 =  this.item.inspectionTime.split(':');
           var current_dur = Number(dur[0]) - Number(dur2[0]);
@@ -696,6 +698,7 @@ export class Bookingv2Component implements OnInit {
         this.finalServiceCost = Number(this.serviceCost) + Number(this.item.additionalServiceCost);
         this.item.calculatedPrice = this.finalServiceCost;
         if(type == 'finalsave'){
+          this.item.packagePrice = Number(this.item.additionalServiceCost)+ Number(this.squarefeetPrice) + Number(this.yearBuiltPrice);
           this.save();
         }else{
           this.item.packagePrice = Number(this.item.packagePrice) + Number(this.item.additionalServiceCost)+ Number(this.squarefeetPrice) + Number(this.yearBuiltPrice);
