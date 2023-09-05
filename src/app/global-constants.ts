@@ -48,7 +48,7 @@ export class GlobalConstants {
     /*--- users ---*/
     getusersList: string = 'v1/getAllUsers';
     getUserById: string = 'v1/getUserById';
-    saveUser: string = 'v1/saveuser';
+    saveUser: string = 'v1/createUser';
     updateUser: string = 'v1/updateUser';
     deleteUser: string = 'v1/deleteUser';
 
