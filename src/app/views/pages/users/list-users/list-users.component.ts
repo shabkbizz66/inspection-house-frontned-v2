@@ -224,9 +224,9 @@ export class ListUsersComponent implements OnInit {
         }
       );
     } else {
-      this.item.id = '';
       this.userService.create(this.globals.saveUser,this.item).then((response) => {
         this.showToast('User Added Successfully');
+        this.closePopup();
         //this.backToList();
         this.reloadPage();
         //this.SpinnerService.hide();
@@ -272,7 +272,7 @@ export class ListUsersComponent implements OnInit {
   deleteSlotDe(id: string){
     this.modalReference.close();
     this.userService.update(this.globals.deleteUser+'?id='+id,this.item).then((response) => {
-      this.showToast('Delete Successfully');
+      this.showToast('User Deleted Successfully');
       this.reloadPage();
       //this.SpinnerService.hide();
     },
