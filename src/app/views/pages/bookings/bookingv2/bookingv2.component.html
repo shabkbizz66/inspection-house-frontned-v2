@@ -460,7 +460,7 @@
                                 <div class="col-sm-4">
                                     <div class="mb-3">
                                     <label class="form-label">Square Footage <span style="color:red;">*</span></label>
-                                    <input type="text" formControlName="squarefeet" [(ngModel)]="item.squareFeet" maxlength="10" [ngClass]="{ 'is-invalid': submitted && f.squarefeet.errors }" class="form-control" placeholder="Enter Square Footage">
+                                    <input type="text" formControlName="squarefeet" (change)="squareFeetChange($event)" [(ngModel)]="item.squareFeet" maxlength="10" [ngClass]="{ 'is-invalid': submitted && f.squarefeet.errors }" class="form-control" placeholder="Enter Square Footage">
                                     <div *ngIf="submitted && f.squarefeet.errors" class="invalid-feedback">
                                         <div *ngIf="f.squarefeet.errors.required">Square Footage is required</div>
                                         <div *ngIf="f.squarefeet.errors.pattern">Enter only number.</div>
@@ -471,7 +471,7 @@
                                 <div class="col-sm-4">
                                     <div class="mb-3">
                                         <label class="form-label">Year Built <span style="color:red;">*</span></label>
-                                        <input type="text" formControlName="yearbuilt" [(ngModel)]="item.yearBuilt" maxlength="4" [ngClass]="{ 'is-invalid': submitted && f.yearbuilt.errors }" class="form-control" placeholder="Enter Built Year">
+                                        <input type="text" formControlName="yearbuilt" (change)="yearBuiltChange($event)" [(ngModel)]="item.yearBuilt" maxlength="4" [ngClass]="{ 'is-invalid': submitted && f.yearbuilt.errors }" class="form-control" placeholder="Enter Built Year">
                                         <div *ngIf="submitted && f.yearbuilt.errors" class="invalid-feedback">
                                             <div *ngIf="f.yearbuilt.errors.required">Year Built is required</div>
                                             <div *ngIf="f.yearbuilt.errors.pattern">Enter only number.</div>

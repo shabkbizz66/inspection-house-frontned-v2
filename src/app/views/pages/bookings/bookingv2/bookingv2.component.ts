@@ -593,7 +593,7 @@ export class Bookingv2Component implements OnInit {
       const index1: number = this.checkboxVal.indexOf(event.target.dataset.id);
       this.checkboxVal.splice(index, 1);
     }
-
+    this.calculateFinalPrice('calculate')
   }
 
   changeDate(event: any){
@@ -677,6 +677,14 @@ export class Bookingv2Component implements OnInit {
     if(this.item.inspectionType == 'New Construction' || this.item.inspectionType == 'Builder warranty Inspection'){
       this.packageType = '3';
     }
+    this.calculateFinalPrice('calculate');
+  }
+
+  squareFeetChange(event:any){
+    this.calculateFinalPrice('calculate');
+  }
+
+  yearBuiltChange(event:any){
     this.calculateFinalPrice('calculate');
   }
 
