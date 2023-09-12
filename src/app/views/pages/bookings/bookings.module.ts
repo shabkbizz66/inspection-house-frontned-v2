@@ -23,6 +23,7 @@ import { QuillModule } from 'ngx-quill';
 import { FailedBookingsComponent } from './failed-bookings/failed-bookings.component';
 import { AlertBookingsComponent } from './alert-bookings/alert-bookings.component';
 import { Bookingv2Component } from './bookingv2/bookingv2.component';
+import { AlertModule } from '../alert/alert.module';
 
 
 
@@ -108,7 +109,8 @@ FullCalendarModule.registerPlugins([
     QuillModule.forRoot(), // ngx-quill
     GooglePlaceModule,
     NgbModule,
-    FeatherIconModule
+    FeatherIconModule,
+    AlertModule
   ]
 })
 export class BookingsModule { }

@@ -137,6 +137,7 @@ export class Bookingv2Component implements OnInit {
   op6:boolean = false;
   op7:boolean = false;
   op8:boolean = false;
+  updatedPrice: number = 0;
 
   constructor(private calendar: NgbCalendar,
     public globals: GlobalConstants,
@@ -711,7 +712,13 @@ export class Bookingv2Component implements OnInit {
         this.finalServiceCost = Number(this.serviceCost) + Number(this.item.additionalServiceCost);
         this.item.calculatedPrice = this.finalServiceCost;
         if(type == 'finalsave'){
+          console.log(this.item.packagePrice)
+          this.updatedPrice = this.item.packagePrice;
           this.item.packagePrice = Number(this.item.additionalServiceCost)+ Number(this.squarefeetPrice) + Number(this.yearBuiltPrice);
+          if(Number(this.updatedPrice) != Number(this.item.packagePrice)){
+            this.item.packagePrice = this.updatedPrice;
+          }
+          console.log(this.item.packagePrice);
           this.save();
         }else{
           this.item.packagePrice = Number(this.item.packagePrice) + Number(this.item.additionalServiceCost)+ Number(this.squarefeetPrice) + Number(this.yearBuiltPrice);
@@ -734,6 +741,66 @@ export class Bookingv2Component implements OnInit {
 
   getExtracPrice(event: any){
     
+    if(!this.item.firstName){
+      this.alertService.error('Please enter first name','');
+      return;
+    }
+    if(!this.item.lastName){
+      this.alertService.error('Please enter last name','');
+      return;
+    }
+    if(!this.item.email){
+      this.alertService.error('Please enter email','');
+      return;
+    }
+    if(!this.item.phone){
+      this.alertService.error('Please enter phone number','');
+      return;
+    }
+    if(!this.item.address){
+      this.alertService.error('Please enter inspection address','');
+      return;
+    }
+    if(!this.item.city){
+      this.alertService.error('Please enter your city','');
+      return;
+    }
+    if(!this.item.state){
+      this.alertService.error('Please enter your state','');
+      return;
+    }
+    if(!this.item.zipcode){
+      this.alertService.error('Please enter your zipcode','');
+      return;
+    }
+    if(!this.item.squareFeet){
+      this.alertService.error('Please enter square footage','');
+      return;
+    }
+    if(!this.item.yearBuilt){
+      this.alertService.error('Please enter year built','');
+      return;
+    }
+    if(!this.item.inspectionTime){
+      this.alertService.error('Please select inspection time','');
+      return;
+    }
+    if(!this.item.duration){
+      this.alertService.error('Please select duration','');
+      return;
+    }
+    if(!this.item.inspectionType){
+      this.alertService.error('Please select inspection type','');
+      return;
+    }
+    if(!this.item.packageName){
+      this.alertService.error('Please select package','');
+      return;
+    }
+    if(!this.item.reportreView){
+      this.alertService.error('Please select your report review','');
+      return;
+    }
 
     const button = (event.srcElement.disabled === undefined) ? event.srcElement.parentElement : event.srcElement;
     button.setAttribute('disabled', true);
@@ -793,7 +860,7 @@ export class Bookingv2Component implements OnInit {
     }else{
       this.item.duration = duration[0]+'.5';
     }
-    
+    this.updatedPrice = 0;
     if (this.item.id) {
       this.bookingService.update(this.globals.updateBookingv2,this.item).then((response) => {
         this.showToast('Booking Updated Successfully');

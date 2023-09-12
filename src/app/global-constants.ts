@@ -44,6 +44,7 @@ export class GlobalConstants {
     dashboardBookingList = 'v1/booking/getDashboardBookingList';
     dashboardMonthBookingList = 'v1/booking/getDashboardMonthWiseBookingList';
     dashboardWeekBookingList = 'v1/booking/getDashboardWeekWiseBookingList';
+    dashboarSearch = 'v1/booking/getBookingsByDetails';
 
     /*--- users ---*/
     getusersList: string = 'v1/getAllUsers';

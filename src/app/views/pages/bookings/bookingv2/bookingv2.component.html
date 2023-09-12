@@ -30,7 +30,8 @@
         <div class="card">
             <div class="card-body">
             <!--<h6 class="card-title">Form Grid</h6>-->
-
+            
+            <alert></alert>
                
             <form [formGroup]="formGroup">
                 <div class="row">
@@ -378,10 +379,16 @@
                                                     </tr>
                                                     <tr>
                                                         <td>Total Amount</td>
-                                                        <td><b><input type="text" formControlName="packagePrice" [(ngModel)]="item.packagePrice" [ngClass]="{ 'is-invalid': submitted && f.packagePrice.errors }" class="form-control">
-                                                            <div *ngIf="submitted && f.packagePrice.errors" class="invalid-feedback">
-                                                            <div *ngIf="f.packagePrice.errors.required">Final Price is required</div>
+                                                        <td><b>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="feather icon-dollar-sign"></i></span>
+                                                                <input type="text" formControlName="packagePrice" [(ngModel)]="item.packagePrice" [ngClass]="{ 'is-invalid': submitted && f.packagePrice.errors }" class="form-control">
+                                                            
+                                                                <div *ngIf="submitted && f.packagePrice.errors" class="invalid-feedback">
+                                                                    <div *ngIf="f.packagePrice.errors.required">Final Price is required</div>
+                                                                </div>
                                                             </div>
+                                                            
                                                             <!--{{finalServiceCost | number : '1.2-2'}} --></b></td>
                                                     </tr>
                                                     <!--<tr>
