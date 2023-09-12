@@ -75,12 +75,15 @@ export class NavbarComponent implements OnInit {
 
   formatTime(time: any){
     var  tm = time.split(":");
+    var timemain:number = 0;
     if(Number(tm[0]) > 11 ){
       var shr = 'PM';
+      timemain = Number(tm[0]) - 12;
     }else{
       var shr = 'AM';
+      timemain = tm[0];
     }
-    var mtime = tm[0]+':'+tm[1]+' '+shr;
+    var mtime = timemain+':'+tm[1]+' '+shr;
     return mtime;
   }
 
