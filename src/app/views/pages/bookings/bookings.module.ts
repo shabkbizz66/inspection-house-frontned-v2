@@ -24,7 +24,7 @@ import { FailedBookingsComponent } from './failed-bookings/failed-bookings.compo
 import { AlertBookingsComponent } from './alert-bookings/alert-bookings.component';
 import { Bookingv2Component } from './bookingv2/bookingv2.component';
 import { AlertModule } from '../alert/alert.module';
-
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 
 
 const routes: Routes = [
@@ -84,8 +84,9 @@ FullCalendarModule.registerPlugins([
   dayGridPlugin,
   timeGridPlugin,
   listPlugin,
-  interactionPlugin
-]);
+  interactionPlugin,
+  resourceTimelinePlugin,
+])
 
 @NgModule({
   declarations: [
