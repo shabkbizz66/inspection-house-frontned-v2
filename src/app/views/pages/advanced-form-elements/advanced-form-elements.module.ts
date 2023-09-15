@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomFormsModule } from 'ngx-custom-validators';
 
 // Ngx-mask
-import { NgxMaskModule, IConfig } from 'ngx-mask';
+//import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 // Ng-select
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -83,7 +83,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     CustomFormsModule, // Ngx-custom-validators
-    NgxMaskModule.forRoot({ validation: true}), // Ngx-mask
+    //NgxMaskModule.forRoot({ validation: true}), // Ngx-mask
     NgSelectModule, // Ng-select
     TagInputModule, // Ngx-chips
     ColorPickerModule, // Ngx-color-picke

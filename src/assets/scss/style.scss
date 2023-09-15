@@ -143,3 +143,17 @@
     z-index: 9999;
   }
 .search-form .dropdown-menu.show{overflow-y:scroll;height: 400px;}
+
+@media (max-width:768px){
+	.ngb-dp-months {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+	}
+
+  ngb-datepicker {
+    display: block;
+    margin: 15px;
+    width: 100%;
+  }
+}

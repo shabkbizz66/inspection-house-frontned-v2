@@ -14,6 +14,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DataTable } from "simple-datatables";
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Time } from '@angular/common';
+import { CalendarOptions } from '@fullcalendar/core';
+import { InspectorService } from '../../inspectors/inspector.service';
+import { ResourceInput } from '@fullcalendar/resource-common';
+import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component({
   selector: 'app-bookingv2',
@@ -139,11 +143,59 @@ export class Bookingv2Component implements OnInit {
   op8:boolean = false;
   updatedPrice: number = 0;
 
+  calendarOptions: CalendarOptions = {
+    initialView: 'resourceTimelineDay',
+    headerToolbar: {
+      left: 'prev,today,next',
+      center: 'title',
+      right: ''
+    },
+    views: {
+      resourceTimelineDay: {
+        title: 'dddd, MMMM Do YYYY'
+      }
+    },
+    resourceAreaWidth: 200,
+    slotMinTime: "08:00:00",
+    slotMaxTime: "20:00:00",
+    contentHeight: 300,
+    height: 450,
+    eventContent: function( info ) {
+      return {html: info.event.title};
+    },  
+    resourceAreaColumns: [
+      {
+        field: 'title',
+        headerContent: 'Inspectors',
+      }
+    ],
+    nowIndicator: false,
+    weekends: true,
+    editable: false,
+    selectable: false,
+    selectMirror: false,
+    dayMaxEvents: false,
+    //select: this.handleDateSelect.bind(this),
+    //eventClick: this.handleEventClick.bind(this),
+    //eventsSet: this.handleEvents.bind(this),
+    //datesSet: this.handleDateChanged.bind(this),
+    //eventDidMount: this.handleEventDidMount.bind(this),
+    //resourceLabelDidMount: this.labelColor.bind(this)
+  };
+  bookingData: any;
+  blockOffData: any;
+  Events: any[] = [];
+  inspectorData: any;
+  resources: ResourceInput[] = [];
+  @ViewChild('fc') calendarComponent: FullCalendarComponent;
+  availableUpdate: string;
+
   constructor(private calendar: NgbCalendar,
     public globals: GlobalConstants,
     public alertService: AlertService,
     private modalService: NgbModal,
     private el: ElementRef,
+    private inspectorService: InspectorService,
     private bookingService: BookingService,
     private http: HttpClient, 
     private activatedRoute: ActivatedRoute,
@@ -162,6 +214,7 @@ export class Bookingv2Component implements OnInit {
         this.bookingService.get(this.globals.getBookingDataV2+'/?id='+id).then((Response: any) => {
           this.item = Response.response;
           console.log(this.item)
+          this.availableUpdate = this.item.inspectionDate;
           this.addUpdateLabel = 'Update';
 
           if(this.item.paymentStatus == 'PENDING'){
@@ -284,7 +337,7 @@ export class Bookingv2Component implements OnInit {
           });
           this.formGroup.updateValueAndValidity();
         });
-        this.getDateWiseOfficer(this.item.inspectionDate);
+        //this.getDateWiseOfficer(this.item.inspectionDate);
       }else{
         this.inspectionDate = this.calendar.getToday();
         this.startDateMonth = ''; 
@@ -292,7 +345,8 @@ export class Bookingv2Component implements OnInit {
         this.item.inspectionDate = this.inspectionDate.year+"-"+('0'+this.inspectionDate.month).slice(-2)+"-"+('0'+this.inspectionDate.day).slice(-2);
         //this.blockBookingSlots(this.item.inspectionDate);
         this.addUpdateLabel = 'Create';
-        this.getDateWiseOfficer(this.currentTodayDate);
+        //this.getDateWiseOfficer(this.currentTodayDate);
+        this.getDashboardData(this.currentTodayDate);
       }
     });
 
@@ -402,6 +456,9 @@ export class Bookingv2Component implements OnInit {
     });
     (this as any)[type] = true;
     
+    if(this.item.id && type == 'tabdatetime'){
+      this.getDashboardData(this.availableUpdate);
+    }
   }
 
   copyURL(){
@@ -606,10 +663,25 @@ export class Bookingv2Component implements OnInit {
     this.inspectionDate = obj;
 
     this.item.duration = '';
-    this.getDateWiseOfficer(this.item.inspectionDate);
-    //console.log(this.item.inspectionDate)
-    //this.item.inspectionTime = '';
-    //this.blockBookingSlots(this.item.inspectionDate);
+    //this.getDateWiseOfficer(this.item.inspectionDate);
+    
+    var month = '';
+    var day = '';
+    if(event.month < 10){
+      month = '0'+event.month;
+    }else{
+      month = String(event.month);
+    }
+    if(event.day < 10){
+      day = '0'+event.day;
+    }else{
+      day = String(event.day);
+    }
+    var selectedDate = event.year+'-'+month+'-'+day;
+    console.log(selectedDate)
+    this.getDashboardData(selectedDate);
+    let calendarApi = this.calendarComponent.getApi();
+    calendarApi.gotoDate(selectedDate);
   }
 
   blockBookingSlots(date: string){
@@ -1104,6 +1176,100 @@ export class Bookingv2Component implements OnInit {
       var timesec = "AM";
     }
     return timemain+':'+timesplit[1]+' '+timesec;
+  }
+
+  private BindMasterCalendarhData(date: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let current = this;
+      Promise.all<any>([
+        this.bookingService.get(this.globals.dashboardBookingList+'?date='+date),
+        this.bookingService.get(this.globals.getBlockOffList+'?date='+date),
+        this.inspectorService.get(this.globals.getInspectorList)
+      ]).then(function (response: any) {
+        current.bookingData = response[0].response;
+        current.blockOffData = response[1].data;
+        current.inspectorData = response[2].data;
+        var i = 0;
+        current.inspectorData.forEach((element :any) => {
+          if(element.status == 'Active'){
+            current.resources[i] = {
+              id: element.id,
+              title: element.firstName+ ' '+element.lastName
+            }
+            i = i +1;
+          }
+        });
+        resolve();
+      });
+    });
+  }
+
+  getDashboardData(currentTodayDate: string){
+    this.BindMasterCalendarhData(currentTodayDate).then(() => {
+      console.log(this.bookingData)
+      console.log(this.inspectorData)
+      this.Events = [];
+      this.bookingData.forEach((element: any,index:any) => {
+
+        let backcolorinfo = this.inspectorData.filter((x:any) => x.id == element.officerId);
+
+        if(element.inspectionTime == '09:00:00'){
+          var endtime = element.inspectionDate+'T13:00:00';
+        }else{
+          var endtime = element.inspectionDate+'T18:00:00';
+        }
+        let arr: any = [];
+        
+        arr.id = element.id;
+        arr.start = element.inspectionDate+'T'+element.inspectionTime;
+        arr.end = endtime;
+        arr.backgroundColor = '#A49A9A';
+        
+        // arr.title = '<div class="mcontent" id="ctm'+element.id+'">&nbsp;<span class="eventbox"><span class="'+contractclass+'">C</span>&nbsp;<span class="'+contractclass+'">$</span></span>&nbsp;'+element.address+'</div><div class="iconcontent">'+iconcontent+'</div></div>';
+        arr.title = '<div class="mcontent">Booked</div>';
+        arr.borderColor = '#797878';
+        arr.resourceId = element.officerId;
+        arr.textEscape = false;
+
+        this.Events.push(arr);
+      });
+
+      this.blockOffData.forEach((element: any,index:any) => {
+        let arr2:any = [];
+        arr2.id = 'O-'+element.id;
+        arr2.start = element.startDate+'T'+element.startTime;
+        arr2.end = element.endDate+'T'+element.endTime;
+        
+        arr2.backgroundColor =  '#A49A9A';
+        arr2.title = '<div class="mcontent">Booked</div>';
+        arr2.borderColor = '#797878';
+        arr2.resourceId = element.inspectorId;
+        arr2.textEscape = false;
+        this.Events.push(arr2);
+      });
+      
+      
+      console.log(this.Events);
+      this.calendarOptions.events = this.Events;
+      this.calendarOptions.resources = this.resources;
+      //this.setEvents(this.Events);
+      
+      if(this.item.id){
+        this.gotoAvailableDate(this.availableUpdate);
+      }
+
+    });
+  }
+  
+  gotoAvailableDate(date: string){
+    //alert(date);
+    console.log(date);
+    //this.getDashboardData(date);
+    setTimeout(() => {
+      let calendarApi = this.calendarComponent.getApi();
+      calendarApi.gotoDate(date);
+    },3000);
+    
   }
 
 }

@@ -105,13 +105,13 @@ FullCalendarModule.registerPlugins([
     RouterModule.forChild(routes),
     ReactiveFormsModule,
     FormsModule,
-    FullCalendarModule,
     NgxMaskModule.forRoot({ validation: true}), // Ngx-mask
     QuillModule.forRoot(), // ngx-quill
     GooglePlaceModule,
     NgbModule,
     FeatherIconModule,
-    AlertModule
+    AlertModule,
+    FullCalendarModule
   ]
 })
 export class BookingsModule { }
