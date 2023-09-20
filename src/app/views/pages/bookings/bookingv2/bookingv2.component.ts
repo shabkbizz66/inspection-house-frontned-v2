@@ -337,7 +337,8 @@ export class Bookingv2Component implements OnInit {
             duration: this.item.duration
           });
           this.formGroup.updateValueAndValidity();
-          this.getDashboardData(this.availableUpdate)
+          //this.getDashboardData(this.availableUpdate,'')
+          this.oneditPage(this.availableUpdate);
         });
         //this.getDateWiseOfficer(this.item.inspectionDate);
       }else{
@@ -349,7 +350,7 @@ export class Bookingv2Component implements OnInit {
         this.addUpdateLabel = 'Create';
         //this.getDateWiseOfficer(this.currentTodayDate);
         this.loadcal = true;
-        this.getDashboardData(this.currentTodayDate);
+        this.getDashboardData(this.currentTodayDate,'');
       }
     });
 
@@ -683,9 +684,11 @@ export class Bookingv2Component implements OnInit {
     }
     var selectedDate = event.year+'-'+month+'-'+day;
     console.log(selectedDate)
-    this.getDashboardData(selectedDate);
+    this.getDashboardData(selectedDate,'changedate');
     let calendarApi = this.calendarComponent.getApi();
     calendarApi.gotoDate(selectedDate);
+
+    
   }
 
   blockBookingSlots(date: string){
@@ -1208,7 +1211,7 @@ export class Bookingv2Component implements OnInit {
     });
   }
 
-  getDashboardData(currentTodayDate: string){
+  getDashboardData(currentTodayDate: string,changedate: string){
     this.BindMasterCalendarhData(currentTodayDate).then(() => {
       console.log(this.bookingData)
       console.log(this.inspectorData)
@@ -1217,16 +1220,16 @@ export class Bookingv2Component implements OnInit {
 
         let backcolorinfo = this.inspectorData.filter((x:any) => x.id == element.officerId);
 
-        if(element.inspectionTime == '09:00:00'){
+        /*if(element.inspectionTime == '09:00:00'){
           var endtime = element.inspectionDate+'T13:00:00';
         }else{
           var endtime = element.inspectionDate+'T18:00:00';
-        }
+        }*/
         let arr: any = [];
         
         arr.id = element.id;
         arr.start = element.inspectionDate+'T'+element.inspectionTime;
-        arr.end = endtime;
+        arr.end = element.inspectionDate+'T'+element.inspectionEndTime;
         arr.backgroundColor = '#A49A9A';
         
         // arr.title = '<div class="mcontent" id="ctm'+element.id+'">&nbsp;<span class="eventbox"><span class="'+contractclass+'">C</span>&nbsp;<span class="'+contractclass+'">$</span></span>&nbsp;'+element.address+'</div><div class="iconcontent">'+iconcontent+'</div></div>';
@@ -1258,8 +1261,8 @@ export class Bookingv2Component implements OnInit {
       this.calendarOptions.resources = this.resources;
       //this.setEvents(this.Events);
       
-      if(this.item.id){
-        this.gotoAvailableDate(this.availableUpdate);
+      if(this.item.id && changedate == 'changedate'){
+        //this.gotoAvailableDate(this.availableUpdate);
       }
 
     });
@@ -1273,8 +1276,14 @@ export class Bookingv2Component implements OnInit {
     setTimeout(() => {
       let calendarApi = this.calendarComponent.getApi();
       calendarApi.gotoDate(date);
-    },1000);
+    },2000);
     
+  }
+
+  oneditPage(selectedDate:string){
+    this.getDashboardData(selectedDate,'changedate');
+    let calendarApi = this.calendarComponent.getApi();
+    calendarApi.gotoDate(selectedDate);
   }
 
 }

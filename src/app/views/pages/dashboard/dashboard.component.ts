@@ -180,16 +180,16 @@ export class DashboardComponent implements OnInit,OnDestroy  {
 
         let backcolorinfo = this.inspectorData.filter((x:any) => x.id == element.officerId);
 
-        if(element.inspectionTime == '09:00:00'){
+        /*if(element.inspectionTime == '09:00:00'){
           var endtime = element.inspectionDate+'T13:00:00';
         }else{
           var endtime = element.inspectionDate+'T18:00:00';
-        }
+        }*/
         let arr: any = [];
         
         arr.id = element.id;
         arr.start = element.inspectionDate+'T'+element.inspectionTime;
-        arr.end = endtime; //element.inspectionDate+'T09:00:00';
+        arr.end = element.inspectionDate+'T'+element.inspectionEndTime;
         if(element.paymentStatus == 'PAID'){
           arr.backgroundColor = '#e0f6f6';
           var contractclass = "eventContract1";
