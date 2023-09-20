@@ -153,7 +153,33 @@
 
   ngb-datepicker {
     display: block;
-    margin: 15px;
+    margin: 15px 0;
     width: 100%;
   }
-}
+  .ngb-dp-week {
+    justify-content: space-between;
+  }
+
+  .fc .fc-toolbar.fc-header-toolbar {
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .fc .fc-toolbar.fc-header-toolbar .fc-toolbar-chunk:nth-child(1) {  
+    order: 2;
+  }
+
+  .fc .fc-toolbar.fc-header-toolbar .fc-toolbar-chunk:nth-child(2)  { 
+    order: 1;
+    text-align: center;
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  .fc .fc-toolbar.fc-header-toolbar .fc-toolbar-chunk:nth-child(3)  { 
+    order: 3;
+  }
+
+  full-calendar.fc-theme-standard .fc-scrollgrid col:nth-child(1)  { width:120px !important }
+  .fc .fc-datagrid-cell-cushion {white-space: normal;}
+
+} /* mobile css */

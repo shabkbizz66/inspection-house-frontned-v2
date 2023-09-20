@@ -50,7 +50,7 @@ const routes: Routes = [
       },
       {
         path: 'add',
-        component: EditBookingComponent //AddBookingComponent
+        component: Bookingv2Component //EditBookingComponent //AddBookingComponent
       },
       {
         path: 'tempaddv2',
@@ -62,11 +62,11 @@ const routes: Routes = [
       },
       {
         path: 'edit/:id',
-        component: EditBookingComponent  //AddBookingComponent
+        component: Bookingv2Component //EditBookingComponent  //AddBookingComponent
       },
       {
         path: 'update/:id',
-        component: EditBookingComponent
+        component: Bookingv2Component //EditBookingComponent
       },
       {
         path: 'agreement/:id',

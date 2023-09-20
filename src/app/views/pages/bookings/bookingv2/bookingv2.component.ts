@@ -142,6 +142,7 @@ export class Bookingv2Component implements OnInit {
   op7:boolean = false;
   op8:boolean = false;
   updatedPrice: number = 0;
+  loadcal: boolean = false;
 
   calendarOptions: CalendarOptions = {
     initialView: 'resourceTimelineDay',
@@ -336,6 +337,7 @@ export class Bookingv2Component implements OnInit {
             duration: this.item.duration
           });
           this.formGroup.updateValueAndValidity();
+          this.getDashboardData(this.availableUpdate)
         });
         //this.getDateWiseOfficer(this.item.inspectionDate);
       }else{
@@ -346,6 +348,7 @@ export class Bookingv2Component implements OnInit {
         //this.blockBookingSlots(this.item.inspectionDate);
         this.addUpdateLabel = 'Create';
         //this.getDateWiseOfficer(this.currentTodayDate);
+        this.loadcal = true;
         this.getDashboardData(this.currentTodayDate);
       }
     });
@@ -457,7 +460,8 @@ export class Bookingv2Component implements OnInit {
     (this as any)[type] = true;
     
     if(this.item.id && type == 'tabdatetime'){
-      this.getDashboardData(this.availableUpdate);
+      //this.getDashboardData(this.availableUpdate);
+      this.gotoAvailableDate(this.availableUpdate);
     }
   }
 
@@ -1263,12 +1267,13 @@ export class Bookingv2Component implements OnInit {
   
   gotoAvailableDate(date: string){
     //alert(date);
+    this.loadcal = true;
     console.log(date);
     //this.getDashboardData(date);
     setTimeout(() => {
       let calendarApi = this.calendarComponent.getApi();
       calendarApi.gotoDate(date);
-    },3000);
+    },1000);
     
   }
 
