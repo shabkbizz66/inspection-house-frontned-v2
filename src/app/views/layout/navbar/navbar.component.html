@@ -3,14 +3,24 @@
     <i class="feather icon-menu"></i>
   </a>
   <div class="navbar-content">
-    <!--<form class="search-form">
-      <div class="input-group">
+    <form class="search-form" style="width: 50%;">
+      <div class="input-group brclass">
         <div class="input-group-text">
           <i class="feather icon-search"></i>
         </div>
-        <input type="text" class="form-control" id="navbarForm" placeholder="Search here...">
+        <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="invName" [inputFormatter]="formatter" [resultTemplate]="rt1" [ngbTypeahead]="booksearch" id="navbarForm" placeholder="Search here...">
       </div>
-    </form>-->
+      <ng-template #rt1 let-r="result" let-t="term">
+        <!--<ngb-highlight [result]="r.address" [term]="t">
+        </ngb-highlight>-->
+        <div class="row" (click)="gotoBooking(r.id)" style="border-bottom: 1px solid #333; padding: 10px;">
+          <div class="col-sm-6">
+            {{r.address}} <br />
+            <span>On {{formatDate(r.inspectionDate)}} at {{formatTime(r.inspectionTime)}}</span>
+          </div>
+        </div>
+      </ng-template>
+    </form>
     <ul class="navbar-nav">
       <li class="nav-item" ngbDropdown>
         <button type="button" style="background: #1C315F; border:none;" routerLink="/bookings/add" class="btn btn-primary btn-icon-text mb-2 mb-md-0">

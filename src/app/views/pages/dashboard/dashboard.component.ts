@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit,OnDestroy  {
   bookingData: any;
   infoContent: string;
   sidebarCounts: any = [];
-        
+  blockOffData: any;
 
   calendarOptions: CalendarOptions = {
     initialView: 'resourceTimelineDay',
@@ -160,6 +160,7 @@ export class DashboardComponent implements OnInit,OnDestroy  {
         current.workorderWeek = response[1].thisweekbooking;
         current.availableslots = response[1].availableSlots;
         localStorage.setItem('alert',response[1].alertCounts);
+        localStorage.setItem('pending',response[1].pendingCount);
         current.sidebarCounts.alertCount = response[1].alertCounts;
         current.sidebarCounts.pendingCount = response[1].pendingCount;
         current.inspectorService.alertCount.next(current.sidebarCounts);
@@ -179,16 +180,16 @@ export class DashboardComponent implements OnInit,OnDestroy  {
 
         let backcolorinfo = this.inspectorData.filter((x:any) => x.id == element.officerId);
 
-        if(element.inspectionTime == '09:00:00'){
-          var endtime = element.inspectionDate+'T13:30:00';
+        /*if(element.inspectionTime == '09:00:00'){
+          var endtime = element.inspectionDate+'T13:00:00';
         }else{
-          var endtime = element.inspectionDate+'T18:30:00';
-        }
+          var endtime = element.inspectionDate+'T18:00:00';
+        }*/
         let arr: any = [];
         
         arr.id = element.id;
         arr.start = element.inspectionDate+'T'+element.inspectionTime;
-        arr.end = endtime; //element.inspectionDate+'T09:00:00';
+        arr.end = element.inspectionDate+'T'+element.inspectionEndTime;
         if(element.paymentStatus == 'PAID'){
           arr.backgroundColor = '#e0f6f6';
           var contractclass = "eventContract1";
@@ -210,6 +211,21 @@ export class DashboardComponent implements OnInit,OnDestroy  {
         
         this.Events.push(arr);
       });
+
+      this.blockOffData.forEach((element: any,index:any) => {
+        let arr2:any = [];
+        arr2.id = 'O-'+element.id;
+        arr2.start = element.startDate+'T'+element.startTime;
+        arr2.end = element.endDate+'T'+element.endTime;
+        
+        arr2.backgroundColor =  '#A49A9A';
+        arr2.title = '<div class="mcontent">Off</div>';
+        arr2.borderColor = '#797878';
+        arr2.resourceId = element.inspectorId;
+        arr2.textEscape = false;
+        this.Events.push(arr2);
+      });
+      
       
       console.log(this.Events);
       this.calendarOptions.events = this.Events;
@@ -223,8 +239,10 @@ export class DashboardComponent implements OnInit,OnDestroy  {
       let current = this;
       Promise.all<any>([
         this.bookingService.get(this.globals.dashboardBookingList+'?date='+date),
+        this.bookingService.get(this.globals.getBlockOffList+'?date='+date)
       ]).then(function (response: any) {
         current.bookingData = response[0].response;
+        current.blockOffData = response[1].data;
         resolve();
       });
     });
@@ -286,6 +304,11 @@ export class DashboardComponent implements OnInit,OnDestroy  {
     console.log('444');
     console.log(clickInfo.event);
     console.log(clickInfo.event['_def'].publicId);
+
+    var chk = clickInfo.event['_def'].publicId.split('-');
+    if(chk[0] == 'O'){
+      return;
+    }
 
     var bookingId = clickInfo.event['_def'].publicId;
     this.router.navigate(['/bookings/update/'+bookingId]);

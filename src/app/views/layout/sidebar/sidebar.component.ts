@@ -57,6 +57,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       this.iconSidebar;
     });
     this.iconSidebar(desktopMedium);
+
+    this.alertCount = Number(localStorage.getItem('alert'));
+    this.pendingCount = Number(localStorage.getItem('pending'));
   }
 
   ngAfterViewInit() {

@@ -25,7 +25,7 @@ export class BookingModel{
     agentPhone: string;
     agentEmail: string;
     inspectionDate: any;
-    inspectionTime: any;
+    inspectionTime: string;
     packageName: string;
     packagePrice: number;
     calculatedPrice: number;
@@ -57,6 +57,8 @@ export class BookingModel{
     op6: boolean;
     op7: boolean;
     op8: boolean;
+    inspectionEndTime: any;
+    duration: string;
 }
 
 export class reassignModel{

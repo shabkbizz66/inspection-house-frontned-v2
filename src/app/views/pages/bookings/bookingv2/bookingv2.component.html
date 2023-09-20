@@ -30,7 +30,8 @@
         <div class="card">
             <div class="card-body">
             <!--<h6 class="card-title">Form Grid</h6>-->
-
+            
+            <alert></alert>
                
             <form [formGroup]="formGroup">
                 <div class="row">
@@ -378,15 +379,21 @@
                                                     </tr>
                                                     <tr>
                                                         <td>Total Amount</td>
-                                                        <td><b><input type="text" formControlName="packagePrice" [(ngModel)]="item.packagePrice" [ngClass]="{ 'is-invalid': submitted && f.packagePrice.errors }" class="form-control">
-                                                            <div *ngIf="submitted && f.packagePrice.errors" class="invalid-feedback">
-                                                            <div *ngIf="f.packagePrice.errors.required">Final Price is required</div>
+                                                        <td><b>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="feather icon-dollar-sign"></i></span>
+                                                                <input type="text" formControlName="packagePrice" [(ngModel)]="item.packagePrice" [ngClass]="{ 'is-invalid': submitted && f.packagePrice.errors }" class="form-control">
+                                                            
+                                                                <div *ngIf="submitted && f.packagePrice.errors" class="invalid-feedback">
+                                                                    <div *ngIf="f.packagePrice.errors.required">Final Price is required</div>
+                                                                </div>
                                                             </div>
+                                                            
                                                             <!--{{finalServiceCost | number : '1.2-2'}} --></b></td>
                                                     </tr>
-                                                    <tr>
+                                                    <!--<tr>
                                                         <td colspan="2"><span style="color:rebeccapurple; text-decoration:underline; cursor: pointer;" (click)="calculateFinalPrice('calculate')">Calculate</span></td>
-                                                    </tr>
+                                                    </tr>-->
                                                 </tbody>
                                                 </table>
                                             </div>
@@ -460,7 +467,7 @@
                                 <div class="col-sm-4">
                                     <div class="mb-3">
                                     <label class="form-label">Square Footage <span style="color:red;">*</span></label>
-                                    <input type="text" formControlName="squarefeet" [(ngModel)]="item.squareFeet" maxlength="10" [ngClass]="{ 'is-invalid': submitted && f.squarefeet.errors }" class="form-control" placeholder="Enter Square Footage">
+                                    <input type="text" formControlName="squarefeet" (change)="squareFeetChange($event)" [(ngModel)]="item.squareFeet" maxlength="10" [ngClass]="{ 'is-invalid': submitted && f.squarefeet.errors }" class="form-control" placeholder="Enter Square Footage">
                                     <div *ngIf="submitted && f.squarefeet.errors" class="invalid-feedback">
                                         <div *ngIf="f.squarefeet.errors.required">Square Footage is required</div>
                                         <div *ngIf="f.squarefeet.errors.pattern">Enter only number.</div>
@@ -471,7 +478,7 @@
                                 <div class="col-sm-4">
                                     <div class="mb-3">
                                         <label class="form-label">Year Built <span style="color:red;">*</span></label>
-                                        <input type="text" formControlName="yearbuilt" [(ngModel)]="item.yearBuilt" maxlength="4" [ngClass]="{ 'is-invalid': submitted && f.yearbuilt.errors }" class="form-control" placeholder="Enter Built Year">
+                                        <input type="text" formControlName="yearbuilt" (change)="yearBuiltChange($event)" [(ngModel)]="item.yearBuilt" maxlength="4" [ngClass]="{ 'is-invalid': submitted && f.yearbuilt.errors }" class="form-control" placeholder="Enter Built Year">
                                         <div *ngIf="submitted && f.yearbuilt.errors" class="invalid-feedback">
                                             <div *ngIf="f.yearbuilt.errors.required">Year Built is required</div>
                                             <div *ngIf="f.yearbuilt.errors.pattern">Enter only number.</div>
@@ -520,50 +527,80 @@
                                         </div>-->
                                     </div>
                                 </div>
-                                <!--<div class="col-sm-3">
-                                    <label class="form-label">Start Time </label>
-                                    <div class="mb-3">    
-                                        <select formControlName="inspectionTime"  (change)="changeNewTime($event)" [(ngModel)]="item.inspectionTime" [ngClass]="{ 'is-invalid': emailSubmitted && f.inspectionTime.errors }" class="form-select">
-                                            <option [ngValue]="undefined" selected>-- Select --</option>
-                                            <option value="08:00:00">8 am</option>
-                                            <option value="09:00:00">9 am</option>
-                                            <option value="10:00:00">10 am</option>
-                                            <option value="11:00:00">11 am</option>
-                                            <option value="12:00:00">12 pm</option>
-                                            <option value="13:00:00">01 pm</option>
-                                            <option value="14:00:00">02 pm</option>
-                                            <option value="15:00:00">03 pm</option>
-                                            <option value="16:00:00">04 pm</option>
-                                            <option value="17:00:00">05 pm</option>
-                                            <option value="18:00:00">06 pm</option>
-                                            <option value="19:00:00">07 pm</option>
-                                            <option value="20:00:00">08 pm</option>
-                                        </select>
-                                        <div *ngIf="submitted && f.inspectionTime.errors" class="invalid-feedback">
-                                        <div *ngIf="f.inspectionTime.errors.required">Inspection Time is required</div>
+                                <div class="col-sm-8">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label class="form-label">Start Time <span style="color:red;">*</span></label>
+                                            <div class="mb-3">    
+                                                <select formControlName="inspectiontime"  (change)="changeNewTime($event)" [(ngModel)]="item.inspectionTime" [ngClass]="{ 'is-invalid': submitted && f.inspectiontime.errors }" class="form-select">
+                                                    <option [ngValue]="undefined" selected>-- Select --</option>
+                                                    <option value="08:00:00">8 am</option>
+                                                    <option value="09:00:00">9 am</option>
+                                                    <option value="10:00:00">10 am</option>
+                                                    <option value="11:00:00">11 am</option>
+                                                    <option value="12:00:00">12 pm</option>
+                                                    <option value="13:00:00">01 pm</option>
+                                                    <option value="14:00:00">02 pm</option>
+                                                    <option value="15:00:00">03 pm</option>
+                                                    <option value="16:00:00">04 pm</option>
+                                                    <option value="17:00:00">05 pm</option>
+                                                    <option value="18:00:00">06 pm</option>
+                                                    <option value="19:00:00">07 pm</option>
+                                                    <option value="20:00:00">08 pm</option>
+                                                </select>
+                                                <div *ngIf="submitted && f.inspectiontime.errors" class="invalid-feedback">
+                                                    <div *ngIf="f.inspectiontime.errors.required">Inspection Time is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label class="form-label">Duration <span style="color:red;">*</span></label>
+                                            <div class="mb-3">    
+                                                <select formControlName="duration"  (change)="changeDuration($event)" [(ngModel)]="item.duration" [ngClass]="{ 'is-invalid': submitted && f.duration.errors }" class="form-select">
+                                                    <option [ngValue]="undefined" selected>-- Select --</option>
+                                                    <option value="1:0">1 Hour</option>
+                                                    <option value="1:30">1.5 Hour</option>
+                                                    <option value="2:0">2 Hour</option>
+                                                    <option value="2:30">2.5 Hour</option>
+                                                    <option value="3:0">3 Hour</option>
+                                                    <option value="3:30">3.5 Hour</option>
+                                                    <option value="4:0">4 Hour</option>
+                                                    <option value="4:30">4.5 Hour</option>
+                                                    <option value="5:0">5 Hour</option>
+                                                </select>
+                                                <div *ngIf="submitted && f.duration.errors" class="invalid-feedback">
+                                                <div *ngIf="f.duration.errors.required">Duration is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="table-responsive">
+                                                <!--<table id="dataTableExample1" class="table table-striped-new">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Officer Name</th>
+                                                        <th>Address</th>
+                                                        <th>Inspection Time</th>
+                                                        <th>Duration</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let alloff of allofficerData">
+                                                        <td>{{alloff.officerName}}</td>
+                                                        <td>{{alloff.address}}</td>
+                                                        <td>{{formatDateTime(alloff.inspectionTime)}}</td>
+                                                        <td>{{alloff.duration}} hrs</td>
+                                                    </tr>
+                                                </tbody>
+                                                </table>-->
+                                                <div *ngIf="loadcal">
+                                                <full-calendar #fc [options]="calendarOptions"></full-calendar>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3">
-                                    <label class="form-label">Start Time </label>
-                                    <div class="mb-3">    
-                                        <select formControlName="duration"  (change)="changeDuration($event)" [(ngModel)]="item.duration" [ngClass]="{ 'is-invalid': emailSubmitted && f.inspectionTime.errors }" class="form-select">
-                                            <option [ngValue]="undefined" selected>-- Select --</option>
-                                            <option value="2">2</option>
-                                            <option value="2.5">2.5</option>
-                                            <option value="3">3</option>
-                                            <option value="3.5">3.45</option>
-                                            <option value="4">4</option>
-                                            <option value="4.5">4.5</option>
-                                            <option value="5">5</option>
-                                            <option value="5.5">5.5</option>
-                                        </select>
-                                        <div *ngIf="submitted && f.inspectionTime.errors" class="invalid-feedback">
-                                        <div *ngIf="f.inspectionTime.errors.required">Inspection Time is required</div>
-                                        </div>
-                                    </div>
-                                </div>-->
-                                <div class="col-sm-6">
+                                <!--<div class="col-sm-6">
                                     <div class="mb-3">
                                         <label class="form-label">Inspection Time <span style="color:red;">*</span></label>
                                         <div class="user-input secound-radio">
@@ -581,7 +618,7 @@
                                         </div>
                                         <div style="color:red" *ngIf="slotBooked">All slots are booked</div>
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
@@ -758,7 +795,7 @@
                                                 <input type="checkbox" class="form-check-input" formControlName="fee" [(ngModel)]="itemEmail.fee" value="true">&nbsp;Fee: ${{item.packagePrice}}
                                             </div>
                                             <div class="col-sm-8">
-                                                <input type="checkbox" class="form-check-input" formControlName="duration" [(ngModel)]="itemEmail.duration" value="true">&nbsp;Duration : 4hr(s)
+                                                <input type="checkbox" class="form-check-input" formControlName="duration" [(ngModel)]="itemEmail.duration" value="true">&nbsp;Duration : {{showDuration}} hr(s)
                                             </div>
                                             <div class="col-sm-8">
                                                 <input type="checkbox" class="form-check-input" formControlName="includeLink" [(ngModel)]="itemEmail.includeLink" value="true">&nbsp;Include link for payment in email
@@ -815,8 +852,8 @@
                         <div class="row">
                             <div class="col-sm-4"></div>
                             <div class="col-sm-4"></div>
-                            <div class="col-sm-4" style="margin-top: 20px; text-align: right;">
-                                <button type="button" style="background: #1C315F; border:none; margin-right: 10px;"  class="btn btn-success submit" (click)="getExtracPrice($event)">Save</button>
+                            <div class="col-sm-4" style="margin-top: 0px; text-align: right;">
+                                <button type="button" style="background: #1C315F; border:none; margin-right: 10px;"  class="btn btn-success submit" (click)="getExtracPrice($event)">{{saveLabel}}</button>
                                 <button type="button" style="background: #1C315F; border:none;" class="btn btn-primary submit" [routerLink]="['/dashboard']">Back</button>
                             </div>
                         </div>
