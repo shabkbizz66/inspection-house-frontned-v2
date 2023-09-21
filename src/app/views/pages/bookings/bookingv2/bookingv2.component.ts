@@ -260,6 +260,66 @@ export class Bookingv2Component implements OnInit {
           this.ontheflyInspectorID = Response.response.officerId;
           this.servicesArr = this.item.additionalServices.slice(0,-1).split(",");
 
+          this.checkboxArr = [];
+          this.checkboxVal = [];
+          var n1 = this.servicesArr.includes("Swimming Pool/Hot Tub");
+          if(n1){
+            this.item.op1 = true;
+            this.checkboxArr.push('100');
+            this.checkboxVal.push('Swimming Pool/Hot Tub')
+          }
+
+          var n2 = this.servicesArr.includes("Septic");
+          if(n2){
+            this.item.op2 = true;
+            this.checkboxArr.push('225');
+            this.checkboxVal.push('Septic')
+          }
+
+          var n3 = this.servicesArr.includes("Storage/Shed w/out Utilities");
+          if(n3){
+            this.item.op3 = true;
+            this.checkboxArr.push('100');
+            this.checkboxVal.push('Storage/Shed w/out Utilities')
+          }
+
+          var n4 = this.servicesArr.includes("Storage/Shed withUtilities");
+          if(n4){
+            this.item.op4 = true;
+            this.checkboxArr.push('100');
+            this.checkboxVal.push('Storage/Shed withUtilities')
+          }
+
+          
+          var n5 = this.servicesArr.includes("Barn w/out Utilities");
+          if(n5){
+            this.item.op5 = true;
+            this.checkboxArr.push('100');
+            this.checkboxVal.push('Barn w/out Utilities')
+          }
+          var n6 = this.servicesArr.includes("Outdoor Kitchen Appliances");
+          if(n6){
+            this.item.op6 = true;
+            this.checkboxArr.push('50');
+            this.checkboxVal.push('Outdoor Kitchen Appliances')
+          }
+          var n7 = this.servicesArr.includes("Guest House");
+          if(n7){
+            this.item.op7 = true;
+            this.checkboxArr.push('250');
+            this.checkboxVal.push('Guest House')
+          }
+          var n8 = this.servicesArr.includes("Workshop with Utilities");
+          if(n8){
+            this.item.op2 = true;
+            this.checkboxArr.push('100');
+            this.checkboxVal.push('Workshop with Utilities')
+          }
+          
+          console.log(this.checkboxArr)
+          console.log(this.checkboxVal)
+
+
           this.serviceCost = Number(this.item.packagePrice) - Number(this.item.additionalServiceCost);
           this.additionalServicesCost = this.item.additionalServiceCost;
           
