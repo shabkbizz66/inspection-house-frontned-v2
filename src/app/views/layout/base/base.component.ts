@@ -7,6 +7,7 @@ import { GlobalConstants } from '../../../global-constants';
 import { BookingService } from '../../pages/bookings/booking.service';
 import { reassignModel } from '../../pages/bookings/booking.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { InspectorService } from '../../pages/inspectors/inspector.service';
 
 @Component({
   selector: 'app-base',
@@ -27,9 +28,13 @@ export class BaseComponent implements OnInit {
   minDate: any;
   inspectorData: any;
   reassignTitle: string;
+  deleteId: number;
+
+  @ViewChild('basicModalBlock') basicModalBlock: any;
 
   constructor(private router: Router,
     private bookingService: BookingService,
+    private inspectorService: InspectorService,
     private modalService: NgbModal,
     private calendar: NgbCalendar,
     public globals: GlobalConstants) { 
@@ -83,6 +88,11 @@ export class BaseComponent implements OnInit {
   closewindow(event:any){
     const contextMenu = (<HTMLInputElement>document.getElementById('contextMenu'));
     contextMenu.style.display = 'none';
+  }
+
+  closewindowOff(event:any){
+    const contextMenuOff = (<HTMLInputElement>document.getElementById('contextMenuOff'));
+    contextMenuOff.style.display = 'none';
   }
 
   openCancelPopup(content: TemplateRef<any>) {
@@ -216,5 +226,37 @@ export class BaseComponent implements OnInit {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
     this.router.navigate(['/dashboard']);
+  }
+
+  deleteBlockOff(event:any){
+    console.log(event);
+    const contextMenu = (<HTMLInputElement>document.getElementById('contextMenuOff'));
+    var id = Number(contextMenu.getAttribute('data-id'));
+    this.deleteId = id;
+    if(this.deleteId != 0){
+      contextMenu.style.display = 'none';
+      this.openPopupBlock(this.basicModalBlock);
+    }
+  }
+
+  deleteSlotDe(id:number){
+    this.modalReference.close();
+    this.inspectorService.create(this.globals.deleteBlockSlot+'?id='+id,this.item).then((response) => {
+      this.showToast('Delete Successfully');
+      this.backtoList();
+    },
+      (rejected: RejectedResponse) => {
+        
+        //this.alertService.BindServerErrors(this.formGroup, rejected);
+      }
+    );
+  }
+
+  openPopupBlock(content: TemplateRef<any>) {
+    this.modalReference = this.modalService.open(content);
+  }
+
+  closePopupBlock(){
+    this.modalReference.close();
   }
 }

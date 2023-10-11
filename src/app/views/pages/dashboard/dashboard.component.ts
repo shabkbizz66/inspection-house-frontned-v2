@@ -132,6 +132,8 @@ export class DashboardComponent implements OnInit,OnDestroy  {
   ngOnDestroy():void{
     const contextMenu = (<HTMLInputElement>document.getElementById('contextMenu'));
     contextMenu.style.display = 'none';
+    const contextMenuOff = (<HTMLInputElement>document.getElementById('contextMenuOff'));
+    contextMenuOff.style.display = 'none';
   }
   
   private BindMaster(): Promise<void> {
@@ -219,7 +221,7 @@ export class DashboardComponent implements OnInit,OnDestroy  {
         arr2.end = element.endDate+'T'+element.endTime;
         
         arr2.backgroundColor =  '#A49A9A';
-        arr2.title = '<div class="mcontent">Off</div>';
+        arr2.title = '<div class="mcontent" id="res'+element.id+'">Off</div>';
         arr2.borderColor = '#797878';
         arr2.resourceId = element.inspectorId;
         arr2.textEscape = false;
@@ -504,45 +506,43 @@ export class DashboardComponent implements OnInit,OnDestroy  {
   handleEventDidMount(info:any) {
     info.el.style.borderWidth = '3px';
     
-   
     
     info.el.addEventListener('contextmenu', (e: MouseEvent) => {
       e.preventDefault();
       
-
+      
       const element = e.target as HTMLElement;
       let mainid = info.event._def.publicId;
-      let ext = 'ctm'+mainid;
-
-      const ctmnu = (<HTMLInputElement>document.getElementById(ext));
-      console.log(ctmnu.offsetTop);
-
-      const contextMenu = (<HTMLInputElement>document.getElementById('contextMenu'));
-      var rectangle = element.getBoundingClientRect();
-      //console.log(rectangle.left);
-      //console.log(rectangle.top);
-      //console.log(e.clientX)
-      contextMenu.style.display = 'block';
-
-      /*console.log(e.clientY);
-      console.log(e.offsetY);
-      console.log(e.screenY);
-      console.log(e.y);
-      console.log(e.pageY)*/
       
+      if(mainid.split('-')[0] == 'O'){
+        let blockoffid  = mainid.split('-')[1];
 
-      contextMenu.style.left = (e.pageX) + 'px';
-      contextMenu.style.top = (e.pageY) + 'px';
-      contextMenu.setAttribute('data-id',mainid);
+        let ext = 'res'+mainid.split('-')[1];
+        const ctmnu1 = (<HTMLInputElement>document.getElementById(ext));
+        console.log(ctmnu1.offsetTop);
 
-      const action1 = contextMenu.querySelector('#workorder');
-      //action1.setAttribute('data-id',mainid);
-      /*action1.addEventListener('click', () => {
-        // Handle action 1
-        var bookingId = info.event._def.publicId;
-        this.router.navigate(['/bookings/update/'+bookingId]);
-        contextMenu.style.display = 'none';
-      });*/
+        const contextMenu = (<HTMLInputElement>document.getElementById('contextMenuOff'));
+        contextMenu.style.display = 'block';
+        contextMenu.style.left = (e.pageX) + 'px';
+        contextMenu.style.top = (e.pageY) + 'px';
+        contextMenu.setAttribute('data-id',blockoffid);
+
+      }else{
+
+        let ext = 'ctm'+mainid;
+        const ctmnu = (<HTMLInputElement>document.getElementById(ext));
+        console.log(ctmnu.offsetTop);
+
+        const contextMenu = (<HTMLInputElement>document.getElementById('contextMenu'));
+        var rectangle = element.getBoundingClientRect();
+    
+        contextMenu.style.display = 'block';
+        contextMenu.style.left = (e.pageX) + 'px';
+        contextMenu.style.top = (e.pageY) + 'px';
+        contextMenu.setAttribute('data-id',mainid);
+
+        const action1 = contextMenu.querySelector('#workorder');
+      }
     });
 
     
