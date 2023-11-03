@@ -310,9 +310,40 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-3" *ngIf="item.id">
+                                    <div class="mb-3">
+                                        <label class="form-label">Re-Inspection <span style="color:red;">*</span></label>
+                                        <select formControlName="reinspection" (change)="changeReInspection($event)" [(ngModel)]="item.reinspection" class="form-select">
+                                            <option [ngValue]="undefined" selected>-- Select --</option>
+                                            <option value="No">No</option>
+                                            <option value="Yes">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <div class="row">
+                            <div class="row" *ngIf="isReinspecData">
+                                <div class="col-sm-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Re-Inspection Price <span style="color:red;">*</span></label>
+                                        <select [(ngModel)]="reinspectionPrice" (change)="changeRePrice($event)" [ngModelOptions]="{standalone: true}" class="form-select">
+                                            <option value="175">$175</option>
+                                            <option value="250">$250</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="isReinspecData">
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Add Re-Inspection Items </label>
+                                        <textarea rows="3" cols="20" formControlName="reinspectionComments"  [(ngModel)]="item.reinspectionComments" class="form-control">
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="!isReinspecData">
                                 <div class="col-sm-12">
                                     <div class="mb-3">
                                         <label class="form-label" style="width:100%"><b>Select Ancillary Services</b></label>
@@ -367,7 +398,16 @@
                                         <div class="card-body">
                                             <h6 class="card-title">Checkout Summary</h6>
                                             <div class="table-responsive pt-3">
-                                                <table class="table table-bordered">
+                                                <table class="table table-bordered" *ngIf="isReinspecData">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Total Re-InspectionCost</td>
+                                                            <td><b>${{reinspectionPrice | number : '1.2-2'}}</b></td>
+                                                        </tr>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                                <table class="table table-bordered" *ngIf="!isReinspecData">
                                                 <tbody>
                                                     <tr>
                                                         <td>Service Cost</td>
