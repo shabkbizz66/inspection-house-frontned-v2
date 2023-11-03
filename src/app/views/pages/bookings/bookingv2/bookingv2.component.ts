@@ -228,6 +228,8 @@ export class Bookingv2Component implements OnInit {
             this.isReinspecData = true;
             this.checkReInspe = '1';
           }else{
+            this.item.reinspection = 'No';
+            this.reinspectionPrice = '175';
             this.checkReInspe = '0';
           }
 
