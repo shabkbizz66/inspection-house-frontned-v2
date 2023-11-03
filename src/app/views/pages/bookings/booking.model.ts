@@ -48,7 +48,8 @@ export class BookingModel{
     bedrooms: string;
     bathrooms: string;
     status: string;
-
+    reinspection: string;
+    reinspectionComments: string;
     op1: boolean;
     op2: boolean;
     op3: boolean;

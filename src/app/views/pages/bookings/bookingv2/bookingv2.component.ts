@@ -191,6 +191,11 @@ export class Bookingv2Component implements OnInit {
   @ViewChild('fc') calendarComponent: FullCalendarComponent;
   availableUpdate: string;
 
+  isReinspection: boolean = false;
+  reinspectionPrice: string;
+  isReinspecData: boolean = false;
+  checkReInspe: string;
+
   constructor(private calendar: NgbCalendar,
     public globals: GlobalConstants,
     public alertService: AlertService,
@@ -217,6 +222,14 @@ export class Bookingv2Component implements OnInit {
           console.log(this.item)
           this.availableUpdate = this.item.inspectionDate;
           this.addUpdateLabel = 'Update';
+
+          if(this.item.reinspection == 'Yes'){
+            this.reinspectionPrice = String(this.item.packagePrice);
+            this.isReinspecData = true;
+            this.checkReInspe = '1';
+          }else{
+            this.checkReInspe = '0';
+          }
 
           if(this.item.paymentStatus == 'PENDING'){
             this.saveButton = true;
@@ -381,12 +394,14 @@ export class Bookingv2Component implements OnInit {
 
           this.itemEmail.to = this.item.email;
           this.itemEmail.salutation = 'Hello '+this.item.firstName+' '+this.item.lastName;
+          
 
           this.formGroup.patchValue({address:this.item.address,
             squarefeet:this.item.squareFeet,
             yearbuilt: this.item.yearBuilt,
             inspectiontype: this.item.inspectionType,
             inspectiontime: this.item.inspectionTime,
+            reinspection: this.item.reinspection,
             city: this.item.city,
             state: this.item.state,
             packagePrice: this.item.packagePrice,
@@ -401,6 +416,9 @@ export class Bookingv2Component implements OnInit {
           this.oneditPage(this.availableUpdate);
         });
         //this.getDateWiseOfficer(this.item.inspectionDate);
+
+        
+
       }else{
         this.inspectionDate = this.calendar.getToday();
         this.startDateMonth = ''; 
@@ -410,6 +428,8 @@ export class Bookingv2Component implements OnInit {
         this.addUpdateLabel = 'Create';
         //this.getDateWiseOfficer(this.currentTodayDate);
         this.loadcal = true;
+        this.item.reinspection = 'No';
+        this.reinspectionPrice = '175';
         this.getDashboardData(this.currentTodayDate,'');
       }
     });
@@ -471,6 +491,8 @@ export class Bookingv2Component implements OnInit {
       bedrooms: new FormControl(''),
       bathrooms: new FormControl(''),
       comments: new FormControl(''),
+      reinspection: new FormControl(''),
+      reinspectionComments: new FormControl(''),
       op1: new FormControl(''),
       op2: new FormControl(''),
       op3: new FormControl(''),
@@ -879,7 +901,7 @@ export class Bookingv2Component implements OnInit {
   }
 
   getExtracPrice(event: any){
-    
+  
     if(!this.item.firstName){
       this.alertService.error('Please enter first name','');
       return;
@@ -959,35 +981,40 @@ export class Bookingv2Component implements OnInit {
       return;
     }
 
-    var cost = 0;
-    var services = '';
-    this.checkboxArr.forEach((element:any) => {
-      cost += Number(element);
-    });
-    this.checkboxVal.forEach((element:any) => {
-      services += element+',';
-    });
-    this.item.additionalServiceCost = cost;
-    this.item.additionalServices = services;
-    if(!this.item.agentName){
-      this.item.agentName = this.invName;
-    }
+
+    if(this.item.reinspection == 'Yes' && this.checkReInspe == '0'){
+      this.saveReinspection();
+    }else{
+      var cost = 0;
+      var services = '';
+      this.checkboxArr.forEach((element:any) => {
+        cost += Number(element);
+      });
+      this.checkboxVal.forEach((element:any) => {
+        services += element+',';
+      });
+      this.item.additionalServiceCost = cost;
+      this.item.additionalServices = services;
+      if(!this.item.agentName){
+        this.item.agentName = this.invName;
+      }
+      
+      if(this.item.officerId == ''){
+        this.showErrorToast('Inpsector Not Available');
+        button.removeAttribute('disabled');
+        return;
+      }
     
-    if(this.item.officerId == ''){
-      this.showErrorToast('Inpsector Not Available');
-      button.removeAttribute('disabled');
-      return;
+      /*let url = '?package_type='+this.packageType+'&squarefeet='+this.item.squareFeet+'&yearbuilt='+this.item.yearBuilt;
+      this.bookingService.get(this.globals.getPricing+url).then((Response: any) => {
+        //console.log(Response);
+        this.squarefeetPrice = Response.package_sqft;
+        this.yearBuiltPrice = Response.package_additional;
+        this.item.packagePrice = Number(this.item.packagePrice) + Number(this.item.additionalServiceCost)+ Number(this.squarefeetPrice) + Number(this.yearBuiltPrice);
+        this.save();
+      });*/
+      this.calculateFinalPrice('finalsave');
     }
-    
-    /*let url = '?package_type='+this.packageType+'&squarefeet='+this.item.squareFeet+'&yearbuilt='+this.item.yearBuilt;
-    this.bookingService.get(this.globals.getPricing+url).then((Response: any) => {
-      //console.log(Response);
-      this.squarefeetPrice = Response.package_sqft;
-      this.yearBuiltPrice = Response.package_additional;
-      this.item.packagePrice = Number(this.item.packagePrice) + Number(this.item.additionalServiceCost)+ Number(this.squarefeetPrice) + Number(this.yearBuiltPrice);
-      this.save();
-    });*/
-    this.calculateFinalPrice('finalsave');
   }
 
   save(){
@@ -1000,6 +1027,9 @@ export class Bookingv2Component implements OnInit {
       this.item.duration = duration[0]+'.5';
     }
     this.updatedPrice = 0;
+
+    console.log(this.item);
+
     if (this.item.id) {
       this.bookingService.update(this.globals.updateBookingv2,this.item).then((response) => {
         this.showToast('Booking Updated Successfully');
@@ -1344,6 +1374,61 @@ export class Bookingv2Component implements OnInit {
     this.getDashboardData(selectedDate,'changedate');
     let calendarApi = this.calendarComponent.getApi();
     calendarApi.gotoDate(selectedDate);
+  }
+
+  changeReInspection(event: any){
+    console.log(event.target.value);
+    console.log(event.value); 
+    if(event.target.value == 'Yes'){
+      this.isReinspecData = true;
+    } else {
+      this.isReinspecData = false;
+      this.item.reinspectionComments = '';
+    }
+  }
+
+  changeRePrice(event:any){
+    this.reinspectionPrice = event.target.value;
+  }
+
+  saveReinspection(){
+
+    this.item.additionalServiceCost = 0;
+    this.item.additionalServices = '';
+    if(!this.item.agentName){
+      this.item.agentName = this.invName;
+    }
+    
+    if(this.item.officerId == ''){
+      this.showErrorToast('Inpsector Not Available');
+      //button.removeAttribute('disabled');
+      return;
+    }
+    this.item.id = '';
+    this.item.calculatedPrice = Number(this.reinspectionPrice);
+    this.item.packagePrice =  Number(this.reinspectionPrice);
+    this.item.bookingType = 'Admin';
+    
+    var duration = this.item.duration.split(':');
+    if(duration[1]=='0'){
+      this.item.duration = duration[0];
+    }else{
+      this.item.duration = duration[0]+'.5';
+    }
+    this.updatedPrice = 0;
+
+    console.log(this.item);
+    this.bookingService.create(this.globals.reinspectionAPIV2,this.item).then((response) => {
+      this.showToast('Re-Inspection Added Successfully');
+      this.backToList();
+      //this.SpinnerService.hide();
+    },
+      (rejected: RejectedResponse) => {
+        this.item.id = '';
+        this.alertService.error('There is something wrong',this.options);
+        //this.alertService.BindServerErrors(this.formGroup, rejected);
+      }
+    );
   }
 
 }

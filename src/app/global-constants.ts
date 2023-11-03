@@ -63,4 +63,6 @@ export class GlobalConstants {
     blockSlotAPIv2: string = 'v1/officer/getOfficerNamev2';
     getBookingDataV2: string = 'v1/booking/getBookingv2';
 
+    reinspectionAPIV2: string = 'v1/booking/saveReinspection';
+
 }
