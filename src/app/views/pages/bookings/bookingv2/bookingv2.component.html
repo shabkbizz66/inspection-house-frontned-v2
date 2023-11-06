@@ -310,7 +310,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3" *ngIf="item.id">
+                                <div class="col-sm-3" *ngIf="item.id && (item.paymentStatus == 'PAID' || item.reinspection == 'Yes')">
                                     <div class="mb-3">
                                         <label class="form-label">Re-Inspection <span style="color:red;">*</span></label>
                                         <select formControlName="reinspection" (change)="changeReInspection($event)" [(ngModel)]="item.reinspection" class="form-select">
