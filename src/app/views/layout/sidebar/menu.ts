@@ -60,6 +60,11 @@ export const MENU: MenuItem[] = [
       text: 'pendingCount',
     }
   },
+  {
+    label:"Abandoned Entry",
+    icon: "file-text",
+    link: '/bookings/abandoned'
+  },
   /*{
     label: 'Email',
     icon: 'mail',

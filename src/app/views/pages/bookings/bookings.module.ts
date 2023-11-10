@@ -25,6 +25,7 @@ import { AlertBookingsComponent } from './alert-bookings/alert-bookings.componen
 import { Bookingv2Component } from './bookingv2/bookingv2.component';
 import { AlertModule } from '../alert/alert.module';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import { AbandonedBookingsComponent } from './abandoned-bookings/abandoned-bookings.component';
 
 
 const routes: Routes = [
@@ -76,6 +77,10 @@ const routes: Routes = [
         path: 'calendar',
         component: InspectionCalendarComponent
       },
+      {
+        path: 'abandoned',
+        component: AbandonedBookingsComponent
+      },
     ]
   }
 ]
@@ -98,7 +103,8 @@ FullCalendarModule.registerPlugins([
     EditBookingComponent,
     FailedBookingsComponent,
     AlertBookingsComponent,
-    Bookingv2Component
+    Bookingv2Component,
+    AbandonedBookingsComponent
   ],
   imports: [
     CommonModule,
