@@ -64,5 +64,6 @@ export class GlobalConstants {
     getBookingDataV2: string = 'v1/booking/getBookingv2';
 
     reinspectionAPIV2: string = 'v1/booking/saveReinspection';
-
+    abandonedList: string = 'v1/incomplete/getIncompleteInspection';
+    deleteAbondonedList: string = 'v1/incomplete/deleteIncompleteInspectionById'
 }
